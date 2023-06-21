@@ -1,0 +1,20 @@
+github
+    -clone repository locally (your computer)
+    -open in VSCode
+
+Before every code session - DO THIS!
+    -open a terminal for the project and enter the text below (minus the - )
+    -git pull origin master (this pulls all the updated code from others work to you locally)
+    -create a new branch (to keep the master branch clean)
+    -git checkout -b (branch name) --- TIP- dont use "Main", call it what ever you are working on. 
+    -Happy coding
+
+When you are finished coding - DO THIS!
+    -close all servers and in the terminal enter the text below 
+    -git add .   (there is a space between the "add" and the ".")(the dot means ALL)
+    -then
+    -git commit -m "what did you do to the project?"
+    -then
+    -git push origin (branch name)
+
+The rest is done through github.

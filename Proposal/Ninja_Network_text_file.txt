@@ -1,0 +1,11 @@
+MERN - Ninja Network
+Social media network for ninja's to connect and share anything.
+
+Features
+Login/Registration, creating/updating a profile, creating/deleting/updating posts, adding other friends (ninjas), view all friends
+
+Jared Sunday - Leader - Back-End
+Khrista Khwaja - Front-End
+Sandy Thai - Front-End
+
+https://github.com/xmrxsundayx/ninja_network
