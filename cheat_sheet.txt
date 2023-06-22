@@ -4,8 +4,8 @@ github
 
 Before every code session - DO THIS!
     -open a terminal for the project and enter the text below (minus the - )
-    -git pull origin master (this pulls all the updated code from others work to you locally)
-    -create a new branch (to keep the master branch clean)
+    -git pull origin main (this pulls all the updated code from others work to you locally)
+    -create a new branch (to keep the main branch clean)
     -git checkout -b (branch name) --- TIP- dont use "Main", call it what ever you are working on. 
     -Happy coding
 
