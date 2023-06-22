@@ -1,3 +1,4 @@
+// Sandy's component
 import React from 'react'
 
 const Friends = () => {
