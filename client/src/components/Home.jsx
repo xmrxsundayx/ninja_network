@@ -1,3 +1,4 @@
+// Jared's component
 import React from 'react'
 
 const Home = () => {
