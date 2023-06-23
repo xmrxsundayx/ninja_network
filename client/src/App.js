@@ -1,11 +1,12 @@
-import logo from './logo.svg';
+
 import './App.css';
 import React from 'react';
 import Home from './components/Home';
 import Friends from './components/Friends';
 import Profile from './components/Profile';
-import LoginRegistration from './components/LoginRegistration';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
 
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<Navigate to="/login" />} path="/" />
-          <Route element={<LoginRegistration />} path='/login' />
+          <Route element={<Login />} path='/login' />
+          <Route element={<Register />} path='/register' />
           <Route element={<Home />} path='/home' />
           <Route element={<Friends />} path='/myninjas' />
           <Route element={<Profile />} path='/profile/:id' />
