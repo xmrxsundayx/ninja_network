@@ -73,7 +73,7 @@ const Friends = () => {
                             <img
                                 src={apiUser.picture}
                                 alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                                style={{ width: '100px', height: 'auto', margin: '20px' }}
+                                style={{ width: '100px', height: 'auto', margin: '20px', borderRadius: '50%' }}
                             />
                             {apiUser.firstName} {apiUser.lastName}
                             <button onClick={() => handleAddFriend(apiUser)}>+</button>
