@@ -4,7 +4,6 @@ import React from 'react';
 import Home from './components/Home';
 import Friends from './components/Friends';
 import Profile from './components/Profile';
-import Navbar from './components/Navbar';
 import LoginRegistration from './components/LoginRegistration';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
@@ -12,7 +11,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 function App() {
   return (
     <div className="container">
-      <Navbar />
       <BrowserRouter>
         <Routes>
           <Route element={<Navigate to="/login" />} path="/" />
