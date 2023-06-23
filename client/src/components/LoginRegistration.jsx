@@ -3,7 +3,9 @@ import React from 'react'
 
 const LoginRegistration = () => {
   return (
-    <div>LoginRegistration</div>
+    <div>
+      THIS IS A COMMENT
+    </div>
   )
 }
 
