@@ -11,15 +11,18 @@ import Register from './components/Register';
 
 function App() {
   return (
-    <div className="container">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route element={<Navigate to="/login" />} path="/" />
           <Route element={<Login />} path='/login' />
           <Route element={<Register />} path='/register' />
+          <>
           <Route element={<Home />} path='/home' />
           <Route element={<Friends />} path='/myninjas' />
-          <Route element={<Profile />} path='/profile/:id' />
+          <Route element={<Profile />} path='/profile' />
+          {/* I took id off of profile until we can get some useParams in to capture the ID.  */}
+          </>
         </Routes>
       </BrowserRouter>
     </div>

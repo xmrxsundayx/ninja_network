@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../api/dummy';
+import Navbar from './Navbar';
 
 
 // Sample code to test api
@@ -44,41 +45,44 @@ const Friends = () => {
 
     return (
         <div>
-            <div>
-                <h2>My Ninjas</h2>
-                <p>Add Some Ninjas, My Ninja...</p>
-            </div>
-            <div>
-                <h2>All Ninjas</h2>
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(2, 1fr)',
-                        gap: '20px',
-                    }}
-                >
-                    {apiUsers.map((apiUser) => (
-                        <div
-                            key={apiUser.id}
-                            style={{
-                                width: '350px',
-                                padding: '0px 10px',
-                                border: '1px solid',
-                                borderRadius:'20px',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <img
-                                src={apiUser.picture}
-                                alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                                style={{ width: '100px', height: 'auto', margin: '20px', borderRadius: '50%' }}
-                            />
-                            {apiUser.firstName} {apiUser.lastName}
-                            <button onClick={() => handleAddFriend(apiUser)}>+</button>
-                        </div>
-                    ))}
+            <Navbar />
+            <div className='container'>
+                <div>
+                    <h2>My Ninjas</h2>
+                    <p>Add Some Ninjas, My Ninja...</p>
+                </div>
+                <div>
+                    <h2>All Ninjas</h2>
+                    <div
+                        style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(2, 1fr)',
+                            gap: '20px',
+                        }}
+                    >
+                        {apiUsers.map((apiUser) => (
+                            <div
+                                key={apiUser.id}
+                                style={{
+                                    width: '350px',
+                                    padding: '0px 10px',
+                                    border: '1px solid',
+                                    borderRadius: '20px',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <img
+                                    src={apiUser.picture}
+                                    alt={`${apiUser.firstName} ${apiUser.lastName}`}
+                                    style={{ width: '100px', height: 'auto', margin: '20px', borderRadius: '50%' }}
+                                />
+                                {apiUser.firstName} {apiUser.lastName}
+                                <button onClick={() => handleAddFriend(apiUser)}>+</button>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

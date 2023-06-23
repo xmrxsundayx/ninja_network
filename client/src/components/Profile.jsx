@@ -1,9 +1,13 @@
 // Copy from Home.jsx
 import React from 'react'
+import Navbar from './Navbar'
 
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <div>
+      <Navbar />
+      Profile
+    </div>
   )
 }
 
