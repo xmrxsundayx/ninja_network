@@ -22,3 +22,26 @@ flex-direction: column;
 align-items: center;
 /* justify-content: space-around; */
 }
+/*  HOME */
+.nav-item{
+  color: white;
+  white-space: nowrap;
+}
+
+.background{
+  background-color: #EDF7FB;
+}
+.block{
+  background-color: #fff;
+  padding: 10px 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: "#fff"
+}
+.sticky{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
