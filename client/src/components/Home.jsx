@@ -100,16 +100,16 @@ const Home = () => {
         <div class="row justify-content-center">
           {/* Left Column */}
           <div class="col-md-3">
-            {/* <div className='block d-flex align-items-center'>
+            <div className='block'>
+              <div className='m-3 d-flex flex-column align-items-center'>
               <img
                 className="rounded-circle mb-4"
-                style={{ width: '200px', height: 'auto', margin: '10px' }}
+                style={{ width: '150px', height: 'auto', margin: '10px' }}
                 src={oneUser.picture}
                 alt={`${oneUser.firstName} ${oneUser.lastName}`}
               />
-              <div className='m-3'>
-                <h2>{oneUser.firstName}</h2>
-                <h2>{oneUser.lastName}</h2>
+                <h3>{oneUser.firstName}</h3>
+                <h3>{oneUser.lastName}</h3>
                 <p>Software Developer</p>
                 <button className='btn btn-primary'>View Profile</button>
               </div>
