@@ -11,6 +11,8 @@ Before every code session - DO THIS!
 
 When you are finished coding - DO THIS!
     -close all servers and in the terminal enter the text below 
+    -cd to main project folder (not server or client)
+    -git checkout (branch name) (double check branch before continuing)
     -git add .   (there is a space between the "add" and the ".")(the dot means ALL)
     -then
     -git commit -m "what did you do to the project?"
