@@ -99,7 +99,7 @@ const Home = () => {
       <div class="mt-5">
         <div class="row justify-content-center">
           {/* Left Column */}
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div className='block d-flex align-items-center'>
               <img
                 className="rounded-circle mb-4"
@@ -176,7 +176,7 @@ const Home = () => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div class="col-md-6">
+          <div class="col-md-5">
             <div className='block'>
               {/* <h4 className='p-2'>Submit a Post</h4> */}
               <form>
