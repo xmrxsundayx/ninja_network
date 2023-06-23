@@ -1,8 +1,24 @@
 // Jared's component
-import React from 'react'
-
+import React, { useEffect, useState } from 'react';
+import api from '../api/dummy';
 
 const Home = () => {
+    const [apiPosts, setApiPosts] = useState([]);
+
+    useEffect(() => {
+        const fetchAllApiPosts = async () => {
+            try {
+                const response = await api.get('/post', { params: { limit: 50 } });
+                setApiPosts(response.data.data);
+                console.log(response.data.data);
+            } catch (error) {
+                console.error('Error fetching ninjas:', error);
+            }
+        };
+
+        fetchAllApiPosts();
+    }, []);
+
   return (
     <div class="container">
       <div class="row">
@@ -95,6 +111,32 @@ const Home = () => {
                   {/* <!-- Optional: Display image or video here --> */}
                 </div>
             </div>
+            {apiPosts.map((apiPost) => (
+                        <div
+                            key={apiPost.id}
+                            style={{
+                                width: '350px',
+                                padding: '0px 10px',
+                                border: '1px solid',
+                                borderRadius:'20px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <img
+                                src={apiPost.owner.picture}
+                                alt={`${apiPost.owner.firstName} ${apiPost.owner.lastName}`}
+                                style={{ width: '100px', height: 'auto', margin: '20px' }}
+                            />
+                            {apiPost.owner.firstName} {apiPost.owner.lastName}
+                            {apiPost.text}
+                            <img
+                                src={apiPost.image}
+                                alt={apiPost.text} 
+                                style={{ width: '300px', height: 'auto', margin: '20px' }}
+                        </div>
+                    ))}
             {/* <!-- Add more post items as needed --> */}
           </div>
         </div>
