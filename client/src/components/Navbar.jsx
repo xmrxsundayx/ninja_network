@@ -1,16 +1,24 @@
 import React, { useState } from "react";
 // import logo from "../images/ninja_network_logo.PNG"
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
+
+    const navigate = useNavigate();
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
 
     const handleLogout = () => {
-        // add logout functionality when we start storing user information
-        console.log("logout Clicked")
+        axios.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
+        .then(res => {
+            console.log(res)
+            navigate('/login')
+    })
+        .catch(err => console.log(err)) 
     };
 
     return (
@@ -21,7 +29,7 @@ const Navbar = () => {
                     background: "#0389C9"
                 }}
             >
-                <div className="container-fluid row-col d-flex align-items-center">
+                <div className="ms-5 container-fluid row-col d-flex align-items-center">
                     <a href="/" className="navbar-brand">
                         <h3>
                             <u className="text-white">NINJA NETWORK</u>
@@ -52,7 +60,7 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}>
-                        <div className="navbar-nav ">
+                        <div className="navbar-nav me-5">
                             <a href="/home" className="nav-item nav-link">
                                 Home
                             </a>
