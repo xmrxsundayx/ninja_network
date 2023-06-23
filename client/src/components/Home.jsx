@@ -103,14 +103,6 @@ const Home = () => {
                                 {/* <!-- Optional: Display image or video here --> */}
                             </div>
                         </div>
-                        <div class="media">
-                            <img src="friend2-photo.jpg" class="mr-3" alt="Friend 2" />
-                            <div class="media-body">
-                                <h6>Friend 2</h6>
-                                <p>Post Text</p>
-                                {/* <!-- Optional: Display image or video here --> */}
-                            </div>
-                        </div>
                         {apiPosts.map((apiPost) => (
                             <div
                                 key={apiPost.id}
