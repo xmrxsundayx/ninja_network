@@ -77,7 +77,7 @@ const Navbar = () => {
                                 My Ninjas
                             </Link>
                             <a href="login" className="nav-item nav-link" onClick={handleLogout}>
-                                Log Out Log OUT
+                                Log Out
                             </a>
                         </div>
                         <div className="navbar-nav "></div>
