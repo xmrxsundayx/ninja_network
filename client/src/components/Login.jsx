@@ -50,7 +50,7 @@ const Login = () => {
         <div className="m-2 col-4">
           <img src={logoWhite} alt="logo" style={{height: "90px"}}/></div>
         <div className='m-2 col-5'>
-          <h1 className='text-light mt-3'>WELCOME BACK!</h1>
+          <h1 className='text-light mt-3'>WELCOME BACK!!!</h1>
         </div>
       </div>
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
