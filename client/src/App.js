@@ -18,9 +18,9 @@ function App() {
           <Route element={<Login />} path='/login' />
           <Route element={<Register />} path='/register' />
           <>
-          <Route element={<Home />} path='/home/:userId' />
-          <Route element={<Friends />} path='/myninjas/:userId' />
-          <Route element={<Profile />} path='/profile/:userId' />
+          <Route element={<Home />} path='/home/:id' />
+          <Route element={<Friends />} path='/myninjas/:id' />
+          <Route element={<Profile />} path='/profile/:id' />
           {/* I took id off of profile until we can get some useParams in to capture the ID.  */}
           </>
         </Routes>
