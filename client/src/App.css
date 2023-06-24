@@ -10,6 +10,9 @@ video{
   position: fixed;
   z-index: -1;
 }
+.logo{
+  height: 75px;
+}
 
 #login_page{
   margin: 0;
@@ -26,6 +29,7 @@ align-items: center;
 .nav-item{
   color: white;
   white-space: nowrap;
+  margin-right: 10px
 }
 
 .background{
