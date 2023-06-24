@@ -4,20 +4,19 @@ import bgVd from '../images/bgVid.mp4'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const Login = () => {
+const Login = (setUser,isLoggedIn) => {
   const [userLogin, setUserLogin] = useState({
     email: '',
     password: ''
   })
   const [errors, setErrors] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/home')
-    }
-  }, [isLoggedIn, navigate])
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate('/home')
+  //   }
+  // }, [isLoggedIn, navigate])
 
   const handleChangeLogin = (e) => {
     setUserLogin({ ...userLogin, [e.target.name]: e.target.value })
@@ -30,8 +29,9 @@ const Login = () => {
         console.log(res)
         console.log(res.data.user)
         console.log(res.data.user._id)
+        setUser(res.data.user)
         navigate(`/home/${res.data.user._id}`);
-        setIsLoggedIn(true)
+
         // change to :id when we have the user id set up
       })
       .catch(err => {
