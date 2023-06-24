@@ -42,32 +42,31 @@ const handleChangeReg = (e) => {
       <button onClick={ () => navigate('/login')} className='btn btn-secondary text-light'>Already in the Fam? Click here!</button>
 {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
-        <a href="/home" className=" greeting nav-item nav-link active text-white">
+        <a href="/home" className=" nav-item nav-link active text-white">
           Home
         </a>
       </div>
 {/* **********^^^^^^^*Delete Me***************** */}
-    <div id='reg_form'>
+    <div className='row'>
       {errors && <h6 classname="text-danger">{errors}</h6>}
-      <form onSubmit={handleReg} className="register_form">
-
-        <label className='text-light' htmlFor='firstName'>First Name</label>
-        <input type="text" className="form-control" name="firstName" onChange={handleChangeReg}/>
-
-        <label className='text-light' htmlFor='lastName'>Last Name</label>
-        <input type="text" className="form-control" name="lastName" onChange={handleChangeReg}/>
-
-        <label className='text-light' htmlFor='email'>Email</label>
-        <input type="text" className="form-control" name="email" onChange={handleChangeReg}/>
-
-        <label className='text-light' htmlFor='password'>Password</label>
-        <input type="password" className="form-control" name="password" onChange={handleChangeReg}/>
-
-        <label className='text-light' htmlFor='confirmPassword'>Confirm Password</label>
-        <input type="password" className="form-control" name="confirmPassword" onChange={handleChangeReg}/>
-        <br/>
-        <input type="submit" className="btn btn-secondary" value="Register" />
-      </form>
+      <div className="col-3"></div>
+      <div className="col-6">
+        <form onSubmit={handleReg} className="register_form">
+          <label className='text-light' htmlFor='firstName'>First Name</label>
+          <input type="text" className="form-control" name="firstName" onChange={handleChangeReg}/>
+          <label className='text-light' htmlFor='lastName'>Last Name</label>
+          <input type="text" className="form-control" name="lastName" onChange={handleChangeReg}/>
+          <label className='text-light' htmlFor='email'>Email</label>
+          <input type="text" className="form-control" name="email" onChange={handleChangeReg}/>
+          <label className='text-light' htmlFor='password'>Password</label>
+          <input type="password" className="form-control" name="password" onChange={handleChangeReg}/>
+          <label className='text-light' htmlFor='confirmPassword'>Confirm Password</label>
+          <input type="password" className="form-control" name="confirmPassword" onChange={handleChangeReg}/>
+          <br/>
+          <input type="submit" className="btn fw-bold  btn-secondary" value="Register" />
+        </form>
+      </div>
+      <div className="col-3"></div>
       </div>
     </div>
   )
