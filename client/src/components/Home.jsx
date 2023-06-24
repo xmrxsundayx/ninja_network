@@ -11,14 +11,14 @@ const Home = () => {
   const [apiUsers, setApiUsers] = useState([])
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
-  // const {userId } = useParams();
+  const {userId } = useParams();
   const navigate = useNavigate();
 
   // this is to get the one User info
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await axios.get(`/user/${response.data.user._id}`, oneUser, { withCredentials: true });
+        const response = await axios.get(`http://localhost:8000/api/user/${userId}}`, oneUser, { withCredentials: true });
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -102,10 +102,10 @@ const Home = () => {
   return (
     <div className='background'>
       <Navbar />
-      <div class="mt-5">
-        <div class="row justify-content-center">
+      <div className="mt-5">
+        <div className="row justify-content-center">
           {/* Left Column */}
-          <div class="col-md-2 col-lg-2">
+          <div className="col-md-2 col-lg-2">
             <div className='block'>
               <div className='m-3 d-flex flex-column align-items-center'>
               <img
@@ -189,12 +189,12 @@ const Home = () => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div class="col-md-5 col-lg-6">
+          <div className="col-md-5 col-lg-6">
             <div className='block'>
               {/* <h4 className='p-2'>Submit a Post</h4> */}
               <form>
-                <div class="form-group">
-                  <textarea class="form-control" id="postText" placeholder="What's on your mind?"
+                <div className="form-group">
+                  <textarea className="form-control" id="postText" placeholder="What's on your mind?"
                     style={{
                       backgroundColor: "#EDF7FB"
                     }}>

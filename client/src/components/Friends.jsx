@@ -54,8 +54,8 @@ const Friends = () => {
     return (
         <div>
             <Navbar />
-            <div className='container'>
-                <div>
+            <div className=''>
+                <div className='container col-md-8'>
                     <h2>My Ninjas</h2>
                     {addedFriends.length === 0 ? (
                         <p>Add Some Ninjas, My Ninja...</p>
@@ -80,7 +80,7 @@ const Friends = () => {
                         </div>
                     )}
                 </div>
-                <div>
+                <div className='container col-md-8'>
                     <h2>All Ninjas</h2>
                     <div
                         style={{
@@ -95,7 +95,7 @@ const Friends = () => {
                                 style={{
                                     width: '350px',
                                     padding: '0px 10px',
-                                    border: '1px solid',
+                                    background: 'rgb(237,247,251)',
                                     borderRadius: '20px',
                                     display: 'flex',
                                     justifyContent: 'space-between',
@@ -106,14 +106,14 @@ const Friends = () => {
                                     src={apiUser.picture}
                                     alt={`${apiUser.firstName} ${apiUser.lastName}`}
                                     style={{
-                                        width: '100px',
+                                        width: '80px',
                                         height: 'auto',
-                                        margin: '20px',
+                                        margin: '20px 10px 20px 10px',
                                         borderRadius: '50%',
                                     }}
                                 />
                                 {apiUser.firstName} {apiUser.lastName}
-                                <button onClick={() => handleAddFriend(apiUser)}>+</button>
+                                <button className='btn btn-outline-primary mx-3' onClick={() => handleAddFriend(apiUser)}>+</button>
                             </div>
                         ))}
                     </div>
