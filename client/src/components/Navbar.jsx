@@ -24,7 +24,7 @@ const Navbar = () => {
 
     const handleHome = (userId) => {
         navigate(`/home/${userId}`)
-      }
+    }
 
     return (
         <div className="sticky">

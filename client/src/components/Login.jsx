@@ -22,7 +22,7 @@ const Login = () => {
       .then(res => {
         console.log(res)
         console.log(res.data.user)
-        navigate('/home')
+        navigate(`/home/${res.data.user._id}`)
         // change to :id when we have the user id set up
       })
       .catch(err => {
