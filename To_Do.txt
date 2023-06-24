@@ -1,1 +1,15 @@
 We could put to do stuff in here?
+user model
+-Email
+-Password
+-firstName
+-lastName
+-image
+-title(job title)
+-languages Learned
+-social media links
+-location (city, state)
+-post
+-friendRequestsReceived
+-friendRequestsSent
+-friends
