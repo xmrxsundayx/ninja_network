@@ -2,19 +2,27 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 // import logo from "../images/ninja_network_logo.PNG"
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const Navbar = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(true);
 
+    const navigate = useNavigate();
+
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
 
     const handleLogout = () => {
-        // add logout functionality when we start storing user information
-        console.log("logout Clicked");
+        axios.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
+        .then(res => {
+            console.log(res)
+            navigate('/login')
+    })
+        .catch(err => console.log(err)) 
     };
 
     return (

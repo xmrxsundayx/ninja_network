@@ -22,40 +22,40 @@ const Login = () => {
       .then(res => {
         console.log(res)
         console.log(res.data.user)
-        navigate('/profile/:id')
+        navigate('/home')
+        // change to :id when we have the user id set up
       })
       .catch(err => {
         console.log(err)
         console.log(err.response.data);
-        setErrors(err.response.data.errors)
+      setErrors(err.response.data.errors)
       })
   }
 
 
   return (
     <div className='login_page'>
-      <video src={bgVd} type="video/mp4" autoplay muted loop id="worldVid" />
-      <h1 className='text-light'>Welcome back! Login</h1>
+      <video src={bgVd} type="video/mp4" autoPlay muted loop id="worldVid" />
+      <h1 className='greeting text-light'>Welcome back! Login</h1>
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
-        <a href="/home" className="nav-item nav-link active text-white">
+        <a href="/home" className=" greeting nav-item nav-link active text-white">
           Home
         </a>
       </div>
       {/* ***********Delete Me***************** */}
-      {errors && <h6 classname="text-danger">{errors}</h6>}
       <div id="login_form" >
+      {errors && <h6 classname="text-danger">{errors}</h6>}
         <form onSubmit={handleLogin}>
           <label className='text-light' htmlFor='email'>Email</label>
-          <input className='form-control' type='text' onChange={handleChange} />
-          {/* why do we have a handleChange here when it is in the submit button? */}
+          <input className='form-control' name="email" type='text' onChange={handleChange} />
           <label className='text-light' htmlFor='password'>Password</label>
-          <input className='form-control' type='password' />
+          <input className='form-control' name="password" type='password'  onChange={handleChange}/>
           <br />
-          <button className='btn btn-secondary text-dark' type='submit' onChange={handleChange}>Login</button>
+          <input className='btn btn-secondary text-dark' type='submit' value="Log in" />
         </form>
       </div>
-    // </div>
+    </div>
   )
 }
 
