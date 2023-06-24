@@ -11,14 +11,14 @@ const Home = () => {
   const [apiUsers, setApiUsers] = useState([])
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
-  const {userId } = useParams();
+  // const {userId } = useParams();
   const navigate = useNavigate();
 
   // this is to get the one User info
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await api.get('/user/60d0fe4f5311236168a109ca');
+        const response = await axios.get(`/user/${response.data.user._id}`, oneUser, { withCredentials: true });
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -26,7 +26,7 @@ const Home = () => {
       }
     };
     fetchOneUser();
-  }, {});
+  }, []);
 
   // this is to get the one Post info
   useEffect(() => {
@@ -40,7 +40,7 @@ const Home = () => {
       }
     };
     fetchOnePost();
-  }, {});
+  }, []);
 
   // this is to get all the API Users
   useEffect(() => {
