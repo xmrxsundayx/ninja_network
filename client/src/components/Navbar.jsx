@@ -10,8 +10,6 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(true);
 
-    const navigate = useNavigate();
-
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
