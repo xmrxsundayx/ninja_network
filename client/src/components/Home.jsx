@@ -18,7 +18,7 @@ const Home = () => {
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await axios.get(`/api/user/${id}}`, oneUser, { withCredentials: true });
+        const response = await axios.get(`/api/users/${id}`, oneUser, { withCredentials: true });
         console.log('testing:',oneUser)
         setOneUser(response.data);
         console.log('Get User', response.data);
@@ -72,8 +72,8 @@ const Home = () => {
     fetchAllApiPosts();
   }, []);
 
-  const handleViewProfile = (userId) => {
-    navigate(`/profile/${userId}`)
+  const handleViewProfile = (id) => {
+    navigate(`/profile/${id}`)
   }
 
   // Function for how long ago a post was posted
