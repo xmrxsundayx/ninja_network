@@ -6,7 +6,7 @@ import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
 
-const Home = () => {
+const Home = ({user,setUser,isLoggedIn}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [oneUser, setOneUser] = useState({})
@@ -18,7 +18,7 @@ const Home = () => {
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await axios.get(`/api/users/${id}`, oneUser, { withCredentials: true });
+        const response = await axios.get(`/api/users/${user._id}`, { withCredentials: true });
         console.log('testing:',oneUser)
         setOneUser(response.data);
         console.log('Get User', response.data);
@@ -27,7 +27,7 @@ const Home = () => {
       }
     };
     fetchOneUser();
-  }, [id]);
+  }, [user._id]);
 
   // this is to get the one Post info
   useEffect(() => {

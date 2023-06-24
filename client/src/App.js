@@ -3,34 +3,27 @@ import React, { useState } from 'react';
 import Home from './components/Home';
 import Friends from './components/Friends';
 import Profile from './components/Profile';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
 
   return (
     <div>
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route element={<Navigate to="/login" />} path="/" />
-          <Route element={<Login handleLogin={handleLogin} />} path="/login" />
+          <Route element={<Login setUser={setUser}  />} path="/login" />
           <Route element={<Register />} path="/register" />
-          {isLoggedIn && (
-            <>
-              <Route element={<Home handleLogin={handleLogin}/>} path="/home/:id" />
-              <Route element={<Friends handleLogin={handleLogin}/>} path="/myninjas/:id" />
-              <Route element={<Profile handleLogin={handleLogin}/>} path="/profile/:id" />
-              {/* I took id off of profile until we can get some useParams in to capture the ID. */}
-            </>
-          )}
+          <Route element={<Home user={user} setUser={setUser} />} path="/home/:id" />
+          <Route element={<Friends user={user} setUser={setUser} />} path="/myninjas/:id" />
+          <Route element={<Profile user={user} setUser={setUser} />} path="/profile/:id" />
+              {/* I took id off of profile until we can get some useParams in to capture the ID. */} 
         </Routes>
-      </Router>
+      </BrowserRouter>
     </div>
   );
 }
