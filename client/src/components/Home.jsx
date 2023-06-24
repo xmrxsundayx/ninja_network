@@ -123,7 +123,7 @@ const Home = () => {
                 <h3>{oneUser.firstName}</h3>
                 <h3>{oneUser.lastName}</h3>
                 <p>Software Developer</p>
-                <button className='btn btn-primary' onClick={handleViewProfile}>View Profile</button>
+                <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
               </div>
             </div>
             <div className='block'>
@@ -207,7 +207,7 @@ const Home = () => {
                     <button type='file' className='btn btn-outline mx-1' htmlFor="attachmentInput"><i className='fas fa-paperclip'></i> Attachment</button>
                   </div>
                   <div className="col-sm-4 text-end mt-3">
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit" className="btn specColor">Submit</button>
                   </div>
                 </div>
               </form>
