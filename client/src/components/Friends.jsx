@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../api/dummy';
 import Navbar from './Navbar';
+import { useParams } from 'react-router-dom';
 
 
 // Sample code to test api
 const Friends = () => {
     const [apiUsers, setApiUsers] = useState([]);
+    const [addedFriends, setAddedFriends] = useState([]);
+    const { userId } = useParams();
 
     useEffect(() => {
         const fetchAllApiUsers = async () => {
@@ -30,18 +33,23 @@ const Friends = () => {
             firstName: apiUser.firstName,
             lastName: apiUser.lastName,
             picture: apiUser.picture,
+            title: 'Software Developer',
+            languages: ['JavaScript', 'Python'],
         };
 
         // Send the friendToAdd object to the backend API endpoint to update the user's friends array
-        axios.patch(`/api/users/${apiUser._id}`, { friends: friendToAdd })
+        axios
+            .patch(`/api/users/${userId}`, { friends: [friendToAdd, ...addedFriends] }) // Pass an array containing the existing addedFriends and the new friendToAdd
             .then((response) => {
                 console.log('Friend added successfully:', response.data);
                 // Update the state or perform any necessary actions after adding a friend
+                setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
             })
             .catch((error) => {
                 console.error('Error adding friend:', error);
             });
     };
+
 
     return (
         <div>
@@ -49,7 +57,28 @@ const Friends = () => {
             <div className='container'>
                 <div>
                     <h2>My Ninjas</h2>
-                    <p>Add Some Ninjas, My Ninja...</p>
+                    {addedFriends.length === 0 ? (
+                        <p>Add Some Ninjas, My Ninja...</p>
+                    ) : (
+                        <div>
+                            {/* Display all of my ninjas */}
+                            {addedFriends.map((friend) => (
+                                <div key={friend._id}>
+                                    <img
+                                        src={friend.picture}
+                                        alt={`${friend.firstName} ${friend.lastName}`}
+                                        style={{
+                                            width: '100px',
+                                            height: 'auto',
+                                            margin: '20px',
+                                            borderRadius: '50%',
+                                        }}
+                                    />
+                                    {friend.firstName} {friend.lastName}
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <div>
                     <h2>All Ninjas</h2>
@@ -70,13 +99,18 @@ const Friends = () => {
                                     borderRadius: '20px',
                                     display: 'flex',
                                     justifyContent: 'space-between',
-                                    alignItems: 'center'
+                                    alignItems: 'center',
                                 }}
                             >
                                 <img
                                     src={apiUser.picture}
                                     alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                                    style={{ width: '100px', height: 'auto', margin: '20px', borderRadius: '50%' }}
+                                    style={{
+                                        width: '100px',
+                                        height: 'auto',
+                                        margin: '20px',
+                                        borderRadius: '50%',
+                                    }}
                                 />
                                 {apiUser.firstName} {apiUser.lastName}
                                 <button onClick={() => handleAddFriend(apiUser)}>+</button>

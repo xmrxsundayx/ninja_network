@@ -82,7 +82,7 @@ const Navbar = () => {
                             <Link to={`/profile/${userId}`} className="nav-item nav-link">
                                 Profile
                             </Link>
-                            <Link to="/myninjas" className="nav-item nav-link">
+                            <Link to={`/myninjas/${userId}`} className="nav-item nav-link">
                                 My Ninjas
                             </Link>
                             <a href="login" className="nav-item nav-link" onClick={handleLogout}>
