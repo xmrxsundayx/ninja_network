@@ -16,10 +16,9 @@ const Home = () => {
 
   // this is to get the one User info
   useEffect(() => {
-    const fetchOneUser = async () => {
+        const fetchOneUser = async () => {
       try {
-        const response = await axios.get(`/api/users/${id}`, oneUser, { withCredentials: true });
-        console.log('testing:',oneUser)
+        const response = await axios.get(`/api/users/${id}`, { withCredentials: true });
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -47,7 +46,7 @@ const Home = () => {
   useEffect(() => {
     const fetchAllApiUsers = async () => {
       try {
-        const response = await api.get('/user', { params: { limit: 5 } });
+        const response = await api.get('api/users', { params: { limit: 5 } });
         setApiUsers(response.data.data);
         console.log('Get All Users', response.data.data);
       } catch (error) {
