@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import bgVd from '../images/bgVid.mp4'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Login = () => {
   const [userLogin, setUserLogin] = useState({
@@ -12,7 +12,7 @@ const Login = () => {
   const [errors, setErrors] = useState('')
   const navigate = useNavigate()
 
-  const handleChange = (e) => {
+  const handleChangeLogin = (e) => {
     setUserLogin({ ...userLogin, [e.target.name]: e.target.value })
   }
 
@@ -37,6 +37,7 @@ const Login = () => {
     <div className='login_page'>
       <video src={bgVd} type="video/mp4" autoPlay muted loop id="worldVid" />
       <h1 className='greeting text-light'>Welcome back! Login</h1>
+      <button onClick={ () => navigate('/register')} className='btn btn-secondary text-light'>New to the Network? Click here!</button>
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
         <a href="/home" className=" greeting nav-item nav-link active text-white">
@@ -48,9 +49,9 @@ const Login = () => {
       {errors && <h6 classname="text-danger">{errors}</h6>}
         <form onSubmit={handleLogin}>
           <label className='text-light' htmlFor='email'>Email</label>
-          <input className='form-control' name="email" type='text' onChange={handleChange} />
+          <input className='form-control' name="email" type='text' onChange={handleChangeLogin} />
           <label className='text-light' htmlFor='password'>Password</label>
-          <input className='form-control' name="password" type='password'  onChange={handleChange}/>
+          <input className='form-control' name="password" type='password'  onChange={handleChangeLogin}/>
           <br />
           <input className='btn btn-secondary text-dark' type='submit' value="Log in" />
         </form>
