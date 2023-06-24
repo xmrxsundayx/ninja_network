@@ -1,10 +1,10 @@
 // Khrista's component
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import bgVd from '../images/bgVid.mp4'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const Login = (setUser,isLoggedIn) => {
+const Login = ({ setUser,isLoggedIn }) => {
   const [userLogin, setUserLogin] = useState({
     email: '',
     password: ''
@@ -12,11 +12,6 @@ const Login = (setUser,isLoggedIn) => {
   const [errors, setErrors] = useState('');
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     navigate('/home')
-  //   }
-  // }, [isLoggedIn, navigate])
 
   const handleChangeLogin = (e) => {
     setUserLogin({ ...userLogin, [e.target.name]: e.target.value })
@@ -29,6 +24,7 @@ const Login = (setUser,isLoggedIn) => {
         console.log(res)
         console.log(res.data.user)
         console.log(res.data.user._id)
+        // setUserLogin(res.data.user)
         setUser(res.data.user)
         navigate(`/home/${res.data.user._id}`);
 

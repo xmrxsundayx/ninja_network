@@ -18,16 +18,17 @@ const Home = ({user,setUser,isLoggedIn}) => {
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await axios.get(`/api/users/${user._id}`, { withCredentials: true });
-        console.log('testing:',oneUser)
+        const response = await axios.get(`/api/users/${id}`, { withCredentials: true });
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
-        console.error('Error fetching ninja:', error);
+        console.error('Error fetching user:', error);
       }
     };
-    fetchOneUser();
-  }, [user._id]);
+    if (id) {
+      fetchOneUser();
+    }
+  }, [id]);
 
   // this is to get the one Post info
   useEffect(() => {
@@ -72,9 +73,9 @@ const Home = ({user,setUser,isLoggedIn}) => {
     fetchAllApiPosts();
   }, []);
 
-  const handleViewProfile = (id) => {
-    navigate(`/profile/${id}`)
-  }
+  const handleViewProfile = () => {
+    navigate(`/profile/${oneUser._id}`);
+  };
 
   // Function for how long ago a post was posted
   function getTimeSince(publishDate) {

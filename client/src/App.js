@@ -10,7 +10,6 @@ import Register from './components/Register';
 function App() {
   const [user, setUser] = useState({});
 
-
   return (
     <div>
       <BrowserRouter>
