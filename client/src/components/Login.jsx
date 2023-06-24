@@ -40,21 +40,25 @@ const Login = () => {
       <button onClick={ () => navigate('/register')} className='btn btn-secondary text-light'>New to the Network? Click here!</button>
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
-        <a href="/home" className=" greeting nav-item nav-link active text-white">
+        <a href="/home" className=" nav-item nav-link active text-white">
           Home
         </a>
       </div>
       {/* ***********Delete Me***************** */}
-      <div id="login_form" >
-      {errors && <h6 classname="text-danger">{errors}</h6>}
-        <form onSubmit={handleLogin}>
-          <label className='text-light' htmlFor='email'>Email</label>
-          <input className='form-control' name="email" type='text' onChange={handleChangeLogin} />
-          <label className='text-light' htmlFor='password'>Password</label>
-          <input className='form-control' name="password" type='password'  onChange={handleChangeLogin}/>
-          <br />
-          <input className='btn btn-secondary text-dark' type='submit' value="Log in" />
-        </form>
+      <div className='row'>
+        <div className="col-3"></div>
+        <div className="col-6" id="login_form">
+        {errors && <h6 classname="text-danger">{errors}</h6>}
+          <form onSubmit={handleLogin}>
+            <label className='text-light' htmlFor='email'>Email</label>
+            <input className='form-control' name="email" type='text' onChange={handleChangeLogin} />
+            <label className='text-light' htmlFor='password'>Password</label>
+            <input className='form-control' name="password" type='password'  onChange={handleChangeLogin}/>
+            <br />
+            <input className='btn btn-secondary fw-bold text-light' type='submit' value="Log in" />
+          </form>
+        </div>
+        <div className="col-3"></div>
       </div>
     </div>
   )
