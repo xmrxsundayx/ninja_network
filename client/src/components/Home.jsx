@@ -9,7 +9,6 @@ import api from '../api/dummy';
 const Home = ({user,setUser,isLoggedIn}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
-  const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ const Home = ({user,setUser,isLoggedIn}) => {
         .then(res => {
             // show the user returned
             console.log("logged user:" + res.data._id)
-            // 4) UPDATE THE STATE WITH CORRECT DATA
             setUser(res.data);
         })
         .catch(err => {
