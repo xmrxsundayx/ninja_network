@@ -1,12 +1,14 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // import logo from "../images/ninja_network_logo.PNG"
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const Navbar = () => {
-    const [isCollapsed, setIsCollapsed] = useState(true);
-
+    const { userId } = useParams();
     const navigate = useNavigate();
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
@@ -26,22 +28,26 @@ const Navbar = () => {
             <nav
                 className="navbar navbar-expand-lg navbar-light"
                 style={{
-                    background: "#0389C9"
+                    background: "#0389C9",
                 }}
             >
-                <div className="ms-5 container-fluid row-col d-flex align-items-center">
-                    <a href="/" className="navbar-brand">
+                <div className="container-fluid row-col d-flex align-items-center">
+                    <Link to={`/home/${userId}`} className="navbar-brand">
                         <h3>
                             <u className="text-white">NINJA NETWORK</u>
                         </h3>
-                    </a>
+                    </Link>
                     <div className="form-outline input-group">
-                        <input type="search" id="form1" placeholder="Search" 
-                        style={{
-                            width: "15%",
-                            backgroundColor: "#1D95CF",
-                            border: "none",
-                        }} />
+                        <input
+                            type="search"
+                            id="form1"
+                            placeholder="Search"
+                            style={{
+                                width: "15%",
+                                backgroundColor: "#1D95CF",
+                                border: "none",
+                            }}
+                        />
                         <button type="button" className="btn btn-primary">
                             <i className="fas fa-search"></i>
                         </button>
@@ -60,26 +66,26 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}>
-                        <div className="navbar-nav me-5">
-                            <a href="/home" className="nav-item nav-link">
-                                Home
-                            </a>
-                            <a href="/profile" className="nav-item nav-link">
-                                Profile
-                            </a>
-                            <a href="/myninjas" className="nav-item nav-link">
-                                My Ninjas
-                            </a>
-                            <a href="login" className="nav-item nav-link" onClick={handleLogout}>
-                                Log Out
-                            </a>
-                        </div>
                         <div className="navbar-nav ">
+                            <Link to={`/home/${userId}`} className="nav-item nav-link">
+                                Home
+                            </Link>
+                            <Link to={`/profile/${userId}`} className="nav-item nav-link">
+                                Profile
+                            </Link>
+                            <Link to="/myninjas" className="nav-item nav-link">
+                                My Ninjas
+                            </Link>
+                            <a href="login" className="nav-item nav-link" onClick={handleLogout}>
+                                Log Out Log OUT
+                            </a>
                         </div>
+                        <div className="navbar-nav "></div>
                     </div>
                 </div>
             </nav>
         </div>
     );
 };
+
 export default Navbar;

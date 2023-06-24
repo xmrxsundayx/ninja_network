@@ -1,5 +1,6 @@
 // Jared's component
 import React, { useEffect, useState } from 'react';
+import {useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
@@ -10,13 +11,14 @@ const Home = () => {
   const [apiUsers, setApiUsers] = useState([])
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
-
+  const {userId } = useParams();
+  const navigate = useNavigate();
 
   // this is to get the one User info
   useEffect(() => {
     const fetchOneUser = async () => {
       try {
-        const response = await api.get('/user/60d0fe4f5311236168a109e8');
+        const response = await api.get('/user/60d0fe4f5311236168a109ca');
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -69,6 +71,10 @@ const Home = () => {
     fetchAllApiPosts();
   }, []);
 
+  const handleViewProfile = (userId) => {
+    navigate(`/profile/${userId}`)
+  }
+
   // Function for how long ago a post was posted
   function getTimeSince(publishDate) {
     const now = new Date();
@@ -99,22 +105,27 @@ const Home = () => {
       <div class="mt-5">
         <div class="row justify-content-center">
           {/* Left Column */}
-          <div class="col-md-3">
+          <div class="col-md-2 col-lg-2">
             <div className='block'>
               <div className='m-3 d-flex flex-column align-items-center'>
               <img
                 className="rounded-circle mb-4"
-                style={{ width: '150px', height: 'auto', margin: '10px' }}
+                style={{ 
+                  width: '150px', 
+                  height: 'auto', 
+                  margin: '10px',
+                  cursor: 'pointer'
+                }}
                 src={oneUser.picture}
                 alt={`${oneUser.firstName} ${oneUser.lastName}`}
+                onClick={handleViewProfile}
               />
                 <h3>{oneUser.firstName}</h3>
                 <h3>{oneUser.lastName}</h3>
                 <p>Software Developer</p>
-                <button className='btn btn-primary'>View Profile</button>
+                <button className='btn btn-primary' onClick={handleViewProfile}>View Profile</button>
               </div>
             </div>
-
             <div className='block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
@@ -160,8 +171,10 @@ const Home = () => {
                       padding: '0px 10px',
                       borderRadius: '20px',
                       margin: '10px 0',
-                      background: "#EDF7FB"
+                      background: "#EDF7FB",
+                      cursor: 'pointer'
                     }}
+                    onClick={() => handleViewProfile(apiUser.id)}
                   >
                     <img className='rounded-circle'
                       src={apiUser.picture}
@@ -176,7 +189,7 @@ const Home = () => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div class="col-md-5">
+          <div class="col-md-5 col-lg-6">
             <div className='block'>
               {/* <h4 className='p-2'>Submit a Post</h4> */}
               <form>
@@ -211,8 +224,10 @@ const Home = () => {
                       style={{
                         width: '50px',
                         height: 'auto',
-                        margin: '20px'
+                        margin: '20px',
+                        cursor: 'pointer'
                       }}
+                      onClick={() => handleViewProfile(apiPost.owner.id)}
                     />
                     <div>
                       <div>
@@ -262,7 +277,7 @@ const Home = () => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}
-          <div className="col-md-3">
+          <div className="col-md-3 col-lg-3">
             <StickyBox offsetTop={100} offsetBottom={0}>
               <div className='block'>
                 <h4 className='p-2'>Ninjas Online</h4>
