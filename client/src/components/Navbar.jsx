@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
 // import logo from "../images/ninja_network_logo.PNG"
-import {useNavigate} from "react-router-dom";
+import logo from "../images/trimmed_logo.PNG"
+import React, { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const Navbar = () => {
@@ -28,15 +27,17 @@ const Navbar = () => {
             <nav
                 className="navbar navbar-expand-lg navbar-light"
                 style={{
-                    background: "#0389C9",
+                    background: "#5F9CB5",
                 }}
             >
                 <div className="container-fluid row-col d-flex align-items-center">
                     <Link to={`/home/${userId}`} className="navbar-brand">
-                        <h3>
+                        {/* <h3>
                             <u className="text-white">NINJA NETWORK</u>
-                        </h3>
+                        </h3> */}
                     </Link>
+                        <img src={logo} type="image"  className="logo me-4"></img>
+
                     <div className="form-outline input-group">
                         <input
                             type="search"
@@ -44,7 +45,7 @@ const Navbar = () => {
                             placeholder="Search"
                             style={{
                                 width: "15%",
-                                backgroundColor: "#1D95CF",
+                                backgroundColor: "#EDF7FB",
                                 border: "none",
                             }}
                         />
@@ -66,6 +67,7 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}>
+                            <i className='fas fa-bell nav-item nav-link'></i>
                         <div className="navbar-nav ">
                             <Link to={`/home/${userId}`} className="nav-item nav-link">
                                 Home
