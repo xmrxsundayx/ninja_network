@@ -22,21 +22,28 @@ const Navbar = () => {
         .catch(err => console.log(err)) 
     };
 
+    const handleHome = (userId) => {
+        navigate(`/home/${userId}`)
+      }
+
     return (
         <div className="sticky">
             <nav
                 className="navbar navbar-expand-lg navbar-light"
                 style={{
                     background: "#5F9CB5",
+                    minWidth: "150px"
                 }}
             >
                 <div className="container-fluid row-col d-flex align-items-center">
-                    <Link to={`/home/${userId}`} className="navbar-brand">
-                        {/* <h3>
-                            <u className="text-white">NINJA NETWORK</u>
-                        </h3> */}
-                    </Link>
-                        <img src={logo} type="image"  className="logo me-4"></img>
+
+                    <img src={logo} type="image"  className="logo me-4" onClick={handleHome}
+                    style={{
+                        cursor: "pointer"
+                    }}
+                    >
+                    
+                    </img>
 
                     <div className="form-outline input-group">
                         <input
