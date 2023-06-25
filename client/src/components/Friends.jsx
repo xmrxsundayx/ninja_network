@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
+    const [users, setUsers] = useState([]);
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState(user.friends || []);
     const navigate = useNavigate();
@@ -35,7 +36,9 @@ const Friends = ({ user, setUser }) => {
         const fetchAllApiUsers = async () => {
             try {
                 const response = await api.get('/user', { params: { limit: 99 } });
-                setApiUsers(response.data.data);
+                setApiUsers(response.data.data.sort((a, b) =>
+                    a.firstName.localeCompare(b.firstName)
+                ));
                 console.log(response.data.data);
             } catch (error) {
                 console.error('Error fetching ninjas:', error);
@@ -124,10 +127,10 @@ const Friends = ({ user, setUser }) => {
     return (
         <div>
             <Navbar />
-            <div className=''>
+            <div className='mx-auto'>
                 <div className='container col-md-8'>
                     <h2 className='my-3'>My Ninjas</h2>
-                    {user.friends.length === 0 ? (
+                    {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
                         <p>Add Some Ninjas, My Ninja...</p>
                     ) : (
                         <div
@@ -184,7 +187,7 @@ const Friends = ({ user, setUser }) => {
                             gap: '20px',
                         }}
                     >
-                        {apiUsers.map((apiUser) => (
+                        {apiUsers && apiUsers.map((apiUser) => (
                             <div
                                 key={apiUser.id}
                                 style={{

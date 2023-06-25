@@ -22,6 +22,7 @@ const Navbar = () => {
             .catch(err => {
                 console.log("current user error: " + err)
                 setUser({})
+                navigate('/login');
             });
     }, []);
 
@@ -61,7 +62,7 @@ const Navbar = () => {
 
                     </img>
 
-                    <div className="form-outline input-group">
+                    <div className="form-outline input-group mx-auto">
                         <input
                             type="search"
                             id="form1"
