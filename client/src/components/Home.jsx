@@ -5,7 +5,7 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
-import Posts from './Posts';
+import PostForm from './PostForm';
 
 const Home = ({user,setUser}) => {
   const [apiPosts, setApiPosts] = useState([]);
@@ -207,7 +207,7 @@ const Home = ({user,setUser}) => {
           {/* <!-- Middle Column --> */}
           <div className="col-md-5 col-lg-6">
                 {/* removing and adding to Post component so that there is only one form for create and edit*/}
-              < Posts />
+              < PostForm />
             <div className=''>
               {apiPosts.map((apiPost, i) => (
                 <div className='block'

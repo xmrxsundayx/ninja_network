@@ -1,7 +1,8 @@
 import React from 'react'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { set } from 'mongoose'
+
 
 const PostForm = ({postList, setPostList}) => {
     const { id } = useParams()
