@@ -81,19 +81,6 @@ module.exports = {
         }
     },
 
-
-    // updateUser: async (req, res) => {
-    //     try{
-    //     console.log('updating user: ', req.body)
-    //     const updateUser = User.findOneAndUpdate({ _id: req.body._id}, req.body, {new: true})
-    //     res.json(updateUser);
-    //     }
-    //         catch (error) {
-    //             console.log('error updating user: ', error)
-    //             res.status(400).json(error)
-    //         }
-    // },
-
     getOneUser: async (req, res) => {
         console.log('getting one user: ', req.params.id)
         User.findOne({ _id: req.params.id })
