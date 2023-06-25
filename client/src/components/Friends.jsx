@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../api/dummy';
 import Navbar from './Navbar';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState([]);
-    const { userId } = useParams();
+    const navigate = useNavigate();
 
 
     // this is to get the one User info
@@ -46,10 +46,11 @@ const Friends = ({ user, setUser }) => {
     }, []);
 
 
-    const handleAddFriend = (apiUser) => {
+    const handleAddFriend = (apiUser, user) => {
+        console.log('apiUser:', apiUser, 'user:', user)
         // Create the friend object
         const friendToAdd = {
-            _id: apiUser.id,
+            _id: apiUser._id,
             firstName: apiUser.firstName,
             lastName: apiUser.lastName,
             picture: apiUser.picture,
@@ -59,7 +60,9 @@ const Friends = ({ user, setUser }) => {
 
         // Send the friendToAdd object to the backend API endpoint to update the user's friends array
         axios
-            .patch(`/api/users/${user._id}`, { friends: [friendToAdd, ...addedFriends] }) // Pass an array containing the existing addedFriends and the new friendToAdd
+            .patch(`http://localhost:8000/api/users/${user._id}`, {
+                friends: [...user.friends, friendToAdd],
+            })
             .then((response) => {
                 console.log('Friend added successfully:', response.data);
                 // Update the state or perform any necessary actions after adding a friend
@@ -70,6 +73,9 @@ const Friends = ({ user, setUser }) => {
             });
     };
 
+    const handleFriendClick = (friendId) => {
+        navigate(`/profile/${friendId}`);
+    };
 
     return (
         <div>
@@ -80,15 +86,31 @@ const Friends = ({ user, setUser }) => {
                     {addedFriends.length === 0 ? (
                         <p>Add Some Ninjas, My Ninja...</p>
                     ) : (
-                        <div>
-                            {/* Display all of my ninjas */}
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '20px',
+                            }}
+                        >
                             {addedFriends.map((friend) => (
-                                <div key={friend._id}>
+                                <div
+                                    key={friend._id}
+                                    style={{
+                                        width: '350px',
+                                        padding: '0px 10px',
+                                        background: 'rgb(237,247,251)',
+                                        borderRadius: '20px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                    onClick={() => handleFriendClick(friend._id)}
+                                >
                                     <img
                                         src={friend.picture}
                                         alt={`${friend.firstName} ${friend.lastName}`}
                                         style={{
-                                            width: '100px',
+                                            width: '80px',
                                             height: 'auto',
                                             margin: '20px',
                                             borderRadius: '50%',
@@ -133,7 +155,12 @@ const Friends = ({ user, setUser }) => {
                                     }}
                                 />
                                 {apiUser.firstName} {apiUser.lastName}
-                                <button className='btn btn-outline-primary mx-3' onClick={() => handleAddFriend(apiUser)}>+</button>
+                                <button
+                                    className='btn btn-outline-primary mx-3'
+                                    onClick={() => handleAddFriend(apiUser, user)}
+                                >
+                                    +
+                                </button>
                             </div>
                         ))}
                     </div>

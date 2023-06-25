@@ -6,19 +6,20 @@ const bcrypt = require('bcrypt')
 module.exports = {
     register: async (req, res) => {
         try {
-            const submitEmail = await User.findOne({ email: req.body.email});
+            const submitEmail = await User.findOne({ email: req.body.email });
             if (submitEmail) {
                 res.status(400).json({
-                    message:' Oops! Email already exists! '
+                    message: ' Oops! Email already exists! '
                 });
             } else {
-            const newUser = await User.create(req.body);
-            const userToken = jwt.sign({_id: newUser._id, email: newUser.email}, secret, {expiresIn: "2h"});
-            console.log(userToken)
-            res.status(201).cookie('usertoken', userToken, {httpOnly: true, maxAge:2 * 60 * 60 * 100}).json({
-                message: "Success!",
-                user: newUser
-            }); }
+                const newUser = await User.create(req.body);
+                const userToken = jwt.sign({ _id: newUser._id, email: newUser.email }, secret, { expiresIn: "2h" });
+                console.log(userToken)
+                res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 100 }).json({
+                    message: "Success!",
+                    user: newUser
+                });
+            }
         } catch (err) {
             return res.status(400).json(err);
         }
@@ -26,12 +27,12 @@ module.exports = {
 
     login: async (req, res) => {
         try {
-            const user = await User.findOne({ email: req.body.email});
-            if(user){
+            const user = await User.findOne({ email: req.body.email });
+            if (user) {
                 const correctPassword = await bcrypt.compare(req.body.password, user.password);
-                if(correctPassword){
-                    const userToken = jwt.sign({_id: user._id, email: user.email}, secret, {expiresIn:'4h'});
-                    res.status(201).cookie('usertoken', userToken, {httpOnly: true, maxAge:2 * 60 * 60 * 100}).json({
+                if (correctPassword) {
+                    const userToken = jwt.sign({ _id: user._id, email: user.email }, secret, { expiresIn: '4h' });
+                    res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 100 }).json({
                         message: "Success!",
                         user: user,
                     })
@@ -49,7 +50,7 @@ module.exports = {
             }
         }
         catch (err) {
-            res.status(400).json({error: err});
+            res.status(400).json({ error: err });
         }
     },
 
@@ -62,28 +63,40 @@ module.exports = {
     logged: async (req, res) => {
         try {
             const user = jwt.verify(req.cookies.usertoken, secret);
-            const currentUser = await User.findOne({_id: user._id});
+            const currentUser = await User.findOne({ _id: user._id });
             res.json(currentUser)
         } catch (err) {
-            res.status(400).json({err: 'Please log in'})
+            res.status(400).json({ err: 'Please log in' })
         }
     },
 
     updateUser: async (req, res) => {
-        try{
-        console.log('updating user: ', req.body)
-        const updateUser = User.findOneAndUpdate({ _id: req.body._id}, req.body, {new: true})
-        res.json(updateUser);
+        try {
+            console.log('updating user:', req.body);
+            const updateUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
+            res.json(updateUser);
+        } catch (error) {
+            console.log('error updating user:', error);
+            res.status(400).json(error);
         }
-            catch (error) {
-                console.log('error updating user: ', error)
-                res.status(400).json(error)
-            }
     },
+
+
+    // updateUser: async (req, res) => {
+    //     try{
+    //     console.log('updating user: ', req.body)
+    //     const updateUser = User.findOneAndUpdate({ _id: req.body._id}, req.body, {new: true})
+    //     res.json(updateUser);
+    //     }
+    //         catch (error) {
+    //             console.log('error updating user: ', error)
+    //             res.status(400).json(error)
+    //         }
+    // },
 
     getOneUser: async (req, res) => {
         console.log('getting one user: ', req.params.id)
-        User.findOne({ _id: req.params.id})
+        User.findOne({ _id: req.params.id })
             .then(e => res.json(e))
             .catch(err => res.status(400).json(err))
     },
