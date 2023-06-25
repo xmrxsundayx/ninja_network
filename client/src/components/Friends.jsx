@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
-    const [addedFriends, setAddedFriends] = useState([]);
+    const [addedFriends, setAddedFriends] = useState(user.friends || []);
     const navigate = useNavigate();
 
 
@@ -48,9 +48,16 @@ const Friends = ({ user, setUser }) => {
 
     const handleAddFriend = (apiUser, user) => {
         console.log('apiUser:', apiUser, 'user:', user)
+
+        const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
+        if (friendExists) {
+            window.alert('Friend already added', apiUser);
+            return;
+        };
+
         // Create the friend object
         const friendToAdd = {
-            _id: apiUser._id,
+            _id: apiUser.id,
             firstName: apiUser.firstName,
             lastName: apiUser.lastName,
             picture: apiUser.picture,
@@ -66,6 +73,10 @@ const Friends = ({ user, setUser }) => {
             .then((response) => {
                 console.log('Friend added successfully:', response.data);
                 // Update the state or perform any necessary actions after adding a friend
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    friends: [...prevUser.friends, friendToAdd],
+                }));
                 setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
             })
             .catch((error) => {
@@ -73,9 +84,26 @@ const Friends = ({ user, setUser }) => {
             });
     };
 
+
     const handleFriendClick = (friendId) => {
         navigate(`/profile/${friendId}`);
     };
+
+    const handleDeleteFriend = async (e, id) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+            await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
+                friends: user.friends.filter((friend) => friend._id !== id),
+            });
+            console.log(user.friends)
+            setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
+        } catch (error) {
+            console.error('Error deleting friend:', error);
+        }
+    };
+    
+
 
     return (
         <div>
@@ -83,7 +111,7 @@ const Friends = ({ user, setUser }) => {
             <div className=''>
                 <div className='container col-md-8'>
                     <h2>My Ninjas</h2>
-                    {addedFriends.length === 0 ? (
+                    {user.friends.length === 0 ? (
                         <p>Add Some Ninjas, My Ninja...</p>
                     ) : (
                         <div
@@ -93,7 +121,7 @@ const Friends = ({ user, setUser }) => {
                                 gap: '20px',
                             }}
                         >
-                            {addedFriends.map((friend) => (
+                            {user.friends.map((friend) => (
                                 <div
                                     key={friend._id}
                                     style={{
@@ -117,6 +145,14 @@ const Friends = ({ user, setUser }) => {
                                         }}
                                     />
                                     {friend.firstName} {friend.lastName}
+                                    <div>
+                                        <button
+                                            className='btn btn-outline-danger mx-3'
+                                            onClick={(e) => handleDeleteFriend(e,friend._id)}
+                                        >
+                                            -
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
