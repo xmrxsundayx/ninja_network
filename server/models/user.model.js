@@ -49,6 +49,9 @@ const UserSchema = new mongoose.Schema({
     posts: {
         type: [],
     },
+    picture: {
+        type: String,
+    }
 
 }, {timestamps: true});
 

@@ -9,25 +9,39 @@ import api from '../api/dummy';
 const Home = ({user,setUser,isLoggedIn}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
-  const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
   const { id } = useParams();
   const navigate = useNavigate();
 
   // this is to get the one User info
+
   useEffect(() => {
-    const fetchOneUser = async () => {
-      try {
-        const response = await axios.get(`/api/users/${user._id}`, { withCredentials: true });
-        console.log('testing:',oneUser)
-        setOneUser(response.data);
-        console.log('Get User', response.data);
-      } catch (error) {
-        console.error('Error fetching ninja:', error);
-      }
-    };
-    fetchOneUser();
-  }, [user._id]);
+    axios
+        .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+        .then(res => {
+            // show the user returned
+            console.log("logged user:" + res.data._id)
+            setUser(res.data);
+        })
+        .catch(err => {
+            console.log("current user error: " + err)
+            setUser({})
+    });
+}, []);
+  // useEffect(() => {
+  //   const fetchOneUser = async () => {
+  //     try {
+  //       const response = await axios.get(`/api/users/${id}`, { withCredentials: true });
+  //       setOneUser(response.data);
+  //       console.log('Get User', response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching user:', error);
+  //     }
+  //   };
+  //   if (id) {
+  //     fetchOneUser();
+  //   }
+  // }, [id]);
 
   // this is to get the one Post info
   useEffect(() => {
@@ -72,9 +86,9 @@ const Home = ({user,setUser,isLoggedIn}) => {
     fetchAllApiPosts();
   }, []);
 
-  const handleViewProfile = (id) => {
-    navigate(`/profile/${id}`)
-  }
+  const handleViewProfile = () => {
+    navigate(`/profile/${setUser._id}`);
+  };
 
   // Function for how long ago a post was posted
   function getTimeSince(publishDate) {
@@ -117,12 +131,12 @@ const Home = ({user,setUser,isLoggedIn}) => {
                   margin: '10px',
                   cursor: 'pointer'
                 }}
-                src={oneUser.picture}
-                alt={`${oneUser.firstName} ${oneUser.lastName}`}
+                src={user.picture}
+                alt={`${user.firstName} ${user.lastName}`}
                 onClick={handleViewProfile}
               />
-                <h3>{oneUser.firstName}</h3>
-                <h3>{oneUser.lastName}</h3>
+                <h3>{user.firstName}</h3>
+                <h3>{user.lastName}</h3>
                 <p>Software Developer</p>
                 <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
               </div>

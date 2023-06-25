@@ -7,10 +7,29 @@ import { useParams } from 'react-router-dom';
 
 
 // Sample code to test api
-const Friends = () => {
+const Friends = ({ user, setUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState([]);
     const { userId } = useParams();
+
+
+    // this is to get the one User info
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+            .then(res => {
+                // show the user returned
+                console.log("logged user:" + res.data._id)
+                console.log(res.data.friends)
+                setUser(res.data);
+            })
+            .catch(err => {
+                console.log("current user error: " + err)
+                setUser({})
+            });
+    }, []);
+
 
     useEffect(() => {
         const fetchAllApiUsers = async () => {
@@ -26,6 +45,7 @@ const Friends = () => {
         fetchAllApiUsers();
     }, []);
 
+
     const handleAddFriend = (apiUser) => {
         // Create the friend object
         const friendToAdd = {
@@ -39,7 +59,7 @@ const Friends = () => {
 
         // Send the friendToAdd object to the backend API endpoint to update the user's friends array
         axios
-            .patch(`/api/users/${userId}`, { friends: [friendToAdd, ...addedFriends] }) // Pass an array containing the existing addedFriends and the new friendToAdd
+            .patch(`/api/users/${user._id}`, { friends: [friendToAdd, ...addedFriends] }) // Pass an array containing the existing addedFriends and the new friendToAdd
             .then((response) => {
                 console.log('Friend added successfully:', response.data);
                 // Update the state or perform any necessary actions after adding a friend
