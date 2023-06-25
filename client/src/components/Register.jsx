@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import bgVd from '../images/bgVid.mp4'
 import axios from 'axios'
+import whiteLogo from '../images/logoWhite.png'
 
 const Register = () => {
 const [registerUser, setUser] = useState({
@@ -38,8 +39,13 @@ const handleChangeReg = (e) => {
   return (
     <div id="reg_page">
       <video src={bgVd} type="video/mp4" autoPlay muted loop id="worldVid" />
-      <h1 className='greeting text-light'>Join the Shinobi Ichizoku</h1>
-      <button onClick={ () => navigate('/login')} className='btn btn-secondary text-light'>Already in the Fam? Click here!</button>
+      <div className="greeting row">
+        <div className="m-2 col-4">
+          <img src={whiteLogo} alt="logo" style={{height: "90px"}}/></div>
+        <div className='m-2 col-5'>
+          <h1 className='text-light mt-3'>Join the Shinobi Ichizoku</h1>
+        </div>
+      </div>
 {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
         <a href="/home" className=" nav-item nav-link active text-white">
@@ -50,7 +56,7 @@ const handleChangeReg = (e) => {
     <div className='row'>
       {errors && <h6 classname="text-danger">{errors}</h6>}
       <div className="col-3"></div>
-      <div className="col-6">
+      <div className="mt-5 col-6">
         <form onSubmit={handleReg} className="register_form">
           <label className='text-light' htmlFor='firstName'>First Name</label>
           <input type="text" className="form-control" name="firstName" onChange={handleChangeReg}/>
@@ -63,11 +69,12 @@ const handleChangeReg = (e) => {
           <label className='text-light' htmlFor='confirmPassword'>Confirm Password</label>
           <input type="password" className="form-control" name="confirmPassword" onChange={handleChangeReg}/>
           <br/>
-          <input type="submit" className="btn fw-bold  btn-secondary" value="Register" />
+          <input type="submit" className="btn fw-bold btn-sm btn-secondary" value="Register" />
         </form>
       </div>
       <div className="col-3"></div>
       </div>
+      <button onClick={ () => navigate('/login')} className='ms-5 mt-5 btn btn-secondary text-light'>Already in the Fam? Click here!</button>
     </div>
   )
 }
