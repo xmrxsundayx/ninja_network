@@ -17,7 +17,7 @@ const Navbar = () => {
         axios.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
         .then(res => {
             console.log(res)
-            navigate('/login')
+            navigate('/api/login')
     })
         .catch(err => console.log(err)) 
     };
@@ -85,7 +85,7 @@ const Navbar = () => {
                             <Link to={`/myninjas/${userId}`} className="nav-item nav-link">
                                 My Ninjas
                             </Link>
-                            <a href="login" className="nav-item nav-link" onClick={handleLogout}>
+                            <a href="/login" className="nav-item nav-link" onClick={handleLogout}>
                                 Log Out
                             </a>
                         </div>

@@ -24,7 +24,6 @@ video{
   padding: 0px 0px 0px 60px;
   background-color: rgba(95,156,181,.5);
   height: 100px;
-  width: 100%;
   display: flex;
   justify-content: space-between;
   text-align: center;
