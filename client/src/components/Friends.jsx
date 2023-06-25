@@ -96,7 +96,13 @@ const Friends = ({ user, setUser }) => {
             await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
                 friends: user.friends.filter((friend) => friend._id !== id),
             });
-            console.log(user.friends)
+            
+            // Update the state after deleting the friend
+            setUser((prevUser) => ({
+                ...prevUser,
+                friends: prevUser.friends.filter((friend) => friend._id !== id),
+            }));
+            
             setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
         } catch (error) {
             console.error('Error deleting friend:', error);
@@ -104,13 +110,12 @@ const Friends = ({ user, setUser }) => {
     };
     
 
-
     return (
         <div>
             <Navbar />
             <div className=''>
                 <div className='container col-md-8'>
-                    <h2>My Ninjas</h2>
+                    <h2 className='my-3'>My Ninjas</h2>
                     {user.friends.length === 0 ? (
                         <p>Add Some Ninjas, My Ninja...</p>
                     ) : (
@@ -130,6 +135,7 @@ const Friends = ({ user, setUser }) => {
                                         background: 'rgb(237,247,251)',
                                         borderRadius: '20px',
                                         display: 'flex',
+                                        justifyContent:'space-between',
                                         alignItems: 'center',
                                     }}
                                     onClick={() => handleFriendClick(friend._id)}
@@ -159,7 +165,7 @@ const Friends = ({ user, setUser }) => {
                     )}
                 </div>
                 <div className='container col-md-8'>
-                    <h2>All Ninjas</h2>
+                    <h2 className='mt-5 my-3'>All Ninjas</h2>
                     <div
                         style={{
                             display: 'grid',
