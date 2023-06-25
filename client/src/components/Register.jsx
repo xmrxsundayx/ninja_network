@@ -43,7 +43,7 @@ const handleChangeReg = (e) => {
         <div className="m-2 col-4">
           <img src={whiteLogo} alt="logo" style={{height: "90px"}}/></div>
         <div className='m-2 col-5'>
-          <h1 className='text-light mt-3'>Join the Shinobi Ichizoku</h1>
+          <h1 className='text-light mt-3'>Join the Shinobi Kazoku</h1>
         </div>
       </div>
 {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
@@ -55,8 +55,8 @@ const handleChangeReg = (e) => {
 {/* **********^^^^^^^*Delete Me***************** */}
     <div className='row'>
       {errors && <h6 classname="text-danger">{errors}</h6>}
-      <div className="col-3"></div>
-      <div className="mt-5 col-6">
+      <div className="col-4"></div>
+      <div className="mt-5 col-4">
         <form onSubmit={handleReg} className="register_form">
           <label className='text-light' htmlFor='firstName'>First Name</label>
           <input type="text" className="form-control" name="firstName" onChange={handleChangeReg}/>
@@ -72,9 +72,16 @@ const handleChangeReg = (e) => {
           <input type="submit" className="btn fw-bold btn-sm btn-secondary" value="Register" />
         </form>
       </div>
-      <div className="col-3"></div>
+      <div className="col-4"></div>
+</div>
+      <div className="row">
+        {/* <div className="col-4"></div> */}
+        <div className="d-grid gap-2 col-4 mx-auto">
+          <button onClick={ () => navigate('/login')} className=' mt-5 btn btn-secondary text-light'>Already in the Fam? Click here!</button>
+        </div>
+        {/* <div className="col-4"></div> */}
       </div>
-      <button onClick={ () => navigate('/login')} className='ms-5 mt-5 btn btn-secondary text-light'>Already in the Fam? Click here!</button>
+      
     </div>
   )
 }

@@ -43,10 +43,11 @@ const Login = ({ setUser,isLoggedIn }) => {
     <div>
       <video src={bgVd} type="video/mp4" autoPlay muted loop id="worldVid" />
       <div className="greeting row">
-        <div className="m-2 col-4">
+        <div className="col-4">
           <img src={whiteLogo} alt="logo" style={{height: "90px"}}/></div>
-        <div className='m-2 col-5'>
-          <h1 className='text-light mt-3'>WELCOME BACK!!!</h1>
+        <div className="col-4"></div>  
+        <div className='col-4'>
+          <h1 className='text-light mt-4'>WELCOME BACK!</h1>
         </div>
       </div>
 
@@ -57,9 +58,11 @@ const Login = ({ setUser,isLoggedIn }) => {
         </a>
       </div>
       {/* ***********Delete Me***************** */}
+
+      
       <div className='mt-5 row'>
-        <div className="col-3"></div>
-        <div className="col-6" id="login_form">
+        <div className="col-4"></div>
+        <div className="col-4" id="login_form">
         {errors && <h6 classname="text-danger">{errors}</h6>}
           <form onSubmit={handleLogin}>
             <label className='text-light' htmlFor='email'>Email</label>
@@ -70,9 +73,9 @@ const Login = ({ setUser,isLoggedIn }) => {
             <input className='btn btn-secondary fw-bold text-light' type='submit' value="Log in" />
           </form>
         </div>
-        <div className="col-3"></div>
+        <div className="col-4"></div>
       </div>
-        <button onClick={ () => navigate('/register')} className='m-5  btn btn-secondary text-light'>New to the Network? Click here!</button>
+        <div className="d-grid gap-2 col-4 mx-auto"><button onClick={ () => navigate('/register')} className='m-5  btn btn-secondary text-light'>New to the Network? Click here!</button></div>
     </div>
   )
 }
