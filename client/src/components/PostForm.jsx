@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState }  from 'react'
 import axios from 'axios'
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
 const PostForm = ({postList, setPostList}) => {
     const { id } = useParams()
     const [errors, setErrors] = useState({})
-    const [post, setPost] = useState([])
+    const [post, setPost] = useState({
+        content: "",
+        image: "",
+        tags:"",
+    })
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
@@ -26,7 +29,7 @@ const PostForm = ({postList, setPostList}) => {
         setPost({...post, [e.target.name]: e.target.value})
     }
 
-    const submitHandler = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
         console.log("submitting post")
         axios.post('http://localhost:8000/api/post/create', post, {withCredentials: true})
@@ -44,15 +47,28 @@ const PostForm = ({postList, setPostList}) => {
                 setLoaded(false)
             })
         }
+
+    const handleUpdate = (e) => {
+        e.preventDefault()
+        console.log("updating post")
+        axios.put(`http://localhost:8000/api/post/update/${id}`, post, {withCredentials: true})
+            .then(res => {
+                console.log(res.data);
+                navigate('/profile/'+ id)
+            })
+            .catch(err => {console.log("Error updating post" + err)
+            setErrors(err.response.data.errors)})
+    }
+
     return (
         <div>
             <div className='block'>
               {/* <h4 className='p-2'>Submit a Post</h4> */}
-                <form>
+                <form onSubmit={(id) ? handleUpdate : handleSubmit}>
                     <div className="form-group">
+                        {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
                         <textarea className="form-control" id="postText" placeholder="What's on your mind?"
-                        style={{ backgroundColor: "#EDF7FB"}}>
-                        </textarea>
+                        style={{ backgroundColor: "#EDF7FB"}} onChange={handleChange}/>
                         </div>
                         <div className="row">
                         <div className="col-sm-8 mt-3">
