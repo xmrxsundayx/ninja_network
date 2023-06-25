@@ -5,8 +5,9 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
+import Posts from './Posts';
 
-const Home = ({user,setUser,isLoggedIn}) => {
+const Home = ({user,setUser}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [onePost, setOnePost] = useState({})
@@ -205,28 +206,8 @@ const Home = ({user,setUser,isLoggedIn}) => {
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
           <div className="col-md-5 col-lg-6">
-            <div className='block'>
-              {/* <h4 className='p-2'>Submit a Post</h4> */}
-              <form>
-                <div className="form-group">
-                  <textarea className="form-control" id="postText" placeholder="What's on your mind?"
-                    style={{
-                      backgroundColor: "#EDF7FB"
-                    }}>
-                  </textarea>
-                </div>
-                <div className="row">
-                  <div className="col-sm-8 mt-3">
-                    <button type='file' className='btn btn-outline' htmlFor="imageInput"><i className='fas fa-image'></i> Image</button>
-                    <button type='file' className='btn btn-outline mx-1' htmlFor="videoInput"><i className='fas fa-video'></i> Video</button>
-                    <button type='file' className='btn btn-outline mx-1' htmlFor="attachmentInput"><i className='fas fa-paperclip'></i> Attachment</button>
-                  </div>
-                  <div className="col-sm-4 text-end mt-3">
-                    <button type="submit" className="btn specColor">Submit</button>
-                  </div>
-                </div>
-              </form>
-            </div>
+                {/* removing and adding to Post component so that there is only one form for create and edit*/}
+              < Posts />
             <div className=''>
               {apiPosts.map((apiPost, i) => (
                 <div className='block'

@@ -40,5 +40,10 @@ module.exports = {
         Post.deleteOne({ _id: req.params.id })
             .then( e => res.json(e))
             .catch(err => res.status(400).json({message: "Error deleting post!", errors: err.errors}));
-    }
+    },
+    getOnePost: (req, res) => {
+        Post.findById(req.params.id)
+        .then( e => res.json(e))
+        .catch(err => res.status(400).json({message: "Error getting post!", errors: err.errors}));
+    },
 }
