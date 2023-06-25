@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import bgVd from '../images/bgVid.mp4'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import whiteLogo from '../images/logoWhite.png'
 
 const Login = ({ setUser,isLoggedIn }) => {
   const [userLogin, setUserLogin] = useState({
@@ -39,10 +40,16 @@ const Login = ({ setUser,isLoggedIn }) => {
 
 
   return (
-    <div className='login_page'>
+    <div>
       <video src={bgVd} type="video/mp4" autoPlay muted loop id="worldVid" />
-      <h1 className='greeting text-light'>Welcome back! Login</h1>
-      <button onClick={ () => navigate('/register')} className='btn btn-secondary text-light'>New to the Network? Click here!</button>
+      <div className="greeting row">
+        <div className="m-2 col-4">
+          <img src={whiteLogo} alt="logo" style={{height: "90px"}}/></div>
+        <div className='m-2 col-5'>
+          <h1 className='text-light mt-3'>WELCOME BACK!!!</h1>
+        </div>
+      </div>
+
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
         <a href="/home" className=" nav-item nav-link active text-white">
@@ -50,7 +57,7 @@ const Login = ({ setUser,isLoggedIn }) => {
         </a>
       </div>
       {/* ***********Delete Me***************** */}
-      <div className='row'>
+      <div className='mt-5 row'>
         <div className="col-3"></div>
         <div className="col-6" id="login_form">
         {errors && <h6 classname="text-danger">{errors}</h6>}
@@ -65,6 +72,7 @@ const Login = ({ setUser,isLoggedIn }) => {
         </div>
         <div className="col-3"></div>
       </div>
+        <button onClick={ () => navigate('/register')} className='m-5  btn btn-secondary text-light'>New to the Network? Click here!</button>
     </div>
   )
 }
