@@ -46,14 +46,15 @@ const Friends = ({ user, setUser }) => {
     }, []);
 
 
-    const handleAddFriend = (apiUser, user) => {
-        console.log('apiUser:', apiUser, 'user:', user)
+    const handleAddFriend = (apiUser, user, e) => {
+        e.stopPropagation();
+        console.log('apiUser:', apiUser, 'user:', user);
 
         const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
         if (friendExists) {
             window.alert('Friend already added', apiUser);
             return;
-        };
+        }
 
         // Create the friend object
         const friendToAdd = {
@@ -78,6 +79,11 @@ const Friends = ({ user, setUser }) => {
                     friends: [...prevUser.friends, friendToAdd],
                 }));
                 setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
+
+                // Remove the added friend from the apiUsers state
+                setApiUsers((prevApiUsers) =>
+                    prevApiUsers.filter((user) => user.id !== apiUser.id)
+                );
             })
             .catch((error) => {
                 console.error('Error adding friend:', error);
@@ -93,6 +99,8 @@ const Friends = ({ user, setUser }) => {
         e.preventDefault();
         e.stopPropagation();
         try {
+            const deletedFriend = user.friends.find((friend) => friend._id === id);
+
             await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
                 friends: user.friends.filter((friend) => friend._id !== id),
             });
@@ -104,6 +112,9 @@ const Friends = ({ user, setUser }) => {
             }));
 
             setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
+
+            // Add the deleted friend back to the apiUsers state
+            setApiUsers((prevApiUsers) => [...prevApiUsers, deletedFriend]);
         } catch (error) {
             console.error('Error deleting friend:', error);
         }
@@ -201,7 +212,7 @@ const Friends = ({ user, setUser }) => {
                                 <div>
                                     <button
                                         className='btn btn-outline-primary mx-3'
-                                        onClick={() => handleAddFriend(apiUser, user)}
+                                        onClick={(e) => handleAddFriend(apiUser, user, e)}
                                     >
                                         +
                                     </button>
