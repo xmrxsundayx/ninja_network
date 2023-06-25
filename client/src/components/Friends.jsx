@@ -96,19 +96,19 @@ const Friends = ({ user, setUser }) => {
             await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
                 friends: user.friends.filter((friend) => friend._id !== id),
             });
-            
+
             // Update the state after deleting the friend
             setUser((prevUser) => ({
                 ...prevUser,
                 friends: prevUser.friends.filter((friend) => friend._id !== id),
             }));
-            
+
             setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
         } catch (error) {
             console.error('Error deleting friend:', error);
         }
     };
-    
+
 
     return (
         <div>
@@ -135,7 +135,7 @@ const Friends = ({ user, setUser }) => {
                                         background: 'rgb(237,247,251)',
                                         borderRadius: '20px',
                                         display: 'flex',
-                                        justifyContent:'space-between',
+                                        justifyContent: 'space-between',
                                         alignItems: 'center',
                                     }}
                                     onClick={() => handleFriendClick(friend._id)}
@@ -154,7 +154,7 @@ const Friends = ({ user, setUser }) => {
                                     <div>
                                         <button
                                             className='btn btn-outline-danger mx-3'
-                                            onClick={(e) => handleDeleteFriend(e,friend._id)}
+                                            onClick={(e) => handleDeleteFriend(e, friend._id)}
                                         >
                                             -
                                         </button>
@@ -185,6 +185,7 @@ const Friends = ({ user, setUser }) => {
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                 }}
+                                onClick={() => handleFriendClick(apiUser.id)}
                             >
                                 <img
                                     src={apiUser.picture}
@@ -197,12 +198,14 @@ const Friends = ({ user, setUser }) => {
                                     }}
                                 />
                                 {apiUser.firstName} {apiUser.lastName}
-                                <button
-                                    className='btn btn-outline-primary mx-3'
-                                    onClick={() => handleAddFriend(apiUser, user)}
-                                >
-                                    +
-                                </button>
+                                <div>
+                                    <button
+                                        className='btn btn-outline-primary mx-3'
+                                        onClick={() => handleAddFriend(apiUser, user)}
+                                    >
+                                        +
+                                    </button>
+                                </div>
                             </div>
                         ))}
                     </div>

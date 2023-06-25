@@ -1,29 +1,45 @@
 // import logo from "../images/ninja_network_logo.PNG"
 import logo from "../images/trimmed_logo.PNG"
-import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Navbar = () => {
-    const { userId } = useParams();
+    const [user, setUser] = useState({});
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(true);
+
+    // this is to get the logged User info
+
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+            .then(res => {
+                // show the user returned
+                console.log("logged user:" + res.data._id)
+                setUser(res.data);
+            })
+            .catch(err => {
+                console.log("current user error: " + err)
+                setUser({})
+            });
+    }, []);
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
 
     const handleLogout = () => {
-        axios.post('http://localhost:8000/api/logout', {}, {withCredentials: true})
-        .then(res => {
-            console.log(res)
-            navigate('/api/login')
-    })
-        .catch(err => console.log(err)) 
+        axios.post('http://localhost:8000/api/logout', {}, { withCredentials: true })
+            .then(res => {
+                console.log(res)
+                navigate('/api/login')
+            })
+            .catch(err => console.log(err))
     };
 
-    const handleHome = (userId) => {
-        navigate(`/home/${userId}`)
+    const handleHome = () => {
+        navigate(`/home/${setUser._id}`)
     }
 
     return (
@@ -37,12 +53,12 @@ const Navbar = () => {
             >
                 <div className="container-fluid row-col d-flex align-items-center">
 
-                    <img src={logo} type="image"  className="logo me-4" onClick={handleHome}
-                    style={{
-                        cursor: "pointer"
-                    }}
+                    <img src={logo} type="image" className="logo me-4" onClick={handleHome}
+                        style={{
+                            cursor: "pointer"
+                        }}
                     >
-                    
+
                     </img>
 
                     <div className="form-outline input-group">
@@ -74,15 +90,15 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}>
-                            <i className='fas fa-bell nav-item nav-link'></i>
+                        <i className='fas fa-bell nav-item nav-link'></i>
                         <div className="navbar-nav ">
-                            <Link to={`/home/${userId}`} className="nav-item nav-link">
+                            <Link to={`/home/${user._id}`} className="nav-item nav-link">
                                 Home
                             </Link>
-                            <Link to={`/profile/${userId}`} className="nav-item nav-link">
+                            <Link to={`/profile/${user._id}`} className="nav-item nav-link">
                                 Profile
                             </Link>
-                            <Link to={`/myninjas/${userId}`} className="nav-item nav-link">
+                            <Link to={`/myninjas/${user._id}`} className="nav-item nav-link">
                                 My Ninjas
                             </Link>
                             <a href="/login" className="nav-item nav-link" onClick={handleLogout}>
