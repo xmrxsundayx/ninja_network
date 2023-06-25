@@ -8,25 +8,56 @@ import api from '../api/dummy';
 
 const Profile = () => {
     const [apiPosts, setApiPosts] = useState([]);
+    const [user, setUser] = useState({});
+    // delete apiUsers when finished
     const [apiUsers, setApiUsers] = useState([])
     const [oneUser, setOneUser] = useState({})
     const [onePost, setOnePost] = useState({})
     const {userId } = useParams();
     const navigate = useNavigate();
+
+    useEffect(() => {
+      axios
+          .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+          .then(res => {
+              // show the user returned
+              console.log("logged user:" + res.data._id)
+              setUser(res.data);
+          })
+          .catch(err => {
+              console.log("current user error: " + err)
+              setUser({})
+      });
+  }, []);
   
     // this is to get the one User info
+    // useEffect(() => {
+    //   const fetchOneUser = async () => {
+    //     try {
+    //       const response = await api.get('/user/');
+    //       setOneUser(response.data);
+    //       console.log('Get User', response.data);
+    //     } catch (error) {
+    //       console.error('Error fetching ninja:', error);
+    //     }
+    //   };
+    //   fetchOneUser();
+    // }, {});
+
+    // create a useEffect to get only posts from the user
     useEffect(() => {
-      const fetchOneUser = async () => {
-        try {
-          const response = await api.get('/user/60d0fe4f5311236168a109ca');
-          setOneUser(response.data);
-          console.log('Get User', response.data);
-        } catch (error) {
-          console.error('Error fetching ninja:', error);
-        }
-      };
-      fetchOneUser();
-    }, {});
+        const fetchOneUserPosts = async () => {
+          try {
+            const response = await api.get('/user/60d0fe4f5311236168a109ca/post');
+            setOneUser(response.data);
+            console.log('Get User', response.data);
+          } catch (error) {
+            console.error('Error fetching ninja:', error);
+          }
+        };
+        fetchOneUserPosts();
+      }, {});
+
   
     // this is to get the one Post info
     useEffect(() => {
@@ -71,9 +102,14 @@ const Profile = () => {
       fetchAllApiPosts();
     }, []);
   
-    const handleViewProfile = (userId) => {
-      navigate(`/profile/${userId}`)
-    }
+    const handleViewHome = () => {
+      navigate(`/home/${user._id}`)
+    };
+
+    const handleViewProfile = () => {
+      navigate(`/profile/${user._id}`);
+    };
+
   
     // Function for how long ago a post was posted
     function getTimeSince(publishDate) {
@@ -120,11 +156,13 @@ const Profile = () => {
                 alt={`${oneUser.firstName} ${oneUser.lastName}`}
                 onClick={handleViewProfile}
               />
-                <h3>{oneUser.firstName}</h3>
-                <h3>{oneUser.lastName}</h3>
+                <h3>{user.firstName}</h3>
+                <h3>{user.lastName}</h3>
                 <p>Software Developer</p>
                 {/* Change from view to edit. direct to a profile edit form */}
-                <button className='btn btn-primary' onClick={handleViewProfile}>View Profile</button>
+                {/* create a button that navigates back to home */}
+                <button className='btn btn-primary' onClick={handleViewHome}>Home</button>
+                {/* <button className='btn btn-primary' onClick={handleEditProfile}>Edit Profile</button> */}
               </div>
             </div>
             <div className='block'>
