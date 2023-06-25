@@ -51,7 +51,7 @@ const Navbar = () => {
                             id="form1"
                             placeholder="Search"
                             style={{
-                                width: "15%",
+                                width: "20%",
                                 backgroundColor: "#EDF7FB",
                                 border: "none",
                             }}
