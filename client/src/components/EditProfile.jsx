@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import Upload from './UploadTest'
 
 
 const EditProfile = ({ user, setUser }) => {
@@ -27,20 +28,21 @@ const EditProfile = ({ user, setUser }) => {
             });
     }, []);
 
-    const handleArrays = (e) => {
-        e.preventDefault()
-        setUser({ ...user, [e.target.name]: e.target.value.split(',') })
-    }
-
     const handleChange = (e) => {
         e.preventDefault()
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
+    // const handlePhotoChange = (e) => {
+    //     e.preventDefault()
+    //     setUser({ ...user, [e.target.name]: e.target.files[0] })
+    // }
     const handlePhotoChange = (e) => {
-        e.preventDefault()
-        setUser({ ...user, [e.target.name]: e.target.files[0] })
-    }
+        e.preventDefault();
+        const file = e.target.files[0];
+        const fileName = file.name;
+        setUser({ ...user, profilePhoto: fileName });
+      };
 
     const handleRemoveLanguage = (index) => {
         const newLanguages = [...user.languages]
@@ -126,11 +128,7 @@ const EditProfile = ({ user, setUser }) => {
                         <input type="text" className="form-control" id="jobTitle" name='jobTitle' value={user.jobTitle} onChange={handleChange} />
                         {errors.jobTitle ? <p className='text-danger'>{errors.jobTitle.message}</p> : ''}
                     </div>
-                    {/* <div className="form-group">
-                        <label>Languages Learned</label>
-                        <input type="text" className="form-control" id="languages" name='languages' value={user.languages.join()} onChange={handleArrays} />
-                        {errors.languages ? <p className='text-danger'>{errors.languages.message}</p> : ''}
-                    </div> */}
+
                     <div className="form-group">
                         <label>Languages Learned</label>
                         {user.languages.map((language, index) => (
@@ -166,13 +164,8 @@ const EditProfile = ({ user, setUser }) => {
 
                     <div>
                         <label>Profile Photo:</label>
-                        <input type="file" id="profilePhoto" onChange={handlePhotoChange} />
+                        <input type="file" id="profilePhoto" name='profilePhoto'  onChange={handlePhotoChange} />
                     </div>
-                    {/* <div className="form-group">
-                        <label>Links</label>
-                        <input type="text" className="form-control" id="links" name='links' value={user.links} onChange={handleArrays} />
-                        {errors.other ? <p className='text-danger'>{errors.other.message}</p> : ''}
-                    </div> */}
                     <div className="form-group">
                         <label>Links</label>
                         {user.links.map((links, index) => (
@@ -213,6 +206,7 @@ const EditProfile = ({ user, setUser }) => {
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>
+            <Upload user={user} setUser={setUser}/>
             <div className="col-3"></div>
         </div>
     )

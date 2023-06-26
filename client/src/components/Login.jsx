@@ -23,8 +23,8 @@ const Login = ({ setUser,isLoggedIn }) => {
     axios.post('http://localhost:8000/api/login', userLogin, { withCredentials: true })
       .then(res => {
         console.log(res)
-        console.log(res.data.user)
-        console.log(res.data.user._id)
+        console.log("this is data user",res.data.user)
+        console.log("this is the ID",res.data.user._id)
         // setUserLogin(res.data.user)
         setUser(res.data.user)
         navigate(`/home/${res.data.user._id}`);

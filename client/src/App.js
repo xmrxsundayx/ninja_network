@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import EditProfile from './components/EditProfile';
+import Upload from './components/UploadTest';
 
 function App() {
   const [user, setUser] = useState({});
@@ -22,7 +23,8 @@ function App() {
           <Route element={<Friends user={user} setUser={setUser} />} path="/myninjas/:id" />
           <Route element={<Profile user={user} setUser={setUser} />} path="/profile/:id" />
           <Route element={<EditProfile user={user} setUser={setUser} />} path="/profile/:id/edit" />
-              {/* I took id off of profile until we can get some useParams in to capture the ID. */} 
+          <Route element={<Upload user={user} setUser={setUser} />} path="/test" />
+
         </Routes>
       </BrowserRouter>
     </div>
