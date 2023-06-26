@@ -62,8 +62,11 @@ module.exports = {
 
     logged: async (req, res) => {
         try {
+            console.log('this is the cookie',req.cookies.usertoken )
             const user = jwt.verify(req.cookies.usertoken, secret);
+            console.log('this is the user', user)
             const currentUser = await User.findOne({ _id: user._id });
+            console.log('this is the current user', currentUser)
             res.json(currentUser)
         } catch (err) {
             res.status(400).json({ err: 'Please log in' })
