@@ -53,7 +53,7 @@ const Login = ({ setUser,isLoggedIn }) => {
 
       {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
       <div>
-        <a href="/home" className=" nav-item nav-link active text-white">
+        <a href='/home/{res.data.user._id}' className=" nav-item nav-link active text-white">
           Home
         </a>
       </div>
@@ -63,7 +63,7 @@ const Login = ({ setUser,isLoggedIn }) => {
       <div className='mt-5 row'>
         <div className="col-4"></div>
         <div className="col-4" id="login_form">
-        {errors && <h6 classname="text-danger">{errors}</h6>}
+        {errors && <h6 className="text-danger">{errors}</h6>}
           <form onSubmit={handleLogin}>
             <label className='text-light' htmlFor='email'>Email</label>
             <input className='form-control' name="email" type='text' onChange={handleChangeLogin} />

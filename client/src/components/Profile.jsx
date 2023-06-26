@@ -1,139 +1,145 @@
 import React, { useEffect, useState } from 'react';
-import {useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
 
 
-const Profile = () => {
-    const [apiPosts, setApiPosts] = useState([]);
-    const [user, setUser] = useState({});
-    // delete apiUsers when finished
-    const [apiUsers, setApiUsers] = useState([])
-    const [oneUser, setOneUser] = useState({})
-    const [onePost, setOnePost] = useState({})
-    const {userId } = useParams();
-    const navigate = useNavigate();
+const Profile = ({ user, setUser }) => {
+  const [apiPosts, setApiPosts] = useState([]);
+  // delete apiUsers when finished
+  const [apiUsers, setApiUsers] = useState([])
+  const [oneUser, setOneUser] = useState({})
+  const [onePost, setOnePost] = useState({})
+  const { userId } = useParams();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      axios
-          .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
-          .then(res => {
-              // show the user returned
-              console.log("logged user:" + res.data._id)
-              setUser(res.data);
-          })
-          .catch(err => {
-              console.log("current user error: " + err)
-              setUser({})
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+      .then(res => {
+        // show the user returned
+        console.log("logged user:", res.data)
+        setUser(res.data);
+      })
+      .catch(err => {
+        console.log("current user error: ", err)
+        setUser({})
       });
   }, []);
-  
-    // this is to get the one User info
-    // useEffect(() => {
-    //   const fetchOneUser = async () => {
-    //     try {
-    //       const response = await api.get('/user/');
-    //       setOneUser(response.data);
-    //       console.log('Get User', response.data);
-    //     } catch (error) {
-    //       console.error('Error fetching ninja:', error);
-    //     }
-    //   };
-    //   fetchOneUser();
-    // }, {});
 
-    // create a useEffect to get only posts from the user
-    useEffect(() => {
-        const fetchOneUserPosts = async () => {
-          try {
-            const response = await api.get('/user/60d0fe4f5311236168a109ca/post');
-            setOneUser(response.data);
-            console.log('Get User', response.data);
-          } catch (error) {
-            console.error('Error fetching ninja:', error);
-          }
-        };
-        fetchOneUserPosts();
-      }, {});
+  // this is to get the one User info
+  // useEffect(() => {
+  //   const fetchOneUser = async () => {
+  //     try {
+  //       const response = await api.get('/user/');
+  //       setOneUser(response.data);
+  //       console.log('Get User', response.data);
+  //     } catch (error) {
+  //       console.error('Error fetching ninja:', error);
+  //     }
+  //   };
+  //   fetchOneUser();
+  // }, {});
 
-  
-    // this is to get the one Post info
-    useEffect(() => {
-      const fetchOnePost = async () => {
-        try {
-          const response = await api.get('/post/60d0fe4f5311236168a109ca/comment');
-          setOnePost(response.data);
-          console.log('Get Post', response.data);
-        } catch (error) {
-          console.error('Error fetching Post:', error);
-        }
-      };
-      fetchOnePost();
-    }, {});
-  
-    // this is to get all the API Users
-    useEffect(() => {
-      const fetchAllApiUsers = async () => {
-        try {
-          const response = await api.get('/user', { params: { limit: 5 } });
-          setApiUsers(response.data.data);
-          console.log('Get All Users', response.data.data);
-        } catch (error) {
-          console.error('Error fetching ninjas:', error);
-        }
-      };
-      fetchAllApiUsers();
-    }, []);
-  
-    // This is used to get all the API posts
-    useEffect(() => {
-      const fetchAllApiPosts = async () => {
-        try {
-          // take away params when finished. 
-          const response = await api.get('/post', { params: { limit: 20 } });
-          setApiPosts(response.data.data);
-          console.log('Get All Posts', response.data.data);
-        } catch (error) {
-          console.error('Error fetching ninjas:', error);
-        }
-      };
-      fetchAllApiPosts();
-    }, []);
-  
-    const handleViewHome = () => {
-      navigate(`/home/${user._id}`)
-    };
-
-    const handleViewProfile = () => {
-      navigate(`/profile/${user._id}`);
-    };
-
-  
-    // Function for how long ago a post was posted
-    function getTimeSince(publishDate) {
-      const now = new Date();
-      const postDate = new Date(publishDate);
-      const diffInSeconds = Math.floor((now - postDate) / 1000);
-  
-      if (diffInSeconds < 3600) {
-        const minutes = Math.floor(diffInSeconds / 60);
-        return `${minutes} minutes`;
-      } else if (diffInSeconds < 86400) {
-        const hours = Math.floor(diffInSeconds / 3600);
-        return `${hours} hours`;
-      } else if (diffInSeconds < 2592000) {
-        const days = Math.floor(diffInSeconds / 86400);
-        return `${days} days`;
-      } else if (diffInSeconds < 31536000) {
-        const months = Math.floor(diffInSeconds / 2592000);
-        return `${months} months`;
-      } else {
-        const years = Math.floor(diffInSeconds / 31536000);
-        return `${years} years`;
+  // create a useEffect to get only posts from the user
+  useEffect(() => {
+    const fetchOneUserPosts = async () => {
+      try {
+        const response = await api.get('/user/60d0fe4f5311236168a109ca/post');
+        setOneUser(response.data);
+        console.log('Get User', response.data);
+      } catch (error) {
+        console.error('Error fetching ninja:', error);
       }
+    };
+    fetchOneUserPosts();
+  }, {});
+
+
+  // this is to get the one Post info
+  useEffect(() => {
+    const fetchOnePost = async () => {
+      try {
+        const response = await api.get('/post/60d0fe4f5311236168a109ca/comment');
+        setOnePost(response.data);
+        console.log('Get Post', response.data);
+      } catch (error) {
+        console.error('Error fetching Post:', error);
+      }
+    };
+    fetchOnePost();
+  }, {});
+
+  // this is to get all the API Users
+  useEffect(() => {
+    const fetchAllApiUsers = async () => {
+      try {
+        const response = await api.get('/user', { params: { limit: 5 } });
+        setApiUsers(response.data.data);
+        console.log('Get All Users', response.data.data);
+      } catch (error) {
+        console.error('Error fetching ninjas:', error);
+      }
+    };
+    fetchAllApiUsers();
+  }, []);
+
+  // This is used to get all the API posts
+  useEffect(() => {
+    const fetchAllApiPosts = async () => {
+      try {
+        // take away params when finished. 
+        const response = await api.get('/post', { params: { limit: 20 } });
+        setApiPosts(response.data.data);
+        console.log('Get All Posts', response.data.data);
+      } catch (error) {
+        console.error('Error fetching ninjas:', error);
+      }
+    };
+    fetchAllApiPosts();
+  }, []);
+
+  const handleButtonClick = () => {
+    navigate();
+  };
+
+  const handleViewHome = () => {
+    navigate(`/home/${user._id}`)
+  };
+
+  const handleViewProfile = () => {
+    navigate(`/profile/${user._id}`);
+  };
+
+  const handleEditProfile = () => {
+    navigate(`/profile/${user._id}/edit`);
+  };
+
+  // Function for how long ago a post was posted
+  function getTimeSince(publishDate) {
+    const now = new Date();
+    const postDate = new Date(publishDate);
+    const diffInSeconds = Math.floor((now - postDate) / 1000);
+
+    if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} minutes`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} hours`;
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} days`;
+    } else if (diffInSeconds < 31536000) {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `${months} months`;
+    } else {
+      const years = Math.floor(diffInSeconds / 31536000);
+      return `${years} years`;
     }
+  }
 
   return (
     <div className='background'>
@@ -144,33 +150,31 @@ const Profile = () => {
           <div class="col-md-2 col-lg-2">
             <div className='block'>
               <div className='m-3 d-flex flex-column align-items-center'>
-              <img
-                className="rounded-circle mb-4"
-                style={{ 
-                  width: '150px', 
-                  height: 'auto', 
-                  margin: '10px',
-                  cursor: 'pointer'
-                }}
-                src={oneUser.picture}
-                alt={`${oneUser.firstName} ${oneUser.lastName}`}
-                onClick={handleViewProfile}
-              />
+                <img
+                  className="rounded-circle mb-4"
+                  style={{
+                    width: '150px',
+                    height: 'auto',
+                    margin: '10px',
+                    cursor: 'pointer'
+                  }}
+                  src={oneUser.picture}
+                  alt={`${oneUser.firstName} ${oneUser.lastName}`}
+                  onClick={handleViewProfile}
+                />
                 <h3>{user.firstName}</h3>
                 <h3>{user.lastName}</h3>
-                <p>Software Developer</p>
-                {/* Change from view to edit. direct to a profile edit form */}
-                {/* create a button that navigates back to home */}
-                <button className='btn btn-primary' onClick={handleViewHome}>Home</button>
-                {/* <button className='btn btn-primary' onClick={handleEditProfile}>Edit Profile</button> */}
+                <p>{user.jobTitle}</p>
+                <button className='btn specColor' onClick={handleViewHome}>Home</button>
+                <button className='btn specColor my-2' onClick={handleEditProfile}>Edit Profile</button>
               </div>
             </div>
             <div className='block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
-                {apiUsers.map((apiUser) => (
+                {user.languages.map((language) => (
                   <div
-                    key={apiUser.id}
+                    key={language._id}
                     style={{
                       padding: '0px 10px',
                       borderRadius: '20px',
@@ -178,25 +182,21 @@ const Profile = () => {
                       background: "lightblue"
                     }}
                   >
-                    {apiUser.firstName} {apiUser.lastName}
+                    {language}
                   </div>
                 ))}
               </div>
-
-              {/* <input class="form-control" type="text" placeholder="Your languages go here" readonly></input> */}
               <div>
                 <h5 className='mt-3'>Social Media Links</h5>
-                <ul>
-                  <li><a href="#">Social Media 1</a></li>
-                  <li><a href="#">Social Media 2</a></li>
-                  <li><a href="#">Social Media 3</a></li>
-                </ul>
+                {user.links.map((link) => (
+                  <div key={link._id}>
+                    <a href={link} target='_blank' rel='noreferrer'>{link}</a>
+                  </div>
+                ))}
               </div>
               <div>
                 <h5>Location</h5>
-                {/* breaks code on refresh?????? */}
-                {/* {oneUser.location.city}, {oneUser.location.state} */}
-                <p>city, state</p>
+                <p>{user.location}</p>
               </div>
             </div>
             <StickyBox offsetTop={100} offsetBottom={0}>

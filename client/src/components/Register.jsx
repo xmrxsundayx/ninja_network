@@ -20,11 +20,10 @@ const handleReg = (e) => {
   axios.post('http://localhost:8000/api/register', registerUser, { withCredentials: true })
     .then(res => {
       console.log(res)
-      navigate('/home')
-        // change to :id when we have the user id set up
+      navigate(`/home/${res.data.user._id}`);
     })
     .catch(err => {
-      console.log(err)
+      console.log('I am err',err)
       console.log(err.response.data);
     setErrors(err.response.data.errors)
     })
@@ -54,20 +53,25 @@ const handleChangeReg = (e) => {
       </div>
 {/* **********^^^^^^^*Delete Me***************** */}
     <div className='row'>
-      {errors && <h6 classname="text-danger">{errors}</h6>}
+      {/* {errors && <h6 classname="text-danger">{errors}</h6>} */}
       <div className="col-4"></div>
       <div className="mt-5 col-4">
         <form onSubmit={handleReg} className="register_form">
           <label className='text-light' htmlFor='firstName'>First Name</label>
           <input type="text" className="form-control" name="firstName" onChange={handleChangeReg}/>
+          {errors.firstName && <h6 className="text-danger">{errors.firstName.message}</h6>}
           <label className='text-light' htmlFor='lastName'>Last Name</label>
           <input type="text" className="form-control" name="lastName" onChange={handleChangeReg}/>
+          {errors.lastName && <h6 className="text-danger">{errors.lastName.message}</h6>}
           <label className='text-light' htmlFor='email'>Email</label>
           <input type="text" className="form-control" name="email" onChange={handleChangeReg}/>
+          {errors.email && <h6 className="text-danger">{errors.email.message}</h6>}
           <label className='text-light' htmlFor='password'>Password</label>
           <input type="password" className="form-control" name="password" onChange={handleChangeReg}/>
+          {errors.password && <h6 className="text-danger">{errors.password.message}</h6>}
           <label className='text-light' htmlFor='confirmPassword'>Confirm Password</label>
           <input type="password" className="form-control" name="confirmPassword" onChange={handleChangeReg}/>
+          {errors.confirmPassword && <h6 className="text-danger">{errors.confirmPassword.message}</h6>}
           <br/>
           <input type="submit" className="btn fw-bold btn-sm btn-secondary" value="Register" />
         </form>

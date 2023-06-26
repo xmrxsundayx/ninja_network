@@ -69,30 +69,18 @@ module.exports = {
             res.status(400).json({ err: 'Please log in' })
         }
     },
-// new code------------------------------
-    updateUser: async (req, res) => {
-        try {
+
+    updateUser: (req, res) => {
             console.log('updating user:', req.body);
-            const updateUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body,{profilePhoto: profilePhoto}, { new: true });
-            res.json(updateUser);
-        } catch (error) {
-            console.log('error updating user:', error);
-            res.status(400).json(error);
-        }
-    },
+            User.updateOne({ _id: req.params.id }, req.body , { new: true })
+            .then((result)=>{
+                res.json(result)
+            }).catch((err)=>{
+                console.log(err)
+                res.status(400).json(err)
+            })
+        },
 
-// old code-----------------------------
-
-    // updateUser: async (req, res) => {
-    //     try {
-    //         console.log('updating user:', req.body);
-    //         const updateUser = await User.findOneAndUpdate({ _id: req.params.id }, req.body,{profilePhoto: profilePhoto}, { new: true });
-    //         res.json(updateUser);
-    //     } catch (error) {
-    //         console.log('error updating user:', error);
-    //         res.status(400).json(error);
-    //     }
-    // },
 
     getOneUser: async (req, res) => {
         console.log('getting one user: ', req.params.id)

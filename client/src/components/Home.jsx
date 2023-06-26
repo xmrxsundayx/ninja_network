@@ -88,7 +88,7 @@ const Home = ({user,setUser}) => {
   }, []);
 
   const handleViewProfile = () => {
-    navigate(`/profile/${setUser._id}`);
+    navigate(`/profile/${user._id}`);
   };
 
   // Function for how long ago a post was posted
@@ -138,16 +138,16 @@ const Home = ({user,setUser}) => {
               />
                 <h3>{user.firstName}</h3>
                 <h3>{user.lastName}</h3>
-                <p>Software Developer</p>
+                <p>{user.jobTitle}</p>
                 <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
               </div>
             </div>
             <div className='block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
-                {apiUsers.map((apiUser) => (
+                {user.languages.map((language) => (
                   <div
-                    key={apiUser.id}
+                    key={language._id}
                     style={{
                       padding: '0px 10px',
                       borderRadius: '20px',
@@ -155,25 +155,21 @@ const Home = ({user,setUser}) => {
                       background: "lightblue"
                     }}
                   >
-                    {apiUser.firstName} {apiUser.lastName}
+                    {language}
                   </div>
                 ))}
               </div>
-
-              {/* <input class="form-control" type="text" placeholder="Your languages go here" readonly></input> */}
               <div>
                 <h5 className='mt-3'>Social Media Links</h5>
-                <ul>
-                  <li><a href="#">Social Media 1</a></li>
-                  <li><a href="#">Social Media 2</a></li>
-                  <li><a href="#">Social Media 3</a></li>
-                </ul>
+                {user.links.map((link) => (
+                  <div key={link._id}>
+                    <a href={link} target='_blank' rel='noreferrer'>{link}</a>
+                  </div>
+                ))}
               </div>
               <div>
                 <h5>Location</h5>
-                {/* breaks code on refresh?????? */}
-                {/* {oneUser.location.city}, {oneUser.location.state} */}
-                <p>city, state</p>
+                <p>{user.location}</p>
               </div>
             </div>
             <StickyBox offsetTop={100} offsetBottom={0}>
