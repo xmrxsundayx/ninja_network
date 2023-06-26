@@ -29,28 +29,4 @@ function App() {
   );
 }
 
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <Routes>
-//         <Route path="/" element={<Navigate to="/login" />} />
-//         <Route path="/login" element={<LoginRegistration />} />
-//         <Route
-//           path="/"
-//           element={
-//             <div>
-//               <Navbar />
-//               <div className="container">
-//                 <Route path="/home" element={<Home />} />
-//                 <Route path="/myninjas" element={<Friends />} />
-//                 <Route path="/profile/:id" element={<Profile />} />
-//               </div>
-//             </div>
-//           }
-//         />
-//       </Routes>
-//     </BrowserRouter>
-//   );
-// }
-
 export default App;

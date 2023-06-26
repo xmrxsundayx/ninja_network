@@ -12,40 +12,89 @@ const EditProfile = ({ user, setUser }) => {
 
 
 
+
     useEffect(() => {
-        if (id) {
-            axios.get(`http://localhost:8000/api/user/${id}`)
-                .then(res => {
-                    console.log(res.data);
-                    setUser(res.data)
-                })
-                .catch(err => console.log("Error fetching user" + err))
-        }
+        axios
+            .get(`http://localhost:8000/api/users/${id}`, { withCredentials: true })
+            .then(res => {
+                // show the user returned
+                console.log("logged user:", res.data)
+                setUser(res.data);
+            })
+            .catch(err => {
+                console.log("current user error: ", err)
+                setUser({})
+            });
+    }, []);
+
+    const handleArrays = (e) => {
+        e.preventDefault()
+        setUser({ ...user, [e.target.name]: e.target.value.split(',') })
     }
-        , [])
 
     const handleChange = (e) => {
+        e.preventDefault()
         setUser({ ...user, [e.target.name]: e.target.value })
     }
 
     const handlePhotoChange = (e) => {
+        e.preventDefault()
         setUser({ ...user, [e.target.name]: e.target.files[0] })
     }
+
+    const handleRemoveLanguage = (index) => {
+        const newLanguages = [...user.languages]
+        newLanguages.splice(index, 1)
+        setUser({ ...user, languages: newLanguages })
+    }
+    
+    const handleAddLanguage = (e) => {
+        e.preventDefault()
+        const newLanguages = [...user.languages, '']
+        setUser({ ...user, languages: newLanguages })
+    };
+    
+    const handleAdditionalLanguageChange = (index, value) => {
+        const updatedLanguages = [...user.languages];
+        updatedLanguages[index] = value;
+        setUser({ ...user, languages: updatedLanguages });
+    };
+
+
+
+    const handleRemoveLinks = (index) => {
+        const newLinks = [...user.links]
+        newLinks.splice(index, 1)
+        setUser({ ...user, links: newLinks })
+    }
+
+    const handleAddLinks = (e) => {
+        e.preventDefault()
+        const newLinks = [...user.links, '']
+        setUser({ ...user, links: newLinks })
+    };
+
+    const handleAdditionalLinksChange = (index, value) => {
+        const updatedLinks = [...user.links];
+        updatedLinks[index] = value;
+        setUser({ ...user, links: updatedLinks });
+    };
+
 
 
     const submitHandler = (e) => {
         e.preventDefault()
-        console.log("submitting user")
-        axios.put(`http://localhost:8000/api/user/${id}`, user, { withCredentials: true }, { headers: { "Content-Type": "multipart/form-data" } })
+        console.log("submitting user", user)
+        axios.patch(`http://localhost:8000/api/users/${id}`, user, { withCredentials: true })
             .then(res => {
                 console.log(res.data);
                 setErrors([])
                 setLoaded(true)
-                console.log("User updated" + res.data);
-                // navigate('/home')
+                console.log("User updated", res.data);
+                navigate(`/profile/${user._id}`)
             })
             .catch(err => {
-                console.log("Error updating user" + err);
+                console.log("Error updating user", err);
                 setErrors(err.response.data.errors)
                 setLoaded(false)
             })
@@ -56,55 +105,110 @@ const EditProfile = ({ user, setUser }) => {
         <div>
             <div className='block'>
                 {/* <h4 className='p-2'>Submit a Post</h4> */}
-                <form>
+                <form onSubmit={submitHandler} >
                     <div className="form-group">
-                        <label htmlFor="firstName">First Name</label>
+                        <label>First Name</label>
                         <input type="text" className="form-control" id="firstName" name='firstName' value={user.firstName} onChange={handleChange} />
                         {errors.firstName ? <p className='text-danger'>{errors.firstName.message}</p> : ''}
                     </div>
                     <div className="form-group">
-                        <label htmlFor="lastName">Last Name</label>
+                        <label>Last Name</label>
                         <input type="text" className="form-control" id="lastName" name='lastName' value={user.lastName} onChange={handleChange} />
                         {errors.lastName ? <p className='text-danger'>{errors.lastName.message}</p> : ''}
                     </div>
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label>Email</label>
                         <input type="text" className="form-control" id="email" name='email' value={user.email} onChange={handleChange} />
                         {errors.email ? <p className='text-danger'>{errors.email.message}</p> : ''}
                     </div>
+                    <div className="form-group">
+                        <label>Job Title</label>
+                        <input type="text" className="form-control" id="jobTitle" name='jobTitle' value={user.jobTitle} onChange={handleChange} />
+                        {errors.jobTitle ? <p className='text-danger'>{errors.jobTitle.message}</p> : ''}
+                    </div>
+                    {/* <div className="form-group">
+                        <label>Languages Learned</label>
+                        <input type="text" className="form-control" id="languages" name='languages' value={user.languages.join()} onChange={handleArrays} />
+                        {errors.languages ? <p className='text-danger'>{errors.languages.message}</p> : ''}
+                    </div> */}
+                    <div className="form-group">
+                        <label>Languages Learned</label>
+                        {user.languages.map((language, index) => (
+                            <div key={index} className="d-flex align-items-center mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={language}
+                                    onChange={(e) => handleAdditionalLanguageChange(index, e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger ms-2"
+                                    onClick={() => handleRemoveLanguage(index)}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-primary mt-2"
+                            onClick={handleAddLanguage}
+                        >
+                            Add Another Language
+                        </button>
+                        {errors.languages ? (
+                            <p className='text-danger'>{errors.languages.message}</p>
+                        ) : (
+                            ''
+                        )}
+                    </div>
+
                     <div>
-                        <label htmlFor="profilePhoto">Profile Photo:</label>
+                        <label>Profile Photo:</label>
                         <input type="file" id="profilePhoto" onChange={handlePhotoChange} />
                     </div>
                     {/* <div className="form-group">
-                        <label htmlFor="bio">Bio</label>
-                        <input type="text" className="form-control" id="bio" name='bio' value={user.bio} onChange={handleChange}/>
-                        {errors.bio ? <p className='text-danger'>{errors.bio.message}</p> : ''}
+                        <label>Links</label>
+                        <input type="text" className="form-control" id="links" name='links' value={user.links} onChange={handleArrays} />
+                        {errors.other ? <p className='text-danger'>{errors.other.message}</p> : ''}
                     </div> */}
                     <div className="form-group">
-                        <label htmlFor="location">Location</label>
+                        <label>Links</label>
+                        {user.links.map((links, index) => (
+                            <div key={index} className="d-flex align-items-center mt-2">
+                                <input
+                                    type="url"
+                                    className="form-control"
+                                    value={links}
+                                    onChange={(e) => handleAdditionalLinksChange(index, e.target.value)}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-danger ms-2"
+                                    onClick={() => handleRemoveLinks(index)}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                        <button
+                            type="button"
+                            className="btn btn-primary mt-2"
+                            onClick={handleAddLinks}
+                        >
+                            Add Another Link
+                        </button>
+                        {errors.links ? (
+                            <p className='text-danger'>{errors.links.message}</p>
+                        ) : (
+                            ''
+                        )}
+                    </div>
+                    <div className="form-group">
+                        <label>Location</label>
                         <input type="text" className="form-control" id="location" name='location' value={user.location} onChange={handleChange} />
                         {errors.location ? <p className='text-danger'>{errors.location.message}</p> : ''}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="website">Website</label>
-                        <input type="text" className="form-control" id="website" name='website' value={user.website} onChange={handleChange} />
-                        {errors.website ? <p className='text-danger'>{errors.website.message}</p> : ''}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="linkedin">Linkedin</label>
-                        <input type="text" className="form-control" id="linkedin" name='linkedin' value={user.linkedin} onChange={handleChange} />
-                        {errors.linkedin ? <p className='text-danger'>{errors.linkedin.message}</p> : ''}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="github">Github</label>
-                        <input type="text" className="form-control" id="github" name='github' value={user.github} onChange={handleChange} />
-                        {errors.github ? <p className='text-danger'>{errors.github.message}</p> : ''}
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="other">Other</label>
-                        <input type="text" className="form-control" id="other" name='other' value={user.other} onChange={handleChange} />
-                        {errors.other ? <p className='text-danger'>{errors.other.message}</p> : ''}
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>

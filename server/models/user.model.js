@@ -25,6 +25,12 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Password is required"],
         minlength: [8, "Password must be at least 8 characters long"]
     },
+    jobTitle: {
+        type: String,
+    },
+    languages: {
+        type: [],
+    },
     profilePhoto:
     {
         type: String,
@@ -32,14 +38,11 @@ const UserSchema = new mongoose.Schema({
     location: {
         type: String,
     },
-    skills: {
-        type: String,
-    },
     links: {
-        type: String,
+        type: [],
     },
     friends: {
-        type: Array,
+        type: [],
     },
     // friendRequests: { 
     //     type: Array,
