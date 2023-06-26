@@ -40,42 +40,24 @@ const Navbar = () => {
     };
 
     const handleHome = () => {
-        navigate(`/home/${setUser._id}`)
+        navigate(`/home/${user._id}`)
     }
 
     return (
         <div className="sticky">
-            <nav
-                className="navbar navbar-expand-lg navbar-light"
-                style={{
-                    background: "#5F9CB5",
-                    minWidth: "150px"
-                }}
-            >
-                <div className="container-fluid row-col d-flex align-items-center">
-
-                    <img src={logo} type="image" className="logo me-4" onClick={handleHome}
-                        style={{
-                            cursor: "pointer"
-                        }}
-                    >
-
-                    </img>
-
+            <nav className="d-flex navbar navbar-expand-lg" style={{ background: "#5F9CB5" }}>
+                <div className="container-fluid row-col d-flex justify-content-between">
+                    <img
+                        src={logo}
+                        type="image"
+                        className="logo"
+                        onClick={handleHome}
+                        style={{ cursor: "pointer" }}
+                    />
+                    {/* Removing Search */}
+                    
                     <div className="form-outline input-group mx-auto">
-                        <input
-                            type="search"
-                            id="form1"
-                            placeholder="Search"
-                            style={{
-                                width: "20%",
-                                backgroundColor: "#EDF7FB",
-                                border: "none",
-                            }}
-                        />
-                        <button type="button" className="btn btn-primary">
-                            <i className="fas fa-search"></i>
-                        </button>
+                        
                     </div>
                     {/* ********************** */}
                     {/* if we want to add a logo, we can save the image in the image file and upload it here. Make sure to uncomment the import for the logo as well. */}
@@ -91,8 +73,8 @@ const Navbar = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className={`collapse navbar-collapse ${isCollapsed ? "" : "show"}`}>
-                        <i className='fas fa-bell nav-item nav-link'></i>
-                        <div className="navbar-nav ">
+                        <i className="fas fa-bell nav-item nav-link"></i>
+                        <div className="navbar-nav justify-content-end">
                             <Link to={`/home/${user._id}`} className="nav-item nav-link">
                                 Home
                             </Link>
@@ -106,7 +88,6 @@ const Navbar = () => {
                                 Log Out
                             </a>
                         </div>
-                        <div className="navbar-nav "></div>
                     </div>
                 </div>
             </nav>
