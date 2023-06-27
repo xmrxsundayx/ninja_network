@@ -89,10 +89,6 @@ const Profile = ({ user, setUser }) => {
     fetchAllApiPosts();
   }, []);
 
-  const handleButtonClick = () => {
-    navigate();
-  };
-
   const handleViewHome = () => {
     navigate(`/home/${user._id}`)
   };
@@ -218,12 +214,12 @@ const Profile = ({ user, setUser }) => {
                   className="rounded-circle mb-4"
                   style={{
                     width: '150px',
-                    height: 'auto',
+                    height: '150px',
                     margin: '10px',
                     cursor: 'pointer'
                   }}
-                  src={oneUser.picture}
-                  alt={`${oneUser.firstName} ${oneUser.lastName}`}
+                  src={user.profilePhoto}
+                  alt="profile"
                   onClick={handleViewProfile}
                 />
                 <h3>{user.firstName}</h3>
@@ -236,7 +232,7 @@ const Profile = ({ user, setUser }) => {
             <div className='left-block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
-                {user.languages.map((language) => (
+                {user?.languages?.map((language) => (
                   <div
                     key={language._id}
                     style={{
@@ -252,7 +248,7 @@ const Profile = ({ user, setUser }) => {
               </div>
               <div>
                 <h5 className='mt-3'>Social Media Links</h5>
-                {user.links.map((link) => (
+                {user?.links?.map((link) => (
                   <div key={link._id}>
                     <a href={link} target='_blank' rel='noreferrer'>{link}</a>
                   </div>

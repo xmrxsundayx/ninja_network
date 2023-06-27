@@ -2,7 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import Upload from './UploadTest'
+import Navbar from './Navbar'
+// import Upload from './UploadTest'
 
 
 const EditProfile = ({ user, setUser }) => {
@@ -10,6 +11,7 @@ const EditProfile = ({ user, setUser }) => {
     const [errors, setErrors] = useState({})
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
+    const [image, setImage] = useState("");
 
 
 
@@ -18,7 +20,6 @@ const EditProfile = ({ user, setUser }) => {
         axios
             .get(`http://localhost:8000/api/users/${id}`, { withCredentials: true })
             .then(res => {
-                // show the user returned
                 console.log("logged user:", res.data)
                 setUser(res.data);
             })
@@ -31,38 +32,49 @@ const EditProfile = ({ user, setUser }) => {
     const handleChange = (e) => {
         e.preventDefault()
         setUser({ ...user, [e.target.name]: e.target.value })
-    }
+    };
 
-    // const handlePhotoChange = (e) => {
-    //     e.preventDefault()
-    //     setUser({ ...user, [e.target.name]: e.target.files[0] })
-    // }
+    // **********************************************************************************************************************
     const handlePhotoChange = (e) => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const fileName = file.name;
-        setUser({ ...user, profilePhoto: fileName });
-      };
+        e.preventDefault()
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "byjlcqbx");
+        console.log("this is the image", image)
+        console.log("this is the form data", formData)
+
+        axios
+            .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", formData)
+            .then((response) => {
+                const sourceUrl = response.data.url;
+                console.log("this is the response",response);
+                setUser({ ...user, profilePhoto: sourceUrl });
+                console.log(response.data.url);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    // **********************************************************************************************************************
 
     const handleRemoveLanguage = (index) => {
         const newLanguages = [...user.languages]
         newLanguages.splice(index, 1)
         setUser({ ...user, languages: newLanguages })
     }
-    
+
     const handleAddLanguage = (e) => {
         e.preventDefault()
         const newLanguages = [...user.languages, '']
         setUser({ ...user, languages: newLanguages })
     };
-    
+
     const handleAdditionalLanguageChange = (index, value) => {
         const updatedLanguages = [...user.languages];
         updatedLanguages[index] = value;
         setUser({ ...user, languages: updatedLanguages });
     };
-
-
 
     const handleRemoveLinks = (index) => {
         const newLinks = [...user.links]
@@ -105,10 +117,38 @@ const EditProfile = ({ user, setUser }) => {
 
     return (
         <div>
+            <Navbar />
             <div className='block'>
                 {/* <h4 className='p-2'>Submit a Post</h4> */}
                 <form onSubmit={submitHandler} >
                     <div className="form-group">
+
+                        <div>
+                            <label>Profile Photo:</label>
+                            <div>
+
+                                <img
+                                    key={user.profilePhoto}
+                                    className="rounded-circle mb-4"
+                                    style={{
+                                        width: '150px',
+                                        height: '150px',
+                                        margin: '10px',
+                                    }}
+                                    src={user.profilePhoto} 
+                                    alt="profilePhoto" />
+                                <input 
+                                type="file" 
+                                id="profilePhoto" 
+                                onChange={(e) => {
+                                    setImage(e.target.files[0]);
+
+                                }} />
+                                        <button onClick={handlePhotoChange}>Upload</button>
+
+                            </div>
+                        </div>
+
                         <label>First Name</label>
                         <input type="text" className="form-control" id="firstName" name='firstName' value={user.firstName} onChange={handleChange} />
                         {errors.firstName ? <p className='text-danger'>{errors.firstName.message}</p> : ''}
@@ -131,7 +171,7 @@ const EditProfile = ({ user, setUser }) => {
 
                     <div className="form-group">
                         <label>Languages Learned</label>
-                        {user.languages.map((language, index) => (
+                        {user?.languages?.map((language, index) => (
                             <div key={index} className="d-flex align-items-center mt-2">
                                 <input
                                     type="text"
@@ -161,14 +201,9 @@ const EditProfile = ({ user, setUser }) => {
                             ''
                         )}
                     </div>
-
-                    <div>
-                        <label>Profile Photo:</label>
-                        <input type="file" id="profilePhoto" name='profilePhoto'  onChange={handlePhotoChange} />
-                    </div>
                     <div className="form-group">
                         <label>Links</label>
-                        {user.links.map((links, index) => (
+                        {user?.links?.map((links, index) => (
                             <div key={index} className="d-flex align-items-center mt-2">
                                 <input
                                     type="url"
@@ -206,7 +241,7 @@ const EditProfile = ({ user, setUser }) => {
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>
-            <Upload user={user} setUser={setUser}/>
+            {/* <Upload user={user} setUser={setUser}/> */}
             <div className="col-3"></div>
         </div>
     )
