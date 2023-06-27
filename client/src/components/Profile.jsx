@@ -8,13 +8,14 @@ import api from '../api/dummy';
 
 const Profile = ({ user, setUser }) => {
   const [apiPosts, setApiPosts] = useState([]);
-  // delete apiUsers when finished
   const [apiUsers, setApiUsers] = useState([])
+  const [addedFriends, setAddedFriends] = useState(user.friends || []);
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
   const { userId } = useParams();
   const navigate = useNavigate();
 
+  // this is to get the one logged User 
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
@@ -29,19 +30,6 @@ const Profile = ({ user, setUser }) => {
       });
   }, []);
 
-  // this is to get the one User info
-  // useEffect(() => {
-  //   const fetchOneUser = async () => {
-  //     try {
-  //       const response = await api.get('/user/');
-  //       setOneUser(response.data);
-  //       console.log('Get User', response.data);
-  //     } catch (error) {
-  //       console.error('Error fetching ninja:', error);
-  //     }
-  //   };
-  //   fetchOneUser();
-  // }, {});
 
   // create a useEffect to get only posts from the user
   useEffect(() => {
@@ -141,13 +129,89 @@ const Profile = ({ user, setUser }) => {
     }
   }
 
+  //functions to handle friends
+  const handleAddFriend = (apiUser, user, e) => {
+    e.stopPropagation();
+    console.log('apiUser:', apiUser, 'user:', user);
+
+    const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
+    if (friendExists) {
+      window.alert('Friend already added', apiUser);
+      return;
+    }
+
+    // Create the friend object
+    const friendToAdd = {
+      _id: apiUser.id,
+      firstName: apiUser.firstName,
+      lastName: apiUser.lastName,
+      picture: apiUser.picture,
+      title: 'Software Developer',
+      languages: ['JavaScript', 'Python'],
+    };
+
+    // Send the friendToAdd object to the backend API endpoint to update the user's friends array
+    axios
+      .patch(`http://localhost:8000/api/users/${user._id}`, {
+        friends: [...user.friends, friendToAdd],
+      })
+      .then((response) => {
+        console.log('Friend added successfully:', response.data);
+        // Update the state or perform any necessary actions after adding a friend
+        setUser((prevUser) => ({
+          ...prevUser,
+          friends: [...prevUser.friends, friendToAdd],
+        }));
+        setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
+
+        // Remove the added friend from the apiUsers state
+        setApiUsers((prevApiUsers) =>
+          prevApiUsers.filter((user) => user.id !== apiUser.id)
+        );
+      })
+      .catch((error) => {
+        console.error('Error adding friend:', error);
+      });
+  };
+
+
+  const handleFriendClick = (friendId) => {
+    navigate(`/profile/${friendId}`);
+  };
+
+  const handleDeleteFriend = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const deletedFriend = user.friends.find((friend) => friend._id === id);
+
+      await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
+        friends: user.friends.filter((friend) => friend._id !== id),
+      });
+
+      // Update the state after deleting the friend
+      setUser((prevUser) => ({
+        ...prevUser,
+        friends: prevUser.friends.filter((friend) => friend._id !== id),
+      }));
+
+      setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
+
+      // Add the deleted friend back to the apiUsers state
+      setApiUsers((prevApiUsers) => [...prevApiUsers, deletedFriend]);
+    } catch (error) {
+      console.error('Error deleting friend:', error);
+    }
+  };
+
+
   return (
     <div className='background'>
       <Navbar />
       <div class="mt-5">
         <div class="row justify-content-center">
           {/* Left Column */}
-          <div class="col-md-2 col-lg-2">
+          <div class="col-3">
             <div className='block'>
               <div className='m-3 d-flex flex-column align-items-center'>
                 <img
@@ -203,26 +267,48 @@ const Profile = ({ user, setUser }) => {
 
               <div className=' block'>
                 <h4 className=' p-2'>My Ninjas</h4>
-                {apiUsers.map((apiUser) => (
-                  <div
-                    key={apiUser.id}
-                    style={{
-                      padding: '0px 10px',
-                      borderRadius: '20px',
-                      margin: '10px 0',
-                      background: "#EDF7FB",
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => handleViewProfile(apiUser.id)}
-                  >
-                    <img className='rounded-circle'
-                      src={apiUser.picture}
-                      alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                      style={{ width: '100px', height: 'auto', margin: '20px' }}
-                    />
-                    {apiUser.firstName} {apiUser.lastName}
+                {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
+                  <p>Add Some Ninjas, My Ninja...</p>
+                ) : (
+                  <div>
+                    <div className='my-1'>
+                      {user.friends.map((friend) => (
+                        <div
+                          key={friend._id}
+                          style={{
+                            padding: '10px',
+                            margin: '5px',
+                            background: 'rgb(237,247,251)',
+                            borderRadius: '20px',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                          onClick={() => handleFriendClick(friend._id)}
+                        >
+                          <img
+                            src={friend.picture}
+                            alt={`${friend.firstName} ${friend.lastName}`}
+                            style={{
+                              width: '50px',
+                              height: 'auto',
+                              borderRadius: '50%',
+                            }}
+                          />
+                          {friend.firstName} {friend.lastName}
+                          <div>
+                            <button
+                              className='btn btn-sm btn-outline-danger mx-3'
+                              onClick={(e) => handleDeleteFriend(e, friend._id)}
+                            >
+                              -
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
             </StickyBox>
           </div>
@@ -298,24 +384,44 @@ const Profile = ({ user, setUser }) => {
             <StickyBox offsetTop={100} offsetBottom={0}>
               <div className='block'>
                 <h4 className='p-2'>Ninjas Online</h4>
-                {apiUsers.map((apiUser) => (
-                  <div
-                    key={apiUser.id}
-                    style={{
-                      padding: '0px 10px',
-                      borderRadius: '20px',
-                      margin: '10px 0',
-                      background: "#EDF7FB"
-                    }}
-                  >
-                    <img className='rounded-circle'
-                      src={apiUser.picture}
-                      alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                      style={{ width: '100px', height: 'auto', margin: '20px' }}
-                    />
-                    {apiUser.firstName} {apiUser.lastName}
+                <div>
+                  <div className='my-2'>
+                    {apiUsers && apiUsers.map((apiUser) => (
+                      <div
+                        key={apiUser.id}
+                        style={{
+                          padding: '10px',
+                          margin: '5px',
+                          background: 'rgb(237,247,251)',
+                          borderRadius: '20px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                        onClick={() => handleFriendClick(apiUser.id)}
+                      >
+                        <img
+                          src={apiUser.picture}
+                          alt={`${apiUser.firstName} ${apiUser.lastName}`}
+                          style={{
+                            width: '50px',
+                            height: 'auto',
+                            borderRadius: '50%',
+                          }}
+                        />
+                        {apiUser.firstName} {apiUser.lastName}
+                        <div>
+                          <button
+                            className='btn btn-sm btn-outline-primary mx-3'
+                            onClick={(e) => handleAddFriend(apiUser, user, e)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </StickyBox>
           </div>
