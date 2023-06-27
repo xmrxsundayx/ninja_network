@@ -212,7 +212,7 @@ const Profile = ({ user, setUser }) => {
         <div class="row justify-content-center">
           {/* Left Column */}
           <div class="col-3">
-            <div className='block'>
+            <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
                 <img
                   className="rounded-circle mb-4"
@@ -233,7 +233,7 @@ const Profile = ({ user, setUser }) => {
                 <button className='btn specColor my-2' onClick={handleEditProfile}>Edit Profile</button>
               </div>
             </div>
-            <div className='block'>
+            <div className='left-block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
                 {user.languages.map((language) => (
@@ -265,7 +265,7 @@ const Profile = ({ user, setUser }) => {
             </div>
             <StickyBox offsetTop={100} offsetBottom={0}>
 
-              <div className=' block'>
+              <div className=' left-block'>
                 <h4 className=' p-2'>My Ninjas</h4>
                 {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
                   <p>Add Some Ninjas, My Ninja...</p>
@@ -317,7 +317,7 @@ const Profile = ({ user, setUser }) => {
           <div class="col-md-5 col-lg-6">
             <div className=''>
               {apiPosts.map((apiPost, i) => (
-                <div className='block'
+                <div className='mid-block'
                   key={apiPost.id}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img
@@ -382,7 +382,7 @@ const Profile = ({ user, setUser }) => {
           {/* Right Column */}
           <div className="col-md-3 col-lg-3">
             <StickyBox offsetTop={100} offsetBottom={0}>
-              <div className='block'>
+              <div className='right-block'>
                 <h4 className='p-2'>Ninjas Online</h4>
                 <div>
                   <div className='my-2'>
