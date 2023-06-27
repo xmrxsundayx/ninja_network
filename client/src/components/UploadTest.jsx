@@ -1,3 +1,46 @@
+import React, { useState } from "react";
+import axios from "axios";
+
+const Upload = ({user, setUser}) => {
+    const [image, setImage] = useState("");
+
+    const uploadImage = () => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("upload_preset", "byjlcqbx");
+    console.log("this is the image", image)
+    console.log("this is the form data", formData)
+
+    axios
+        .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", formData)
+        .then((response) => {
+        const sourceUrl = response.data.url;
+        console.log(response);
+        setUser({ ...user, profilePhoto: sourceUrl });
+        console.log(response.data.url);
+        })
+        .catch((error) => {
+        console.log(error);
+        });
+    };
+
+    return (
+    <div>
+        <input
+        type="file"
+        onChange={(e) => {
+            setImage(e.target.files[0]);
+        }}
+        />
+        <button onClick={uploadImage}>Upload</button>             
+        <img  src='http://res.cloudinary.com/dijdukoam/image/upload/v1687891822/vcqb6zt9wfgg8rldl7dx.jpg' />
+    </div>
+    );
+};
+
+export default Upload;
+
+
 // import React, {useState, useEffect} from "react";
 // import axios from "axios";
 
@@ -39,7 +82,7 @@
 //     const viewImage = () => {
 //         console.log("this is the image",image)
 //         axios
-//         .get(`https://api.cloudinary.com/v1_1/dijdukoam/image/upload/${response.data.public_id}`)
+//         .get(`https://api.cloudinary.com/v1_1/dijdukoam/image/upload/`)
 //         .then((response) => {
 //             console.log(response);
 //         })

@@ -175,11 +175,11 @@ const Home = ({ user, setUser}) => {
                   className="rounded-circle mb-4"
                   style={{
                     width: '150px',
-                    height: 'auto',
+                    height: '150px',
                     margin: '10px',
                     cursor: 'pointer'
                   }}
-                  src={user.picture}
+                  src={user.profilePhoto}
                   alt={`${user.firstName} ${user.lastName}`}
                   onClick={handleViewProfile}
                 />
@@ -254,7 +254,7 @@ const Home = ({ user, setUser}) => {
                           {friend.firstName} {friend.lastName}
                           <div>
                             <button
-                              className='btn btn-sm btn-outline-danger mx-3'
+                              className='btn  btn-sm btn-outline-danger mx-3'
                               onClick={(e) => handleDeleteFriend(e, friend._id)}
                             >
                               -
