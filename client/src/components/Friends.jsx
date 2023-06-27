@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
-    const [users, setUsers] = useState([]);
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState(user.friends || []);
     const navigate = useNavigate();
