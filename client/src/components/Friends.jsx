@@ -124,14 +124,65 @@ const Friends = ({ user, setUser }) => {
 
 
     return (
-        <div>
+        <div className='background'>
             <Navbar />
-            <div className='mx-auto'>
-                <div className='container col-md-8'>
-                    <h2 className='my-3'>My Ninjas</h2>
-                    {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
-                        <p>Add Some Ninjas, My Ninja...</p>
-                    ) : (
+            <div className='background pb-4'>
+                {/* <div className='container col-md-8'> */}
+                <div className='col-md-6 mid-block mx-auto mb-5'>
+                    <h2 className='my-2 ms-4 ps-3'>My Ninjas</h2>
+                    <div className='d-flex justify-content-center mb-3'>
+                        {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
+                            <p>Add Some Ninjas, My Ninja...</p>
+                        ) : (
+                            <div
+                                style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(2, 1fr)',
+                                    gap: '20px',
+                                }}
+                            >
+                                {user.friends.map((friend) => (
+                                    <div
+                                        key={friend._id}
+                                        style={{
+                                            width: '350px',
+                                            padding: '0px 10px',
+                                            background: 'rgb(237,247,251)',
+                                            borderRadius: '30px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                        }}
+                                        onClick={() => handleFriendClick(friend._id)}
+                                    >
+                                        <img
+                                            src={friend.picture}
+                                            alt={`${friend.firstName} ${friend.lastName}`}
+                                            style={{
+                                                width: '80px',
+                                                height: 'auto',
+                                                margin: '20px',
+                                                borderRadius: '50%',
+                                            }}
+                                        />
+                                        {friend.firstName} {friend.lastName}
+                                        <div>
+                                            <button
+                                                className='btn btn-outline-danger mx-3'
+                                                onClick={(e) => handleDeleteFriend(e, friend._id)}
+                                            >
+                                                -
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className='col-md-6 mid-block mx-auto mb-5'>
+                    <h2 className='my-2 ms-4 ps-3'>All Ninjas</h2>
+                    <div className='d-flex justify-content-center mb-3'>
                         <div
                             style={{
                                 display: 'grid',
@@ -139,88 +190,42 @@ const Friends = ({ user, setUser }) => {
                                 gap: '20px',
                             }}
                         >
-                            {user.friends.map((friend) => (
+                            {apiUsers && apiUsers.map((apiUser) => (
                                 <div
-                                    key={friend._id}
+                                    key={apiUser.id}
                                     style={{
                                         width: '350px',
                                         padding: '0px 10px',
                                         background: 'rgb(237,247,251)',
-                                        borderRadius: '20px',
+                                        borderRadius: '30px',
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                     }}
-                                    onClick={() => handleFriendClick(friend._id)}
+                                    onClick={() => handleFriendClick(apiUser.id)}
                                 >
                                     <img
-                                        src={friend.picture}
-                                        alt={`${friend.firstName} ${friend.lastName}`}
+                                        src={apiUser.picture}
+                                        alt={`${apiUser.firstName} ${apiUser.lastName}`}
                                         style={{
                                             width: '80px',
                                             height: 'auto',
-                                            margin: '20px',
+                                            margin: '20px 10px 20px 10px',
                                             borderRadius: '50%',
                                         }}
                                     />
-                                    {friend.firstName} {friend.lastName}
+                                    {apiUser.firstName} {apiUser.lastName}
                                     <div>
                                         <button
-                                            className='btn btn-outline-danger mx-3'
-                                            onClick={(e) => handleDeleteFriend(e, friend._id)}
+                                            className='btn btn-outline-primary mx-3'
+                                            onClick={(e) => handleAddFriend(apiUser, user, e)}
                                         >
-                                            -
+                                            +
                                         </button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    )}
-                </div>
-                <div className='container col-md-8'>
-                    <h2 className='mt-5 my-3'>All Ninjas</h2>
-                    <div
-                        style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(2, 1fr)',
-                            gap: '20px',
-                        }}
-                    >
-                        {apiUsers && apiUsers.map((apiUser) => (
-                            <div
-                                key={apiUser.id}
-                                style={{
-                                    width: '350px',
-                                    padding: '0px 10px',
-                                    background: 'rgb(237,247,251)',
-                                    borderRadius: '20px',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                }}
-                                onClick={() => handleFriendClick(apiUser.id)}
-                            >
-                                <img
-                                    src={apiUser.picture}
-                                    alt={`${apiUser.firstName} ${apiUser.lastName}`}
-                                    style={{
-                                        width: '80px',
-                                        height: 'auto',
-                                        margin: '20px 10px 20px 10px',
-                                        borderRadius: '50%',
-                                    }}
-                                />
-                                {apiUser.firstName} {apiUser.lastName}
-                                <div>
-                                    <button
-                                        className='btn btn-outline-primary mx-3'
-                                        onClick={(e) => handleAddFriend(apiUser, user, e)}
-                                    >
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>
