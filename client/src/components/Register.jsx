@@ -45,13 +45,6 @@ const handleChangeReg = (e) => {
           <h1 className='text-light mt-3'>Join the Shinobi Kazoku</h1>
         </div>
       </div>
-{/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
-      <div>
-        <a href="/home" className=" nav-item nav-link active text-white">
-          Home
-        </a>
-      </div>
-{/* **********^^^^^^^*Delete Me***************** */}
     <div className='row'>
       {/* {errors && <h6 classname="text-danger">{errors}</h6>} */}
       <div className="col-4"></div>
