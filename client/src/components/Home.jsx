@@ -168,7 +168,8 @@ const Home = ({ user, setUser}) => {
       <div className="mt-5">
         <div className="row justify-content-center">
           {/* Left Column */}
-          <div className="col-3 ml-1">
+          <div className="col-1"></div>
+          <div className="col-3">
             <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
                 <img
@@ -183,8 +184,8 @@ const Home = ({ user, setUser}) => {
                   alt={`${user.firstName} ${user.lastName}`}
                   onClick={handleViewProfile}
                 />
-                <h3>{user.firstName}</h3>
-                <h3>{user.lastName}</h3>
+                <h2>{user.firstName}</h2>
+                <h2>{user.lastName}</h2>
                 <p>{user.jobTitle}</p>
                 <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
               </div>
@@ -270,7 +271,7 @@ const Home = ({ user, setUser}) => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div className="col-6">
+          <div className="col-4">
             {/* removing and adding to Post component so that there is only one form for create and edit*/}
             < PostForm />
             <div className=''>
@@ -383,6 +384,7 @@ const Home = ({ user, setUser}) => {
               </div>
             </StickyBox>
           </div>
+          <div className="col-1"></div>
         </div>
       </div>
     </div >
