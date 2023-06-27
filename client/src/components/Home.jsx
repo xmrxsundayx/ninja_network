@@ -7,7 +7,7 @@ import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
 import PostForm from './PostForm';
 
-const Home = ({ user, setUser }) => {
+const Home = ({ user, setUser}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
@@ -169,7 +169,7 @@ const Home = ({ user, setUser }) => {
         <div className="row justify-content-center">
           {/* Left Column */}
           <div className="col-3 ml-1">
-            <div className='block'>
+            <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
                 <img
                   className="rounded-circle mb-4"
@@ -189,7 +189,7 @@ const Home = ({ user, setUser }) => {
                 <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
               </div>
             </div>
-            <div className='block'>
+            <div className='left-block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
                 {user?.languages?.map((language, index) => (
@@ -221,7 +221,7 @@ const Home = ({ user, setUser }) => {
             </div>
             <StickyBox offsetTop={100} offsetBottom={0}>
 
-              <div className=' block'>
+              <div className=' left-block'>
                 <h4 className=' p-2'>My Ninjas</h4>
                 {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
                   <p>Add Some Ninjas, My Ninja...</p>
@@ -275,7 +275,7 @@ const Home = ({ user, setUser }) => {
             < PostForm />
             <div className=''>
               {apiPosts?.map((apiPost, i) => (
-                <div className='block'
+                <div className='mid-block'
                   key={apiPost.id}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img
@@ -340,7 +340,7 @@ const Home = ({ user, setUser }) => {
           {/* Right Column */}
           <div className="col-3">
             <StickyBox offsetTop={100} offsetBottom={0}>
-              <div className='block'>
+              <div className='right-block'>
                 <h4 className='p-2'>Ninjas Online</h4>
                 <div>
                   <div className='my-2'>

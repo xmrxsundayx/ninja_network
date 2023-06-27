@@ -67,7 +67,7 @@ const PostForm = ({postList, setPostList}) => {
                 <form onSubmit={(id) ? handleUpdate : handleSubmit}>
                     <div className="form-group">
                         {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
-                        <textarea className="form-control" id="postText" placeholder="What's on your mind?"
+                        <textarea type='text' value={post.content}className="form-control" id="postText" placeholder="What's on your mind?" name="content"
                         style={{ backgroundColor: "#EDF7FB"}} onChange={handleChange}/>
                         </div>
                         <div className="row">
