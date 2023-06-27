@@ -207,6 +207,7 @@ const Profile = ({ user, setUser }) => {
       <div class="mt-5">
         <div class="row justify-content-center">
           {/* Left Column */}
+          <div className="col-1"></div>
           <div class="col-3">
             <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
@@ -310,7 +311,7 @@ const Profile = ({ user, setUser }) => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div class="col-md-5 col-lg-6">
+          <div class="col-4">
             <div className=''>
               {apiPosts.map((apiPost, i) => (
                 <div className='mid-block'
@@ -376,7 +377,7 @@ const Profile = ({ user, setUser }) => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}
-          <div className="col-md-3 col-lg-3">
+          <div className="col-3">
             <StickyBox offsetTop={100} offsetBottom={0}>
               <div className='right-block'>
                 <h4 className='p-2'>Ninjas Online</h4>
@@ -421,6 +422,7 @@ const Profile = ({ user, setUser }) => {
               </div>
             </StickyBox>
           </div>
+          <div className="col-1"></div>
         </div>
       </div>
     </div >

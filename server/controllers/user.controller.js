@@ -15,7 +15,7 @@ module.exports = {
                 const newUser = await User.create(req.body);
                 const userToken = jwt.sign({ _id: newUser._id, email: newUser.email }, secret, { expiresIn: "2h" });
                 console.log(userToken)
-                res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 100 }).json({
+                res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 1000 }).json({
                     message: "Success!",
                     user: newUser
                 });
@@ -32,7 +32,7 @@ module.exports = {
                 const correctPassword = await bcrypt.compare(req.body.password, user.password);
                 if (correctPassword) {
                     const userToken = jwt.sign({ _id: user._id, email: user.email }, secret, { expiresIn: '4h' });
-                    res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 100 }).json({
+                    res.status(201).cookie('usertoken', userToken, { httpOnly: true, maxAge: 2 * 60 * 60 * 1000 }).json({
                         message: "Success!",
                         user: user,
                     })
