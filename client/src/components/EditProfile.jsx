@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from './Navbar'
-// import Upload from './UploadTest'
+
 
 
 const EditProfile = ({ user, setUser }) => {
@@ -241,7 +241,6 @@ const EditProfile = ({ user, setUser }) => {
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
             </div>
-            {/* <Upload user={user} setUser={setUser}/> */}
             <div className="col-3"></div>
         </div>
     )
