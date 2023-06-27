@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from './Navbar'
-// import Upload from './UploadTest'
+
 
 
 const EditProfile = ({ user, setUser }) => {

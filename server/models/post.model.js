@@ -12,7 +12,6 @@ const PostSchema = new mongoose.Schema({
         ref: 'User'
     },
     image: {
-        data: Buffer,
         type: String,
     },
     likes: [{
