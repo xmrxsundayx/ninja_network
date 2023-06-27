@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import whiteLogo from '../images/logoWhite.png'
 
-const Login = ({ setUser,isLoggedIn }) => {
+const Login = ({ user, setUser }) => {
   const [userLogin, setUserLogin] = useState({
     email: '',
     password: ''
@@ -19,24 +19,21 @@ const Login = ({ setUser,isLoggedIn }) => {
   }
 
   const handleLogin = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     axios.post('http://localhost:8000/api/login', userLogin, { withCredentials: true })
       .then(res => {
-        console.log(res)
-        console.log("this is data user",res.data.user)
-        console.log("this is the ID",res.data.user._id)
-        // setUserLogin(res.data.user)
-        setUser(res.data.user)
+        console.log(res);
+        console.log("this is data user", res.data.user);
+        console.log("this is the ID", res.data.user._id);
+        setUser(res.data.user);
         navigate(`/home/${res.data.user._id}`);
-
-        // change to :id when we have the user id set up
       })
       .catch(err => {
-        console.log(err)
+        console.log(err);
         console.log(err.response.data);
-      setErrors(err.response.data.errors)
-      })
-  }
+        setErrors('Invalid email or password'); // Set a general error message
+      });
+  };
 
 
   return (
@@ -50,15 +47,6 @@ const Login = ({ setUser,isLoggedIn }) => {
           <h1 className='text-light mt-4'>WELCOME BACK!</h1>
         </div>
       </div>
-
-      {/* ***********Delete Me***************** (just made this so you can easily get to the site)*/}
-      <div>
-        <a href='/home/{res.data.user._id}' className=" nav-item nav-link active text-white">
-          Home
-        </a>
-      </div>
-      {/* ***********Delete Me***************** */}
-
       
       <div className='mt-5 row'>
         <div className="col-4"></div>
@@ -67,8 +55,10 @@ const Login = ({ setUser,isLoggedIn }) => {
           <form onSubmit={handleLogin}>
             <label className='text-light' htmlFor='email'>Email</label>
             <input className='form-control' name="email" type='text' onChange={handleChangeLogin} />
+            {errors.email && <h6 className="text-danger">{errors.email.message}</h6>}
             <label className='text-light' htmlFor='password'>Password</label>
             <input className='form-control' name="password" type='password'  onChange={handleChangeLogin}/>
+            {errors.password && <h6 className="text-danger">{errors.password.message}</h6>}
             <br />
             <input className='btn btn-secondary fw-bold text-light' type='submit' value="Log in" />
           </form>
