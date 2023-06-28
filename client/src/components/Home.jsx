@@ -4,71 +4,59 @@ import { useParams, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
-import api from '../api/dummy';
 import PostForm from './PostForm';
 import Posts from './Posts';
 
-const Home = ({ user, setUser, postList, setPostList}) => {
+const Home = ({ user, setUser, postList, setPostList }) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [onePost, setOnePost] = useState({})
-  const { id } = useParams();
+  const { userId } = useParams();
   const navigate = useNavigate();
 
-  // this is to get the one User info
-
+  // this is to get the one logged User 
   useEffect(() => {
     axios
       .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
       .then(res => {
         // show the user returned
-        console.log("logged user from home useEffect:", res.data)
+        console.log("logged user:", res.data)
         setUser(res.data);
       })
       .catch(err => {
         console.log("current user error: ", err)
         setUser({})
       });
-  }, []);
+  }, [setUser]);
 
-  useEffect(() => {
-    const fetchAllApiUsers = async () => {
+   // this is to get all the Users
+   useEffect(() => {
+    const fetchAllUsers = async () => {
       try {
-        const response = await api.get('/user', { params: { limit: 5 } });
-        setApiUsers(response.data.data);
-        console.log('Get All Users', response.data.data);
+        const response = await axios.get('http://localhost:8000/api/users/');
+        setApiUsers(response.data);
+        console.log('Fetch all users', response.data);
       } catch (error) {
         console.error('Error fetching ninjas:', error);
       }
     };
-    fetchAllApiUsers();
+
+    fetchAllUsers();
   }, []);
 
-
-  useEffect(() => {
-    const fetchAllApiPosts = async () => {
-      try {
-        // take away params when finished. 
-        const response = await api.get('/post', { params: { limit: 20 } });
-        console.log('Get All Posts', response.data.data);
-        setApiPosts(response.data.data);
-      } catch (error) {
-        console.error('Error fetching ninjas:', error);
-      }
-    };
-    fetchAllApiPosts();
-  }, []);
 
   const handleViewProfile = () => {
     navigate(`/profile/${user._id}`);
   };
 
+  //functions to handle friends
   const handleAddFriend = (apiUser, user, e) => {
     e.stopPropagation();
     console.log('apiUser:', apiUser, 'user:', user);
 
-    const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
+    const friendExists = user.friends.some((friend) => friend._id === apiUser._id);
     if (friendExists) {
       window.alert('Friend already added', apiUser);
       return;
@@ -76,12 +64,12 @@ const Home = ({ user, setUser, postList, setPostList}) => {
 
     // Create the friend object
     const friendToAdd = {
-      _id: apiUser.id,
+      _id: apiUser._id,
       firstName: apiUser.firstName,
       lastName: apiUser.lastName,
-      picture: apiUser.picture,
-      title: 'Software Developer',
-      languages: ['JavaScript', 'Python'],
+      profilePhoto: apiUser.profilePhoto,
+      jobTitle: apiUser.jobTitle,
+      languages: apiUser.languages,
     };
 
     // Send the friendToAdd object to the backend API endpoint to update the user's friends array
@@ -100,7 +88,7 @@ const Home = ({ user, setUser, postList, setPostList}) => {
 
         // Remove the added friend from the apiUsers state
         setApiUsers((prevApiUsers) =>
-          prevApiUsers.filter((user) => user.id !== apiUser.id)
+          prevApiUsers.filter((user) => user._id !== apiUser._id)
         );
       })
       .catch((error) => {
@@ -108,34 +96,10 @@ const Home = ({ user, setUser, postList, setPostList}) => {
       });
   };
 
-
-  const handleFriendClick = (friendId) => {
-    navigate(`/profile/${friendId}`);
-  };
-
-  const handleDeleteFriend = async (e, id) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      const deletedFriend = user.friends.find((friend) => friend._id === id);
-
-      await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
-        friends: user.friends.filter((friend) => friend._id !== id),
-      });
-
-      // Update the state after deleting the friend
-      setUser((prevUser) => ({
-        ...prevUser,
-        friends: prevUser.friends.filter((friend) => friend._id !== id),
-      }));
-
-      setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
-
-      // Add the deleted friend back to the apiUsers state
-      setApiUsers((prevApiUsers) => [...prevApiUsers, deletedFriend]);
-    } catch (error) {
-      console.error('Error deleting friend:', error);
-    }
+  const handleFriendClick = (userId) => {
+    const clickedUser = apiUsers.find((user) => user._id === userId) || user.friends.find((friend) => friend._id === userId);
+    setSelectedUser(clickedUser);
+    navigate(`/profile/${userId}`);
   };
 
 
@@ -147,186 +111,52 @@ const Home = ({ user, setUser, postList, setPostList}) => {
           {/* Left Column */}
           <div className="col-1"></div>
           <div className="col-3">
-            <div className='left-block'>
-              <div className='m-3 d-flex flex-column align-items-center'>
-                <img
-                  className="rounded-circle mb-4"
-                  style={{
-                    width: '150px',
-                    height: '150px',
-                    margin: '10px',
-                    cursor: 'pointer'
-                  }}
-                  src={user.profilePhoto}
-                  alt={`${user.firstName} ${user.lastName}`}
-                  onClick={handleViewProfile}
-                />
-                <h2>{user.firstName}</h2>
-                <h2>{user.lastName}</h2>
-                <p>{user.jobTitle}</p>
-                <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
-              </div>
-            </div>
-            <div className='left-block'>
-              <h5>Languages Learned</h5>
-              <div className='d-flex flex-sm-wrap' >
-                {user?.languages?.map((language, index) => (
-                  <div
-                    key={language}
+            <StickyBox offsetTop={90} offsetBottom={0}>
+              <div className='left-block'>
+                <div className='m-3 d-flex flex-column align-items-center'>
+                  <img
+                    className="rounded-circle mb-4"
                     style={{
-                      padding: '0px 10px',
-                      borderRadius: '20px',
-                      margin: '1px 1px',
-                      background: "lightblue"
+                      width: '150px',
+                      height: '150px',
+                      margin: '10px',
+                      cursor: 'pointer'
                     }}
-                  >
-                    {language}
-                  </div>
-                ))}
+                    src={user.profilePhoto}
+                    alt={`${user.firstName} ${user.lastName}`}
+                    onClick={handleViewProfile}
+                  />
+                  <h2>{user.firstName}</h2>
+                  <h2>{user.lastName}</h2>
+                  <p>{user.jobTitle}</p>
+                  <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
+                </div>
               </div>
-              <div>
-                <h5 className='mt-3'>Social Media Links</h5>
-                {user?.links?.map((link, index) => (
-                  <div key={link}>
-                    <a href={link} target='_blank' rel='noreferrer'>{link}</a>
-                  </div>
-                ))}
-              </div>
-              <div>
-                <h5>Location</h5>
-                <p>{user.location}</p>
-              </div>
-            </div>
-            <StickyBox offsetTop={100} offsetBottom={0}>
 
-              <div className=' left-block'>
-                <h4 className=' p-2'>My Ninjas</h4>
-                {(!user.friends || user.friends.length === 0) && addedFriends.length === 0 ? (
-                  <p>Add Some Ninjas, My Ninja...</p>
-                ) : (
-                  <div>
-                    <div className='my-1'>
-                      {user.friends.map((friend) => (
-                        <div
-                          key={friend._id}
-                          style={{
-                            padding: '10px',
-                            margin: '5px',
-                            background: 'rgb(237,247,251)',
-                            borderRadius: '20px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                          onClick={() => handleFriendClick(friend._id)}
-                        >
-                          <img
-                            src={friend.picture}
-                            alt={`${friend.firstName} ${friend.lastName}`}
-                            style={{
-                              width: '50px',
-                              height: 'auto',
-                              borderRadius: '50%',
-                            }}
-                          />
-                          {friend.firstName} {friend.lastName}
-                          <div>
-                            <button
-                              className='btn  btn-sm btn-outline-danger mx-3'
-                              onClick={(e) => handleDeleteFriend(e, friend._id)}
-                            >
-                              -
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+
+
             </StickyBox>
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
           <div className="col-4">
-            {/* removing and adding to Post component so that there is only one form for create and edit*/}
-            < PostForm postList={postList} setPostList={setPostList}/>
-            < Posts postList={postList} setPostList= {setPostList}  />
-            {/* <div className=''>
-              {apiPosts?.map((apiPost, i) => (
-                <div className='mid-block'
-                  key={apiPost.id}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img
-                      className='rounded-circle'
-                      src={apiPost.owner.picture}
-                      alt={`${apiPost.owner.firstName} ${apiPost.owner.lastName}`}
-                      style={{
-                        width: '50px',
-                        height: 'auto',
-                        margin: '20px',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => handleViewProfile(apiPost.owner.id)}
-                    />
-                    <div>
-                      <div>
-                        {apiPost.owner.firstName} {apiPost.owner.lastName}
-                      </div>
-                      <div>
-                        {getTimeSince(apiPost.publishDate)} ago
-                      </div>
-                    </div>
-                  </div>
-                  <img
-                    src={apiPost.image}
-                    alt={apiPost.text}
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
-                  <div className='m-3'>
-                    <h5 >{apiPost.text}</h5>
-                    <div>
-                      {apiPost.tags?.map((tag, index) => (
-                        <div key={index} className='badge bg-secondary me-1'>
-                          #{tag}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className='d-flex justify-content-around'>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='far fa-heart'></i> Like
-                    </button>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='far fa-comment'></i> Comment
-                    </button>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='fas fa-share'></i> Share
-                    </button>
-                  </div>
-                  <div>
-                    <textarea className='w-100' placeholder='Comments coming soon'></textarea>
-                    {onePost.map((post, index) => (
-                      <div key={index}>{post}</div>
-                    ))}
-                    {onePost.data}
-                  </div>
-                </div>
-              ))}
-            </div> */}
+            <StickyBox offsetTop={90} >
+            < PostForm postList={postList} setPostList={setPostList} />
+            </StickyBox>
+            < Posts postList={postList} setPostList={setPostList} />
           </div>
-          
+
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}
           <div className="col-3">
-            <StickyBox offsetTop={100} offsetBottom={0}>
+            <StickyBox offsetTop={90} offsetBottom={0}>
               <div className='right-block'>
                 <h4 className='p-2'>Ninjas Online</h4>
                 <div>
                   <div className='my-2'>
-                    {apiUsers && apiUsers.map((apiUser) => (
+                  {apiUsers && apiUsers.map((apiUser) => (
                       <div
-                        key={apiUser.id}
+                        key={apiUser._id}
                         style={{
                           padding: '10px',
                           margin: '5px',
@@ -336,14 +166,14 @@ const Home = ({ user, setUser, postList, setPostList}) => {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                         }}
-                        onClick={() => handleFriendClick(apiUser.id)}
+                        onClick={() => handleFriendClick(apiUser._id)}
                       >
                         <img
-                          src={apiUser.picture}
+                          src={apiUser.profilePhoto}
                           alt={`${apiUser.firstName} ${apiUser.lastName}`}
                           style={{
                             width: '50px',
-                            height: 'auto',
+                            height: '50px',
                             borderRadius: '50%',
                           }}
                         />
