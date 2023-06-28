@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import PostForm from "./PostForm";
 
 const Upload = ({user, setUser}) => {
     const [image, setImage] = useState("");
@@ -26,6 +27,9 @@ const Upload = ({user, setUser}) => {
 
     return (
     <div>
+        <div>
+            <PostForm />
+        </div>
         <input
         type="file"
         onChange={(e) => {
