@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import PostForm from "./PostForm";
+import Posts from "./Posts";
 
-const Upload = ({user, setUser}) => {
+const Upload = ({user, setUser, postList, setPostList}) => {
     const [image, setImage] = useState("");
 
     const uploadImage = () => {
@@ -28,7 +29,8 @@ const Upload = ({user, setUser}) => {
     return (
     <div>
         <div>
-            <PostForm />
+            <PostForm postList={postList} setPostList={setPostList}/>
+            {/* <Posts postList={postList} setPostList={setPostList}/> */}
         </div>
         <input
         type="file"
@@ -37,7 +39,15 @@ const Upload = ({user, setUser}) => {
         }}
         />
         <button onClick={uploadImage}>Upload</button>             
-        <img  src='http://res.cloudinary.com/dijdukoam/image/upload/v1687891822/vcqb6zt9wfgg8rldl7dx.jpg' />
+        <img 
+                          className="rounded-circle mb-4"
+                          style={{
+                            width: '150px',
+                            height: '150px',
+                            margin: '10px',
+                            cursor: 'pointer'
+                          }}
+        src='http://res.cloudinary.com/dijdukoam/image/upload/v1687891822/vcqb6zt9wfgg8rldl7dx.jpg' />
     </div>
     );
 };
