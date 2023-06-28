@@ -31,13 +31,13 @@ const Friends = ({ user, setUser }) => {
                 console.log("current user error: " + err)
                 setUser({})
             });
-    }, []);
+    }, [setUser]);
 
     // Fetch user data based on the URL ID
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await api.get(`/user/${userId}`);
+                const response = await axios.get(`/user/${userId}`);
                 setApiUsers(response.data);
             } catch (error) {
                 console.error('Error fetching user:', error);
@@ -47,19 +47,17 @@ const Friends = ({ user, setUser }) => {
     }, [userId]);
 
     useEffect(() => {
-        const fetchAllApiUsers = async () => {
+        const fetchAllUsers = async () => {
             try {
-                const response = await api.get('/user', { params: { limit: 99 } });
-                setApiUsers(response.data.data.sort((a, b) =>
-                    a.firstName.localeCompare(b.firstName)
-                ));
-                console.log(response.data.data);
+                const response = await axios.get('http://localhost:8000/api/users/');
+                setApiUsers(response.data);
+                console.log('Fetch all users',response.data);
             } catch (error) {
                 console.error('Error fetching ninjas:', error);
             }
         };
 
-        fetchAllApiUsers();
+        fetchAllUsers();
     }, []);
 
 
@@ -67,7 +65,7 @@ const Friends = ({ user, setUser }) => {
         e.stopPropagation();
         console.log('apiUser:', apiUser, 'user:', user);
 
-        const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
+        const friendExists = user.friends.some((friend) => friend._id === apiUser._id);
         if (friendExists) {
             window.alert('Friend already added', apiUser);
             return;
@@ -75,12 +73,12 @@ const Friends = ({ user, setUser }) => {
 
         // Create the friend object
         const friendToAdd = {
-            _id: apiUser.id,
+            _id: apiUser._id,
             firstName: apiUser.firstName,
             lastName: apiUser.lastName,
-            picture: apiUser.picture,
-            jobTitle: 'Software Developer',
-            languages: ['JavaScript', 'Python'],
+            profilePhoto: apiUser.profilePhoto,
+            jobTitle: '',
+            languages: [],
         };
 
         // Send the friendToAdd object to the backend API endpoint to update the user's friends array
@@ -99,7 +97,7 @@ const Friends = ({ user, setUser }) => {
 
                 // Remove the added friend from the apiUsers state
                 setApiUsers((prevApiUsers) =>
-                    prevApiUsers.filter((user) => user.id !== apiUser.id)
+                    prevApiUsers.filter((user) => user._id !== apiUser._id)
                 );
             })
             .catch((error) => {
@@ -108,28 +106,28 @@ const Friends = ({ user, setUser }) => {
     };
 
     const handleFriendClick = (userId) => {
-        const clickedUser = apiUsers.find((user) => user.id === userId) || user.friends.find((friend) => friend._id === userId);
+        const clickedUser = apiUsers.find((user) => user._id === userId) || user.friends.find((friend) => friend._id === userId);
         setSelectedUser(clickedUser);
         navigate(`/profile/${userId}`);
       };
 
-    const handleDeleteFriend = async (e, id) => {
+    const handleDeleteFriend = async (e, _id) => {
         e.preventDefault();
         e.stopPropagation();
         try {
-            const deletedFriend = user.friends.find((friend) => friend._id === id);
+            const deletedFriend = user.friends.find((friend) => friend._id === _id);
 
             await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
-                friends: user.friends.filter((friend) => friend._id !== id),
+                friends: user.friends.filter((friend) => friend._id !== _id),
             });
 
             // Update the state after deleting the friend
             setUser((prevUser) => ({
                 ...prevUser,
-                friends: prevUser.friends.filter((friend) => friend._id !== id),
+                friends: prevUser.friends.filter((friend) => friend._id !== _id),
             }));
 
-            setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
+            setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== _id));
 
             // Add the deleted friend back to the apiUsers state
             setApiUsers((prevApiUsers) => [...prevApiUsers, deletedFriend]);
@@ -172,11 +170,11 @@ const Friends = ({ user, setUser }) => {
                                         onClick={() => handleFriendClick(friend._id)}
                                     >
                                         <img
-                                            src={friend.picture}
+                                            src={friend.profilePhoto}
                                             alt={`${friend.firstName} ${friend.lastName}`}
                                             style={{
                                                 width: '80px',
-                                                height: 'auto',
+                                                height: '80px',
                                                 margin: '20px',
                                                 borderRadius: '50%',
                                             }}
@@ -208,7 +206,7 @@ const Friends = ({ user, setUser }) => {
                         >
                             {apiUsers && apiUsers.map((apiUser) => (
                                 <div
-                                    key={apiUser.id}
+                                    key={apiUser._id}
                                     style={{
                                         width: '350px',
                                         padding: '0px 10px',
@@ -218,14 +216,14 @@ const Friends = ({ user, setUser }) => {
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                     }}
-                                    onClick={() => handleFriendClick(apiUser.id)}
+                                    onClick={() => handleFriendClick(apiUser._id)}
                                 >
                                     <img
-                                        src={apiUser.picture}
+                                        src={apiUser.profilePhoto}
                                         alt={`${apiUser.firstName} ${apiUser.lastName}`}
                                         style={{
                                             width: '80px',
-                                            height: 'auto',
+                                            height: '80px',
                                             margin: '20px 10px 20px 10px',
                                             borderRadius: '50%',
                                         }}
