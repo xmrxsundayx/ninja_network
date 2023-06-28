@@ -10,6 +10,7 @@ const Profile = ({ user, setUser }) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
   const { userId } = useParams();
@@ -30,12 +31,24 @@ const Profile = ({ user, setUser }) => {
       });
   }, []);
 
+  // Fetch user data based on the URL ID
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await api.get(`/user/${userId}`);
+        setApiUsers(response.data);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    fetchUser();
+  }, [userId]);
 
   // create a useEffect to get only posts from the user
   useEffect(() => {
     const fetchOneUserPosts = async () => {
       try {
-        const response = await api.get('/user/60d0fe4f5311236168a109ca/post');
+        const response = await api.get(`/user/${userId}/post`);
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -43,14 +56,14 @@ const Profile = ({ user, setUser }) => {
       }
     };
     fetchOneUserPosts();
-  }, {});
+  }, [userId]);
 
 
   // this is to get the one Post info
   useEffect(() => {
     const fetchOnePost = async () => {
       try {
-        const response = await api.get('/post/60d0fe4f5311236168a109ca/comment');
+        const response = await api.get(`/post/${userId}/comment`);
         setOnePost(response.data);
         console.log('Get Post', response.data);
       } catch (error) {
@@ -58,7 +71,8 @@ const Profile = ({ user, setUser }) => {
       }
     };
     fetchOnePost();
-  }, {});
+  }, [userId]);
+
 
   // this is to get all the API Users
   useEffect(() => {
@@ -129,23 +143,23 @@ const Profile = ({ user, setUser }) => {
   const handleAddFriend = (apiUser, user, e) => {
     e.stopPropagation();
     console.log('apiUser:', apiUser, 'user:', user);
-
+  
     const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
     if (friendExists) {
       window.alert('Friend already added', apiUser);
       return;
     }
-
+  
     // Create the friend object
     const friendToAdd = {
       _id: apiUser.id,
       firstName: apiUser.firstName,
       lastName: apiUser.lastName,
       picture: apiUser.picture,
-      title: 'Software Developer',
+      jobTitle: 'Software Developer',
       languages: ['JavaScript', 'Python'],
     };
-
+  
     // Send the friendToAdd object to the backend API endpoint to update the user's friends array
     axios
       .patch(`http://localhost:8000/api/users/${user._id}`, {
@@ -159,7 +173,7 @@ const Profile = ({ user, setUser }) => {
           friends: [...prevUser.friends, friendToAdd],
         }));
         setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
-
+  
         // Remove the added friend from the apiUsers state
         setApiUsers((prevApiUsers) =>
           prevApiUsers.filter((user) => user.id !== apiUser.id)
@@ -169,11 +183,14 @@ const Profile = ({ user, setUser }) => {
         console.error('Error adding friend:', error);
       });
   };
+  
 
-
-  const handleFriendClick = (friendId) => {
-    navigate(`/profile/${friendId}`);
-  };
+  const handleFriendClick = (userId) => {
+    const clickedUser = apiUsers.find((user) => user.id === userId);
+    setSelectedUser(clickedUser);
+    navigate(`/profile/${userId}`);
+  };  
+  
 
   const handleDeleteFriend = async (e, id) => {
     e.preventDefault();
@@ -204,11 +221,11 @@ const Profile = ({ user, setUser }) => {
   return (
     <div className='background'>
       <Navbar />
-      <div class="mt-5">
-        <div class="row justify-content-center">
+      <div className="mt-5">
+        <div className="row justify-content-center">
           {/* Left Column */}
           <div className="col-1"></div>
-          <div class="col-3">
+          <div className="col-3">
             <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
                 <img
@@ -219,13 +236,13 @@ const Profile = ({ user, setUser }) => {
                     margin: '10px',
                     cursor: 'pointer'
                   }}
-                  src={user.profilePhoto}
+                  src={selectedUser?.picture || user.profilePhoto }
                   alt="profile"
                   onClick={handleViewProfile}
                 />
-                <h3>{user.firstName}</h3>
-                <h3>{user.lastName}</h3>
-                <p>{user.jobTitle}</p>
+                <h3>{selectedUser?.firstName || user.firstName }</h3>
+                <h3>{selectedUser?.lastName || user.lastName }</h3>
+                <p>{selectedUser?.jobTitle || user.jobTitle }</p>
                 <button className='btn specColor' onClick={handleViewHome}>Home</button>
                 <button className='btn specColor my-2' onClick={handleEditProfile}>Edit Profile</button>
               </div>
@@ -311,7 +328,7 @@ const Profile = ({ user, setUser }) => {
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
-          <div class="col-4">
+          <div className="col-4">
             <div className=''>
               {apiPosts.map((apiPost, i) => (
                 <div className='mid-block'

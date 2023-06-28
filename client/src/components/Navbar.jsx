@@ -43,6 +43,10 @@ const Navbar = () => {
         navigate(`/home/${user._id}`)
     }
 
+    const handleProfile = () => {
+        navigate(`/profile/${user._id}`)
+    }
+
     return (
         <div className="sticky">
             <nav className="d-flex navbar navbar-expand-lg" style={{ background: "#5F9CB5" }}>
@@ -78,9 +82,9 @@ const Navbar = () => {
                             <Link to={`/home/${user._id}`} className="nav-item nav-link">
                                 Home
                             </Link>
-                            <Link to={`/profile/${user._id}`} className="nav-item nav-link">
+                            <a href={`/profile/${user._id}`} onClick={handleProfile} className="nav-item nav-link">
                                 Profile
-                            </Link>
+                            </a>
                             <Link to={`/myninjas/${user._id}`} className="nav-item nav-link">
                                 My Ninjas
                             </Link>
