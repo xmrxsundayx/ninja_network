@@ -186,7 +186,7 @@ const Profile = ({ user, setUser }) => {
   
 
   const handleFriendClick = (userId) => {
-    const clickedUser = apiUsers.find((user) => user.id === userId);
+    const clickedUser = apiUsers.find((user) => user.id === userId) || user.friends.find((friend) => friend._id === userId);
     setSelectedUser(clickedUser);
     navigate(`/profile/${userId}`);
   };  
