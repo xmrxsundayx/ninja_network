@@ -119,7 +119,7 @@ const EditProfile = ({ user, setUser }) => {
         <div className='background'>
             <Navbar />
             <div className="d-flex justify-content-center">
-            {/* <div className="container"> */}
+                {/* <div className="container"> */}
                 <div className='block'>
                     {/* <h4 className='p-2'>Submit a Post</h4> */}
                     <form onSubmit={submitHandler} >
@@ -130,11 +130,7 @@ const EditProfile = ({ user, setUser }) => {
                                     <img
                                         key={user.profilePhoto}
                                         className="rounded-circle mb-4"
-                                        style={{
-                                            width: '150px',
-                                            height: '150px',
-                                            margin: '10px',
-                                        }}
+                                        style={{ width: '150px', height: '150px', margin: '10px', }}
                                         src={user.profilePhoto}
                                         alt="profilePhoto" />
                                     <input
@@ -145,92 +141,93 @@ const EditProfile = ({ user, setUser }) => {
                                         }} />
                                     <button className='btn btn-secondary' onClick={handlePhotoChange}>Upload</button>
                                 </div>
-                            </div>                        
                             </div>
-                            <div className="row">
-                                <div className="col-6">
-                                    <label>First Name</label>
-                                    <input type="text" className="form-control" id="firstName" name='firstName' value={user.firstName} onChange={handleChange} />
-                                        {errors.firstName ? <p className='text-danger'>{errors.firstName.message}</p> : ''}
-                                    <label>Last Name</label>
-                                    <input type="text" className="form-control" id="lastName" name='lastName' value={user.lastName} onChange={handleChange} />
-                                    {errors.lastName ? <p className='text-danger'>{errors.lastName.message}</p> : ''}
-                                    <label>Email</label>
-                                    <input type="text" className="form-control" id="email" name='email' value={user.email} onChange={handleChange} />
-                                    {errors.email ? <p className='text-danger'>{errors.email.message}</p> : ''}
-                                    <label>Job Title</label>
-                                    <input type="text" className="form-control" id="jobTitle" name='jobTitle' value={user.jobTitle} onChange={handleChange} />
-                                    {errors.jobTitle ? <p className='text-danger'>{errors.jobTitle.message}</p> : ''}
-                                    <label>Location</label>
-                                    <input type="text" className="form-control" id="location" name='location' value={user.location} onChange={handleChange} />
-                                    {errors.location ? <p className='text-danger'>{errors.location.message}</p> : ''}
-                                </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-6">
+                                <label>First Name</label>
+                                <input type="text" className="form-control" id="firstName" name='firstName' value={user.firstName} onChange={handleChange} />
+                                {errors.firstName ? <p className='text-danger'>{errors.firstName.message}</p> : ''}
+                                <label>Last Name</label>
+                                <input type="text" className="form-control" id="lastName" name='lastName' value={user.lastName} onChange={handleChange} />
+                                {errors.lastName ? <p className='text-danger'>{errors.lastName.message}</p> : ''}
+                                <label>Email</label>
+                                <input type="text" className="form-control" id="email" name='email' value={user.email} onChange={handleChange} />
+                                {errors.email ? <p className='text-danger'>{errors.email.message}</p> : ''}
+                                <label>Job Title</label>
+                                <input type="text" className="form-control" id="jobTitle" name='jobTitle' value={user.jobTitle} onChange={handleChange} />
+                                {errors.jobTitle ? <p className='text-danger'>{errors.jobTitle.message}</p> : ''}
+                                <label>Location</label>
+                                <input type="text" className="form-control" id="location" name='location' value={user.location} placeholder="Add Location" onChange={handleChange} />
+                                {errors.location ? <p className='text-danger'>{errors.location.message}</p> : ''}
+                            </div>
 
-                                <div className="col-6">
-                                        <label>Languages Learned</label>
-                                        {user?.languages?.map((language, index) => (
-                                            <div key={index} className="d-flex align-items-center mb-3">
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    value={language}
-                                                    onChange={(e) => handleAdditionalLanguageChange(index, e.target.value)}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-danger ms-2"
-                                                    onClick={() => handleRemoveLanguage(index)}
-                                                >
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        ))}
-                                        <div className="d-flex justify-content-end"><button
+                            <div className="col-6">
+                                <label>Languages Learned</label>
+                                {user?.languages?.map((language, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-3">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={language}
+                                            placeholder='Add Language'
+                                            onChange={(e) => handleAdditionalLanguageChange(index, e.target.value)}
+                                        />
+                                        <button
                                             type="button"
-                                            className="btn btn-secondary mt-2"
-                                            onClick={handleAddLanguage}
+                                            className="btn btn-danger ms-2"
+                                            onClick={() => handleRemoveLanguage(index)}
                                         >
-                                            Add Another Language
-                                        </button></div>
-                                        {errors.languages ? (
-                                            <p className='text-danger'>{errors.languages.message}</p>
-                                        ) : (
-                                            ''
-                                        )}
-                                        <label className='mt-3'>Links</label>
-                                        {user?.links?.map((links, index) => (
-                                            <div key={index} className="d-flex align-items-center mb-3">
-                                                <input
-                                                    type="url"
-                                                    className="form-control"
-                                                    value={links}
-                                                    onChange={(e) => handleAdditionalLinksChange(index, e.target.value)}
-                                                />
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-danger ms-2"
-                                                    onClick={() => handleRemoveLinks(index)}
-                                                >
-                                                    Remove
-                                                </button>
-                                            </div>
-                                        ))}
-                                        <div className="d-flex justify-content-end">
-                                            <button
-                                                type="button"
-                                                className="btn btn-secondary mt-2"
-                                                onClick={handleAddLinks}
-                                            >
-                                                Add Another Link
-                                            </button>
-                                        </div>
-                                        {errors.links ? (
-                                            <p className='text-danger'>{errors.links.message}</p>
-                                        ) : (
-                                            ''
-                                        )}
+                                            Remove
+                                        </button>
+                                    </div>
+                                ))}
+                                <div className="d-flex justify-content-end"><button
+                                    type="button"
+                                    className="btn btn-secondary mt-2"
+                                    onClick={handleAddLanguage}
+                                >
+                                    Add Language
+                                </button></div>
+                                {errors.languages ? (
+                                    <p className='text-danger'>{errors.languages.message}</p>
+                                ) : (
+                                    ''
+                                )}
+                                <label className='mt-3'>Links</label>
+                                {user?.links?.map((links, index) => (
+                                    <div key={index} className="d-flex align-items-center mb-3">
+                                        <input
+                                            type="url"
+                                            className="form-control"
+                                            value={links}
+                                            onChange={(e) => handleAdditionalLinksChange(index, e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger ms-2"
+                                            onClick={() => handleRemoveLinks(index)}
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                ))}
+                                <div className="d-flex justify-content-end">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary mt-2"
+                                        onClick={handleAddLinks}
+                                    >
+                                        Add Link
+                                    </button>
                                 </div>
+                                {errors.links ? (
+                                    <p className='text-danger'>{errors.links.message}</p>
+                                ) : (
+                                    ''
+                                )}
                             </div>
+                        </div>
 
                         <div className="row justify-content-center">
                             <button type="submit" className="mt-3 col-2 btn btn-secondary">Submit</button>
