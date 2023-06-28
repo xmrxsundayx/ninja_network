@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const Posts = () => {
+const Posts = (user) => {
     const [postList, setPostList] = useState([])
     const navigate = useNavigate()
 
@@ -12,17 +12,22 @@ const Posts = () => {
                 console.log(res.data);
                 setPostList(res.data)
             })
-            .catch(err => console.log("Error fetching all posts" + err))
+            .catch(err => console.log("Error fetching all posts", err))
     }, [])
 
     const deletePost = (id) => {
         axios.delete(`http://localhost:8000/api/posts/delete/${id}`)
-            .then(res => {
+            .then((res) => {
                 console.log(res.data);
-                setPostList(postList.filter(post => post._id !== id))
+                setPostList(postList.filter((post) => post._id !== id))
             })
-            .catch(err => console.log("Error deleting post" + err))
+            .catch(err => console.log("Error deleting post", err))
     }
+
+    const handleViewProfile = () => {
+        navigate(`/profile/${postList.creator._id}`);
+      };
+
 
     // Function for how long ago a post was posted
     function getTimeSince(publishDate) {
@@ -58,34 +63,34 @@ const Posts = () => {
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
                                 className='rounded-circle'
-                                src={post.creater.picture}
-                                alt={`${post.creater.firstName} ${post.creater.lastName}`}
+                                src={post.creator.picture}
+                                alt={`${post.creator.firstName} ${post.creator.lastName}`}
                                 style={{
                                     width: '50px',
                                     height: 'auto',
                                     margin: '20px',
                                     cursor: 'pointer'
                                 }}
-                                // onClick={() => handleViewProfile(post.creater.id)}
+                                onClick={() => handleViewProfile(post.creator.id)}
                             />
                             <div>
                                 <div>
-                                    {post.creater.firstName} {post.creater.lastName}
+                                    {post.creator.firstName} {post.creator.lastName}
                                 </div>
                                 <div>
-                                    {getTimeSince(post.creater.publishDate)} ago
+                                    {getTimeSince(post.creator.publishDate)} ago
                                 </div>
                             </div>
                         </div>
                         <img
-                            src={post.creater.image}
-                            alt={post.creater.content}
+                            src={post.creator.image}
+                            alt={post.creator.content}
                             style={{ width: '100%', height: 'auto', display: 'block' }}
                         />
                         <div className='m-3'>
-                            <h5 >{post.creater.content}</h5>
+                            <h5 >{post.creator.content}</h5>
                             <div>
-                                {post.creater.tags.map((tag, index) => (
+                                {post.creator.tags.map((tag, index) => (
                                     <div key={index} className='badge bg-secondary me-1'>
                                         #{tag}
                                     </div>
