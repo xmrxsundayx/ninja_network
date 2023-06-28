@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
+
 
 
 const Profile = ({ user, setUser }) => {
@@ -13,8 +14,9 @@ const Profile = ({ user, setUser }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
-  const { userId } = useParams();
+  const {userId} = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // this is to get the one logged User 
   useEffect(() => {
@@ -40,8 +42,7 @@ const Profile = ({ user, setUser }) => {
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
-        console.error('Error fetching ninjas post:', error);
-
+        console.error('Error fetching ninja posts:', error);
       }
     };
     fetchOneUserPosts();
@@ -63,19 +64,22 @@ const Profile = ({ user, setUser }) => {
   }, [userId]);
 
   // this is to get one API User
+  const fetchOneAPIUser = async () => {
+    try {
+      const response = await api.get(`/user/${userId}`);
+      setSelectedUser(response.data);
+      console.log('Test1', response.data);
+    } catch (error) {
+      console.error('Test Error', error);
+    }
+  };  
+
   useEffect(() => {
-    const fetchOneAPIUser = async () => {
-        try {
-          const response = await api.get(`/user/${userId}`);
-          console.log('test',response.data);
-          setSelectedUser(response.data);
-        } catch (error) {
-          console.error('New Error', error);
-      }
-    };
+    if (selectedUser && !selectedUser.id) {
+      fetchOneAPIUser(userId);
+    }
+  }, [selectedUser, location]);
   
-    fetchOneAPIUser();
-  }, [userId]);  
 
   // this is to get all the API Users
   useEffect(() => {
