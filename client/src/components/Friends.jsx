@@ -1,9 +1,8 @@
 // Sandy's component test
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import api from '../api/dummy';
 import Navbar from './Navbar';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 
 
@@ -14,6 +13,7 @@ const Friends = ({ user, setUser }) => {
     const [selectedUser, setSelectedUser] = useState(null);
     const { userId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
 
     // this is to get the one User info
@@ -51,7 +51,7 @@ const Friends = ({ user, setUser }) => {
             try {
                 const response = await axios.get('http://localhost:8000/api/users/');
                 setApiUsers(response.data);
-                console.log('Fetch all users',response.data);
+                console.log('Fetch all users', response.data);
             } catch (error) {
                 console.error('Error fetching ninjas:', error);
             }
@@ -59,7 +59,6 @@ const Friends = ({ user, setUser }) => {
 
         fetchAllUsers();
     }, []);
-
 
     const handleAddFriend = (apiUser, user, e) => {
         e.stopPropagation();
@@ -71,7 +70,6 @@ const Friends = ({ user, setUser }) => {
             return;
         }
 
-        // Create the friend object
         const friendToAdd = {
             _id: apiUser._id,
             firstName: apiUser.firstName,
@@ -81,21 +79,18 @@ const Friends = ({ user, setUser }) => {
             languages: [],
         };
 
-        // Send the friendToAdd object to the backend API endpoint to update the user's friends array
         axios
             .patch(`http://localhost:8000/api/users/${user._id}`, {
                 friends: [...user.friends, friendToAdd],
             })
             .then((response) => {
                 console.log('Friend added successfully:', response.data);
-                // Update the state or perform any necessary actions after adding a friend
                 setUser((prevUser) => ({
                     ...prevUser,
                     friends: [...prevUser.friends, friendToAdd],
                 }));
                 setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
 
-                // Remove the added friend from the apiUsers state
                 setApiUsers((prevApiUsers) =>
                     prevApiUsers.filter((user) => user._id !== apiUser._id)
                 );
@@ -108,8 +103,8 @@ const Friends = ({ user, setUser }) => {
     const handleFriendClick = (userId) => {
         const clickedUser = apiUsers.find((user) => user._id === userId) || user.friends.find((friend) => friend._id === userId);
         setSelectedUser(clickedUser);
-        navigate(`/profile/${userId}`);
-      };
+        navigate(`/profile/${userId}`, { state: { userClicked: clickedUser } });
+    };
 
     const handleDeleteFriend = async (e, _id) => {
         e.preventDefault();
