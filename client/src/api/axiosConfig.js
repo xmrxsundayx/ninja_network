@@ -6,14 +6,14 @@
 
 // export default axios;
 
-import axios from 'axios';
+// import axios from 'axios';
 
-const token = axios.create({
-    baseURL: '',
-    headers: {
+// const token = axios.create({
+//     baseURL: '',
+//     headers: {
         
 
-    }
-});
+//     }
+// });
 
-export default token;
+// export default token;

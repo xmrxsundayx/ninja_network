@@ -6,8 +6,9 @@ import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import api from '../api/dummy';
 import PostForm from './PostForm';
+import Posts from './Posts';
 
-const Home = ({ user, setUser}) => {
+const Home = ({ user, setUser, postList, setPostList}) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
@@ -274,7 +275,8 @@ const Home = ({ user, setUser}) => {
           <div className="col-4">
             {/* removing and adding to Post component so that there is only one form for create and edit*/}
             < PostForm />
-            <div className=''>
+            < Posts getTimeSince = {getTimeSince} postList={postList} setPostList= {setPostList}  />
+            {/* <div className=''>
               {apiPosts?.map((apiPost, i) => (
                 <div className='mid-block'
                   key={apiPost.id}>
@@ -328,14 +330,14 @@ const Home = ({ user, setUser}) => {
                   </div>
                   <div>
                     <textarea className='w-100' placeholder='Comments coming soon'></textarea>
-                    {/* {onePost.map((post, index) => (
+                    {onePost.map((post, index) => (
                       <div key={index}>{post}</div>
-                    ))} */}
-                    {/* {onePost.data} */}
+                    ))}
+                    {onePost.data}
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}

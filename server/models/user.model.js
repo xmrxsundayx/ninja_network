@@ -34,7 +34,7 @@ const UserSchema = new mongoose.Schema({
     profilePhoto:
     {
         type: String,
-        default: "http://res.cloudinary.com/dijdukoam/image/upload/v1687891822/vcqb6zt9wfgg8rldl7dx.jpg"
+        default: "https://res.cloudinary.com/dijdukoam/image/upload/v1687903553/l97pm0jdnvfvhpngtuza.png"
     },
     location: {
         type: String,

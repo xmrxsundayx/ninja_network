@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const Posts = (user) => {
-    const [postList, setPostList] = useState([])
+const Posts = ({ postList, setPostList }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/posts/all')
-            .then(res => {
-                console.log(res.data);
-                setPostList(res.data)
-            })
-            .catch(err => console.log("Error fetching all posts", err))
-    }, [])
+        const fetchPosts = async () => {
+            try {
+                console.log("getting all posts", postList);
+                const response = await axios.get('http://localhost:8000/api/posts/all', { withCredentials: true });
+                setPostList(response.data);
+                console.log("this is all posts", response.data);
+            } catch (error) {
+                console.log("Error fetching all posts", error);
+            }
+        };
+        fetchPosts();
+    }, []);
+
 
     const deletePost = (id) => {
         axios.delete(`http://localhost:8000/api/posts/delete/${id}`)
@@ -26,7 +31,7 @@ const Posts = (user) => {
 
     const handleViewProfile = () => {
         navigate(`/profile/${postList.creator._id}`);
-      };
+    };
 
 
     // Function for how long ago a post was posted
@@ -55,15 +60,16 @@ const Posts = (user) => {
 
     return (
         <div>
+            <h1>Posts</h1>
             <div className=''>
                 {/* view for all posts in friend list */}
-                {Array.isArray(postList) && postList((post, id) => (
+                {postList && postList.map((post, id) => (
                     <div className='block'
                         key={id}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
                                 className='rounded-circle'
-                                src={post.creator.picture}
+                                src={post.creator.profilePhoto}
                                 alt={`${post.creator.firstName} ${post.creator.lastName}`}
                                 style={{
                                     width: '50px',
@@ -71,14 +77,14 @@ const Posts = (user) => {
                                     margin: '20px',
                                     cursor: 'pointer'
                                 }}
-                                onClick={() => handleViewProfile(post.creator.id)}
+                                onClick={() => handleViewProfile(post.creator._id)}
                             />
                             <div>
                                 <div>
                                     {post.creator.firstName} {post.creator.lastName}
                                 </div>
                                 <div>
-                                    {getTimeSince(post.creator.publishDate)} ago
+                                    {getTimeSince(post.creator.createdAt)} ago
                                 </div>
                             </div>
                         </div>
@@ -87,16 +93,16 @@ const Posts = (user) => {
                             alt={post.creator.content}
                             style={{ width: '100%', height: 'auto', display: 'block' }}
                         />
-                        <div className='m-3'>
+                        {/* <div className='m-3'>
                             <h5 >{post.creator.content}</h5>
                             <div>
-                                {post.creator.tags.map((tag, index) => (
+                                {post?.creator?.tags.map((tag, index) => (
                                     <div key={index} className='badge bg-secondary me-1'>
                                         #{tag}
                                     </div>
                                 ))}
                             </div>
-                        </div>
+                        </div> */}
                         <div className='d-flex justify-content-around'>
                             <button type='button' className='btn btn-outline me-2'>
                                 <i className='far fa-heart'></i> Like
@@ -108,7 +114,7 @@ const Posts = (user) => {
                                 <i className='fas fa-share'></i> Share
                             </button>
                             {/* if id ? something so only created can delete */}
-                            <button type='button' className='btn btn-outline me-2' onClick={()=> navigate(`/api/post/update/${id}`)}>
+                            <button type='button' className='btn btn-outline me-2' onClick={() => navigate(`/api/post/update/${id}`)}>
                                 <i className='fas fa-edit'></i> Edit
                             </button>
                             <button type='button' className='btn btn-outline me-2' onClick={deletePost}>

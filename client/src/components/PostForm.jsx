@@ -3,28 +3,32 @@ import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
-const PostForm = () => {
-    const [ postList, setPostList ] = useState([])
+const PostForm = ({postList, setPostList}) => {
     const { id } = useParams()
     const [errors, setErrors] = useState({})
     const [post, setPost] = useState({
-        content: "",
-        image: "",
-        tags: "",
+        // content: "",
+        // image: "",
+        // tags: "",
     })
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {
-        if (id) {
-            axios.get(`http://localhost:8000/api/post/${id}`)
-                .then(res => {
-                    console.log(res.data);
-                    setPost(res.data)
-                })
-                .catch(err => console.log("Error fetching post" + err))
-        }
-    }, [])
+    // useEffect(() => {
+    //     console.log("getting all posts", postList)
+    // }
+    // , [postList])
+
+    // useEffect(() => {
+    //     if (id) {
+    //         axios.get(`http://localhost:8000/api/post/${id}`)
+    //             .then(res => {
+    //                 console.log(res.data);
+    //                 setPost(res.data)
+    //             })
+    //             .catch(err => console.log("Error fetching post" + err))
+    //     }
+    // }, [])
 
     // -----------------------------------------------------------------------------------------------------------------
     // const getAuth = () => {
@@ -58,11 +62,10 @@ const PostForm = () => {
         console.log("submitting post")
         axios.post('http://localhost:8000/api/post/create', post, { withCredentials: true })
             .then(res => {
-                console.log("Post created", res.data);
+                console.log("Post created", res.data)
                 setErrors([])
                 setLoaded(true)
                 setPostList([...postList, res.data])
-                // navigate('/posts')
             })
             .catch(err => {
                 console.log("Error creating post", err);
