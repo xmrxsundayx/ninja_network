@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 import { useNavigate, useParams } from 'react-router-dom';
 
 
+
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
