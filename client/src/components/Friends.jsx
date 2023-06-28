@@ -3,13 +3,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import api from '../api/dummy';
 import Navbar from './Navbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 // Sample code to test api
 const Friends = ({ user, setUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState(user.friends || []);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const { userId } = useParams();
     const navigate = useNavigate();
 
 
@@ -30,6 +32,18 @@ const Friends = ({ user, setUser }) => {
             });
     }, []);
 
+    // Fetch user data based on the URL ID
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await api.get(`/user/${userId}`);
+                setApiUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
+        fetchUser();
+    }, [userId]);
 
     useEffect(() => {
         const fetchAllApiUsers = async () => {
@@ -64,7 +78,7 @@ const Friends = ({ user, setUser }) => {
             firstName: apiUser.firstName,
             lastName: apiUser.lastName,
             picture: apiUser.picture,
-            title: 'Software Developer',
+            jobTitle: 'Software Developer',
             languages: ['JavaScript', 'Python'],
         };
 
@@ -92,10 +106,11 @@ const Friends = ({ user, setUser }) => {
             });
     };
 
-
-    const handleFriendClick = (friendId) => {
-        navigate(`/profile/${friendId}`);
-    };
+    const handleFriendClick = (userId) => {
+        const clickedUser = apiUsers.find((user) => user.id === userId) || user.friends.find((friend) => friend._id === userId);
+        setSelectedUser(clickedUser);
+        navigate(`/profile/${userId}`);
+      };
 
     const handleDeleteFriend = async (e, id) => {
         e.preventDefault();
