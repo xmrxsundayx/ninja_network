@@ -87,7 +87,7 @@ const PostForm = () => {
 
     return (
         <div>
-            <div className='block mb-4'>
+            <div className='mid-block mb-4'>
                 {/* <h4 className='p-2'>Submit a Post</h4> */}
                 <form onSubmit={(id) ? handleUpdate : handleSubmit}>
                     <div className="form-group">
