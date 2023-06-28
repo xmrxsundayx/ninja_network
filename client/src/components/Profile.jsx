@@ -31,18 +31,6 @@ const Profile = ({ user, setUser }) => {
       });
   }, []);
 
-  // Fetch user data based on the URL ID
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await api.get(`/user/${userId}`);
-        setApiUsers(response.data);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    fetchUser();
-  }, [userId]);
 
   // create a useEffect to get only posts from the user
   useEffect(() => {
@@ -53,6 +41,7 @@ const Profile = ({ user, setUser }) => {
         console.log('Get User', response.data);
       } catch (error) {
         console.error('Error fetching ninjas post:', error);
+
       }
     };
     fetchOneUserPosts();
@@ -67,22 +56,37 @@ const Profile = ({ user, setUser }) => {
         setOnePost(response.data);
         console.log('Get Post', response.data);
       } catch (error) {
-        console.error('Error fetching Post:', error);
+        console.error('Error fetching one Post:', error);
       }
     };
     fetchOnePost();
   }, [userId]);
 
+  // this is to get one API User
+  useEffect(() => {
+    const fetchOneAPIUser = async () => {
+        try {
+          const response = await api.get(`/user/${userId}`);
+          console.log('test',response.data);
+          setSelectedUser(response.data);
+        } catch (error) {
+          console.error('New Error', error);
+      }
+    };
+  
+    fetchOneAPIUser();
+  }, [userId]);  
 
   // this is to get all the API Users
   useEffect(() => {
     const fetchAllApiUsers = async () => {
       try {
         const response = await api.get('/user', { params: { limit: 5 } });
+        console.log(response.data.data)
         setApiUsers(response.data.data);
         console.log('Get All Users', response.data.data);
       } catch (error) {
-        console.error('Error fetching ninjas:', error);
+        console.error('Error fetching all ninjas:', error);
       }
     };
     fetchAllApiUsers();
@@ -97,7 +101,7 @@ const Profile = ({ user, setUser }) => {
         setApiPosts(response.data.data);
         console.log('Get All Posts', response.data.data);
       } catch (error) {
-        console.error('Error fetching ninjas:', error);
+        console.error('Error fetching ninjas posts:', error);
       }
     };
     fetchAllApiPosts();
