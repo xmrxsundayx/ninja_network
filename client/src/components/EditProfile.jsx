@@ -237,7 +237,6 @@ const EditProfile = ({ user, setUser }) => {
                         </div>
                     </form>
                 </div>
-                {/* <Upload user={user} setUser={setUser}/> */}
             </div>
         </div>
     )
