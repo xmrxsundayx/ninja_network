@@ -60,10 +60,10 @@ const Posts = ({ postList, setPostList }) => {
 
     return (
         <div>
-            <div className='mid-block mb-4'>
+            <div className="">
                 {/* view for all posts in friend list */}
                 {postList && postList.map((post, id) => (
-                    <div className='mid-block'
+                    <div className='mid-block p-3'
                         key={id}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
@@ -90,7 +90,7 @@ const Posts = ({ postList, setPostList }) => {
                         <img
                             src={post.image}
                             alt={post.content}
-                            style={{ width: '100%', height: 'auto', display: 'block' }}
+                            style={{ width: '100%', height: 'auto', display: 'block' , marginLeft: '15px'}}
                         />
                         <div className='m-3'>
                             <h5 >{post.content}</h5>
@@ -120,7 +120,7 @@ const Posts = ({ postList, setPostList }) => {
                                 <i className='fas fa-trash'></i> Delete
                             </button>
                         </div>
-                        <div>
+                        <div className='d-flex justify-content-center mx-3'>
                             <textarea className='w-100' placeholder='Comments coming soon'></textarea>
                             {/* {onePost.map((post, index) => (
                     <div key={index}>{post}</div>
