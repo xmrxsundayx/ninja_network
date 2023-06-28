@@ -3,8 +3,6 @@ import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
-import api from '../api/dummy';
-
 
 
 const Profile = ({ user, setUser }) => {
@@ -14,7 +12,7 @@ const Profile = ({ user, setUser }) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [oneUser, setOneUser] = useState({})
   const [onePost, setOnePost] = useState({})
-  const {userId} = useParams();
+  const { userId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -31,14 +29,14 @@ const Profile = ({ user, setUser }) => {
         console.log("current user error: ", err)
         setUser({})
       });
-  }, []);
+  }, [setUser]);
 
 
   // create a useEffect to get only posts from the user
   useEffect(() => {
     const fetchOneUserPosts = async () => {
       try {
-        const response = await api.get(`/user/${userId}/post`);
+        const response = await axios.get(`/user/${userId}/post`);
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
@@ -53,7 +51,7 @@ const Profile = ({ user, setUser }) => {
   useEffect(() => {
     const fetchOnePost = async () => {
       try {
-        const response = await api.get(`/post/${userId}/comment`);
+        const response = await axios.get(`/post/${userId}/comment`);
         setOnePost(response.data);
         console.log('Get Post', response.data);
       } catch (error) {
@@ -63,52 +61,44 @@ const Profile = ({ user, setUser }) => {
     fetchOnePost();
   }, [userId]);
 
-  // this is to get one API User
-  const fetchOneAPIUser = async () => {
-    try {
-      const response = await api.get(`/user/${userId}`);
-      setSelectedUser(response.data);
-      console.log('Test1', response.data);
-    } catch (error) {
-      console.error('Test Error', error);
-    }
-  };  
-
+  // this is to get one User
   useEffect(() => {
-    if (selectedUser && !selectedUser.id) {
-      fetchOneAPIUser(userId);
+    const fetchOneUser = async () => {
+      try {
+        if (location.state && location.state.userClicked) {
+          setSelectedUser((prevUser) => ({
+            ...prevUser,
+            userClicked: location.state.userClicked,
+          }));
+        } else {
+          const response = await axios.get(`/user/${userId}`);
+          setSelectedUser(response.data);
+          console.log('Test1', response.data);
+        }
+      } catch (error) {
+        console.error('Test Error', error);
+      }
+    };
+  
+    if (selectedUser && selectedUser._id !== userId) {
+      fetchOneUser();
     }
-  }, [selectedUser, location]);
+  }, [location, userId]);
   
 
-  // this is to get all the API Users
+  // this is to get all the Users
   useEffect(() => {
-    const fetchAllApiUsers = async () => {
+    const fetchAllUsers = async () => {
       try {
-        const response = await api.get('/user', { params: { limit: 5 } });
-        console.log(response.data.data)
-        setApiUsers(response.data.data);
-        console.log('Get All Users', response.data.data);
+        const response = await axios.get('http://localhost:8000/api/users/');
+        setApiUsers(response.data);
+        console.log('Fetch all users', response.data);
       } catch (error) {
-        console.error('Error fetching all ninjas:', error);
+        console.error('Error fetching ninjas:', error);
       }
     };
-    fetchAllApiUsers();
-  }, []);
 
-  // This is used to get all the API posts
-  useEffect(() => {
-    const fetchAllApiPosts = async () => {
-      try {
-        // take away params when finished. 
-        const response = await api.get('/post', { params: { limit: 20 } });
-        setApiPosts(response.data.data);
-        console.log('Get All Posts', response.data.data);
-      } catch (error) {
-        console.error('Error fetching ninjas posts:', error);
-      }
-    };
-    fetchAllApiPosts();
+    fetchAllUsers();
   }, []);
 
   const handleViewHome = () => {
@@ -151,23 +141,23 @@ const Profile = ({ user, setUser }) => {
   const handleAddFriend = (apiUser, user, e) => {
     e.stopPropagation();
     console.log('apiUser:', apiUser, 'user:', user);
-  
-    const friendExists = user.friends.some((friend) => friend._id === apiUser.id);
+
+    const friendExists = user.friends.some((friend) => friend._id === apiUser._id);
     if (friendExists) {
       window.alert('Friend already added', apiUser);
       return;
     }
-  
+
     // Create the friend object
     const friendToAdd = {
-      _id: apiUser.id,
+      _id: apiUser._id,
       firstName: apiUser.firstName,
       lastName: apiUser.lastName,
-      picture: apiUser.picture,
-      jobTitle: 'Software Developer',
-      languages: ['JavaScript', 'Python'],
+      profilePhoto: apiUser.profilePhoto,
+      jobTitle: '',
+      languages: [],
     };
-  
+
     // Send the friendToAdd object to the backend API endpoint to update the user's friends array
     axios
       .patch(`http://localhost:8000/api/users/${user._id}`, {
@@ -181,42 +171,41 @@ const Profile = ({ user, setUser }) => {
           friends: [...prevUser.friends, friendToAdd],
         }));
         setAddedFriends((prevFriends) => [...prevFriends, friendToAdd]);
-  
+
         // Remove the added friend from the apiUsers state
         setApiUsers((prevApiUsers) =>
-          prevApiUsers.filter((user) => user.id !== apiUser.id)
+          prevApiUsers.filter((user) => user._id !== apiUser._id)
         );
       })
       .catch((error) => {
         console.error('Error adding friend:', error);
       });
   };
-  
 
   const handleFriendClick = (userId) => {
-    const clickedUser = apiUsers.find((user) => user.id === userId) || user.friends.find((friend) => friend._id === userId);
+    const clickedUser = apiUsers.find((user) => user._id === userId) || user.friends.find((friend) => friend._id === userId);
     setSelectedUser(clickedUser);
     navigate(`/profile/${userId}`);
-  };  
-  
+  };
 
-  const handleDeleteFriend = async (e, id) => {
+
+  const handleDeleteFriend = async (e, _id) => {
     e.preventDefault();
     e.stopPropagation();
     try {
-      const deletedFriend = user.friends.find((friend) => friend._id === id);
+      const deletedFriend = user.friends.find((friend) => friend._id === _id);
 
       await axios.patch(`http://localhost:8000/api/users/${user._id}`, {
-        friends: user.friends.filter((friend) => friend._id !== id),
+        friends: user.friends.filter((friend) => friend._id !== _id),
       });
 
       // Update the state after deleting the friend
       setUser((prevUser) => ({
         ...prevUser,
-        friends: prevUser.friends.filter((friend) => friend._id !== id),
+        friends: prevUser.friends.filter((friend) => friend._id !== _id),
       }));
 
-      setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== id));
+      setAddedFriends((prevFriends) => prevFriends.filter((friend) => friend._id !== _id));
 
       // Add the deleted friend back to the apiUsers state
       setApiUsers((prevApiUsers) => [...prevApiUsers, deletedFriend]);
@@ -244,13 +233,13 @@ const Profile = ({ user, setUser }) => {
                     margin: '10px',
                     cursor: 'pointer'
                   }}
-                  src={selectedUser?.picture || user.profilePhoto }
+                  src={selectedUser?.profilePhoto || user.profilePhoto}
                   alt="profile"
                   onClick={handleViewProfile}
                 />
-                <h3>{selectedUser?.firstName || user.firstName }</h3>
-                <h3>{selectedUser?.lastName || user.lastName }</h3>
-                <p>{selectedUser?.jobTitle || user.jobTitle }</p>
+                <h3>{selectedUser?.firstName || user.firstName}</h3>
+                <h3>{selectedUser?.lastName || user.lastName}</h3>
+                <p>{selectedUser?.jobTitle || user.jobTitle}</p>
                 <button className='btn specColor' onClick={handleViewHome}>Home</button>
                 <button className='btn specColor my-2' onClick={handleEditProfile}>Edit Profile</button>
               </div>
@@ -258,7 +247,7 @@ const Profile = ({ user, setUser }) => {
             <div className='left-block'>
               <h5>Languages Learned</h5>
               <div className='d-flex flex-sm-wrap' >
-                {user?.languages?.map((language) => (
+                {selectedUser?.languages || user?.languages?.map((language) => (
                   <div
                     key={language._id}
                     style={{
@@ -268,13 +257,13 @@ const Profile = ({ user, setUser }) => {
                       background: "lightblue"
                     }}
                   >
-                    {language}
+                    <div>{language}</div>
                   </div>
                 ))}
               </div>
               <div>
                 <h5 className='mt-3'>Social Media Links</h5>
-                {user?.links?.map((link) => (
+                {selectedUser?.links || user?.links?.map((link) => (
                   <div key={link._id}>
                     <a href={link} target='_blank' rel='noreferrer'>{link}</a>
                   </div>
@@ -282,7 +271,7 @@ const Profile = ({ user, setUser }) => {
               </div>
               <div>
                 <h5>Location</h5>
-                <p>{user.location}</p>
+                <p>{selectedUser?.location || user.location}</p>
               </div>
             </div>
             <StickyBox offsetTop={100} offsetBottom={0}>
@@ -309,11 +298,11 @@ const Profile = ({ user, setUser }) => {
                           onClick={() => handleFriendClick(friend._id)}
                         >
                           <img
-                            src={friend.picture}
+                            src={friend.profilePhoto}
                             alt={`${friend.firstName} ${friend.lastName}`}
                             style={{
                               width: '50px',
-                              height: 'auto',
+                              height: '50px',
                               borderRadius: '50%',
                             }}
                           />
@@ -340,19 +329,19 @@ const Profile = ({ user, setUser }) => {
             <div className=''>
               {apiPosts.map((apiPost, i) => (
                 <div className='mid-block'
-                  key={apiPost.id}>
+                  key={apiPost._id}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img
                       className='rounded-circle'
-                      src={apiPost.owner.picture}
+                      src={apiPost.owner.profilePhoto}
                       alt={`${apiPost.owner.firstName} ${apiPost.owner.lastName}`}
                       style={{
                         width: '50px',
-                        height: 'auto',
+                        height: '50px',
                         margin: '20px',
                         cursor: 'pointer'
                       }}
-                      onClick={() => handleViewProfile(apiPost.owner.id)}
+                      onClick={() => handleViewProfile(apiPost.owner._id)}
                     />
                     <div>
                       <div>
@@ -410,7 +399,7 @@ const Profile = ({ user, setUser }) => {
                   <div className='my-2'>
                     {apiUsers && apiUsers.map((apiUser) => (
                       <div
-                        key={apiUser.id}
+                        key={apiUser._id}
                         style={{
                           padding: '10px',
                           margin: '5px',
@@ -420,14 +409,14 @@ const Profile = ({ user, setUser }) => {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                         }}
-                        onClick={() => handleFriendClick(apiUser.id)}
+                        onClick={() => handleFriendClick(apiUser._id)}
                       >
                         <img
-                          src={apiUser.picture}
+                          src={apiUser.profilePhoto}
                           alt={`${apiUser.firstName} ${apiUser.lastName}`}
                           style={{
                             width: '50px',
-                            height: 'auto',
+                            height: '50px',
                             borderRadius: '50%',
                           }}
                         />
