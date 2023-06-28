@@ -28,6 +28,13 @@ const Posts = ({ postList, setPostList }) => {
             })
             .catch(err => console.log("Error deleting post", err))
     }
+    const getOnePost = (id) => {
+        axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+            .then((res) => {
+                console.log("one Post",res.data);
+            })
+            .catch(err => console.log("Error deleting post", err))
+    }
 
     const handleViewProfile = () => {
         navigate(`/profile/${postList.creator._id}`);
@@ -113,8 +120,13 @@ const Posts = ({ postList, setPostList }) => {
                                 <i className='fas fa-share'></i> Share
                             </button>
                             {/* if id ? something so only created can delete */}
-                            <button type='button' className='btn btn-outline me-2' onClick={() => navigate(`/api/post/update/${id}`)}>
-                                <i className='fas fa-edit'></i> Edit
+                            <button 
+                            type='button' 
+                            className='btn btn-outline me-2' 
+
+                            onClick={() => getOnePost(post._id)}>
+                                <i className='fas fa-edit'></i>
+                                 Edit
                             </button>
                             <button type='button' className='btn btn-outline me-2' onClick={()=> deletePost(post._id)}>
                                 <i className='fas fa-trash'></i> Delete

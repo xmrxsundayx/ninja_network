@@ -17,7 +17,7 @@ const PostForm = ({ postList, setPostList }) => {
 
     // useEffect(() => {
     //     if (id) {
-    //         axios.get(`http://localhost:8000/api/post/${id}`)
+    //         axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
     //             .then(res => {
     //                 console.log(res.data);
     //                 setPost(res.data)
@@ -50,8 +50,14 @@ const PostForm = ({ postList, setPostList }) => {
     // -----------------------------------------------------------------------------------------------------------------
 
     const handleChange = (e) => {
-        setPost({ ...post, [e.target.name]: e.target.value })
-    }
+        setPost((prevPost) => {
+            if (!prevPost) {
+                return { content: e.target.value };
+            }
+            return { ...prevPost, [e.target.name]: e.target.value };
+        });
+    };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -62,8 +68,7 @@ const PostForm = ({ postList, setPostList }) => {
                 console.log("Post created", res.data);
                 setErrors([]);
                 setLoaded(true);
-                setPostList(prevPostList => [...prevPostList, res.data]); 
-                setPost({ title: '', content: '' });
+                setPostList(prevPostList => [...prevPostList, res.data]);
             })
             .catch(err => {
                 console.log("Error creating post", err);
