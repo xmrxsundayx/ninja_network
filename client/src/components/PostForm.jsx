@@ -91,6 +91,27 @@ const PostForm = ({ postList, setPostList }) => {
             })
     }
 
+    // const handlePhotoChange = (e) => {
+    //     e.preventDefault()
+    //     const photoData = new FormData();
+    //     photoData.append("file", image);
+    //     photoData.append("upload_preset", "byjlcqbx");
+    //     console.log("this is the image", image)
+    //     console.log("this is the photo data", photoData)
+
+    //     axios
+    //         .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", formData)
+    //         .then((response) => {
+    //             const sourceUrl = response.data.url;
+    //             console.log("this is the response", response);
+    //             setPost({ ...post, image: sourceUrl });
+    //             console.log(response.data.url);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // };
+
     return (
         <div>
             <div className='mid-block mb-4'>

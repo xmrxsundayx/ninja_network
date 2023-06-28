@@ -30,6 +30,7 @@ const UserSchema = new mongoose.Schema({
     },
     languages: {
         type: [],
+        default: ["Edit profile to add languages"]
     },
     profilePhoto:
     {
@@ -38,6 +39,7 @@ const UserSchema = new mongoose.Schema({
     },
     location: {
         type: String,
+        default: "Edit profile to add location"
     },
     links: {
         type: [],
