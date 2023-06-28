@@ -11,6 +11,7 @@ import Upload from './components/UploadTest';
 
 function App() {
   const [user, setUser] = useState({});
+  const [postList, setPostList] = useState([]);
 
   return (
     <div>
@@ -23,7 +24,7 @@ function App() {
           <Route element={<Friends user={user} setUser={setUser} />} path="/myninjas/:id" />
           <Route element={<Profile user={user} setUser={setUser} />} path="/profile/:id" />
           <Route element={<EditProfile user={user} setUser={setUser} />} path="/profile/:id/edit" />
-          <Route element={<Upload user={user} setUser={setUser} />} path="/test" />
+          <Route element={<Upload user={user} setUser={setUser} postList={postList} setPostList={setPostList} />} path="/test" />
 
         </Routes>
       </BrowserRouter>

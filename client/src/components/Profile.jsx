@@ -40,7 +40,8 @@ const Profile = ({ user, setUser }) => {
         setOneUser(response.data);
         console.log('Get User', response.data);
       } catch (error) {
-        console.error('Error fetching ninja posts:', error);
+        console.error('Error fetching ninjas post:', error);
+
       }
     };
     fetchOneUserPosts();
