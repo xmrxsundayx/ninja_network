@@ -139,30 +139,6 @@ const Home = ({ user, setUser, postList, setPostList}) => {
   };
 
 
-  // Function for how long ago a post was posted
-  function getTimeSince(publishDate) {
-    const now = new Date();
-    const postDate = new Date(publishDate);
-    const diffInSeconds = Math.floor((now - postDate) / 1000);
-
-    if (diffInSeconds < 3600) {
-      const minutes = Math.floor(diffInSeconds / 60);
-      return `${minutes} minutes`;
-    } else if (diffInSeconds < 86400) {
-      const hours = Math.floor(diffInSeconds / 3600);
-      return `${hours} hours`;
-    } else if (diffInSeconds < 2592000) {
-      const days = Math.floor(diffInSeconds / 86400);
-      return `${days} days`;
-    } else if (diffInSeconds < 31536000) {
-      const months = Math.floor(diffInSeconds / 2592000);
-      return `${months} months`;
-    } else {
-      const years = Math.floor(diffInSeconds / 31536000);
-      return `${years} years`;
-    }
-  }
-
   return (
     <div className='background'>
       <Navbar />
@@ -274,8 +250,8 @@ const Home = ({ user, setUser, postList, setPostList}) => {
           {/* <!-- Middle Column --> */}
           <div className="col-4">
             {/* removing and adding to Post component so that there is only one form for create and edit*/}
-            < PostForm />
-            < Posts getTimeSince = {getTimeSince} postList={postList} setPostList= {setPostList}  />
+            < PostForm postList={postList} setPostList={setPostList}/>
+            < Posts postList={postList} setPostList= {setPostList}  />
             {/* <div className=''>
               {apiPosts?.map((apiPost, i) => (
                 <div className='mid-block'
@@ -339,6 +315,7 @@ const Home = ({ user, setUser, postList, setPostList}) => {
               ))}
             </div> */}
           </div>
+          
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}
           <div className="col-3">

@@ -3,21 +3,17 @@ import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 
 
-const PostForm = ({postList, setPostList}) => {
+const PostForm = ({ postList, setPostList }) => {
     const { id } = useParams()
     const [errors, setErrors] = useState({})
-    const [post, setPost] = useState({
-        // content: "",
-        // image: "",
-        // tags: "",
-    })
+    const [post, setPost] = useState({})
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
-    // useEffect(() => {
-    //     console.log("getting all posts", postList)
-    // }
-    // , [postList])
+    useEffect(() => {
+        console.log("getting all posts", postList)
+    }
+        , [])
 
     // useEffect(() => {
     //     if (id) {
@@ -58,21 +54,23 @@ const PostForm = ({postList, setPostList}) => {
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log("submitting post")
-        axios.post('http://localhost:8000/api/post/create', post, { withCredentials: true })
+        e.preventDefault();
+        console.log("submitting post");
+        axios
+            .post('http://localhost:8000/api/post/create', post, { withCredentials: true })
             .then(res => {
-                console.log("Post created", res.data)
-                setErrors([])
-                setLoaded(true)
-                setPostList([...postList, res.data])
+                console.log("Post created", res.data);
+                setErrors([]);
+                setLoaded(true);
+                setPostList(prevPostList => [...prevPostList, res.data]); 
+                setPost({ title: '', content: '' });
             })
             .catch(err => {
                 console.log("Error creating post", err);
-                setErrors(err.response.data.errors)
-                setLoaded(false)
-            })
-    }
+                setErrors(err.response.data.errors);
+                setLoaded(false);
+            });
+    };
 
     const handleUpdate = (e) => {
         e.preventDefault()
@@ -92,7 +90,8 @@ const PostForm = ({postList, setPostList}) => {
         <div>
             <div className='mid-block mb-4'>
                 {/* <h4 className='p-2'>Submit a Post</h4> */}
-                <form onSubmit={(id) ? handleUpdate : handleSubmit}>
+                {/* <form onSubmit={(id) ? handleUpdate : handleSubmit}> */}
+                <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
                         <textarea type='text' value={post.content} className="form-control" id="postText" placeholder="What's on your mind?" name="content"

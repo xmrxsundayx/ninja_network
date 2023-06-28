@@ -20,7 +20,7 @@ module.exports = {
     // Read all posts
     getAllPosts: (req, res) => {
         Post.find()
-        .populate('creator', 'firstName lastName profilePhoto createdAt')
+        .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
             // .populate('comments')
             // .populate('likes')
             .sort({ createdAt: 'desc' })

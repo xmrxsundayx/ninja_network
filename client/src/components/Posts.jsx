@@ -21,10 +21,10 @@ const Posts = ({ postList, setPostList }) => {
 
 
     const deletePost = (id) => {
-        axios.delete(`http://localhost:8000/api/posts/delete/${id}`)
+        axios.delete(`http://localhost:8000/api/post/delete/${id}`, { withCredentials: true })
             .then((res) => {
-                console.log(res.data);
                 setPostList(postList.filter((post) => post._id !== id))
+                console.log("after delete",res.data);
             })
             .catch(err => console.log("Error deleting post", err))
     }
@@ -60,11 +60,10 @@ const Posts = ({ postList, setPostList }) => {
 
     return (
         <div>
-            <h1>Posts</h1>
-            <div className=''>
+            <div className='mid-block mb-4'>
                 {/* view for all posts in friend list */}
                 {postList && postList.map((post, id) => (
-                    <div className='block'
+                    <div className='mid-block'
                         key={id}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
@@ -72,8 +71,8 @@ const Posts = ({ postList, setPostList }) => {
                                 src={post.creator.profilePhoto}
                                 alt={`${post.creator.firstName} ${post.creator.lastName}`}
                                 style={{
-                                    width: '50px',
-                                    height: 'auto',
+                                    width: '60px',
+                                    height: '60px',
                                     margin: '20px',
                                     cursor: 'pointer'
                                 }}
@@ -84,25 +83,25 @@ const Posts = ({ postList, setPostList }) => {
                                     {post.creator.firstName} {post.creator.lastName}
                                 </div>
                                 <div>
-                                    {getTimeSince(post.creator.createdAt)} ago
+                                    {getTimeSince(post.createdAt)} ago
                                 </div>
                             </div>
                         </div>
                         <img
-                            src={post.creator.image}
-                            alt={post.creator.content}
+                            src={post.image}
+                            alt={post.content}
                             style={{ width: '100%', height: 'auto', display: 'block' }}
                         />
-                        {/* <div className='m-3'>
-                            <h5 >{post.creator.content}</h5>
-                            <div>
+                        <div className='m-3'>
+                            <h5 >{post.content}</h5>
+                            {/* <div>
                                 {post?.creator?.tags.map((tag, index) => (
-                                    <div key={index} className='badge bg-secondary me-1'>
+                                    <div key={index}className='badge bg-secondary me-1'>
                                         #{tag}
                                     </div>
                                 ))}
-                            </div>
-                        </div> */}
+                            </div> */}
+                        </div>
                         <div className='d-flex justify-content-around'>
                             <button type='button' className='btn btn-outline me-2'>
                                 <i className='far fa-heart'></i> Like
@@ -117,7 +116,7 @@ const Posts = ({ postList, setPostList }) => {
                             <button type='button' className='btn btn-outline me-2' onClick={() => navigate(`/api/post/update/${id}`)}>
                                 <i className='fas fa-edit'></i> Edit
                             </button>
-                            <button type='button' className='btn btn-outline me-2' onClick={deletePost}>
+                            <button type='button' className='btn btn-outline me-2' onClick={()=> deletePost(post._id)}>
                                 <i className='fas fa-trash'></i> Delete
                             </button>
                         </div>
