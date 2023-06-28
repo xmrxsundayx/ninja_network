@@ -154,8 +154,8 @@ const Profile = ({ user, setUser }) => {
       firstName: apiUser.firstName,
       lastName: apiUser.lastName,
       profilePhoto: apiUser.profilePhoto,
-      jobTitle: '',
-      languages: [],
+      jobTitle: apiUser.jobTitle,
+      languages: apiUser.languages,
     };
 
     // Send the friendToAdd object to the backend API endpoint to update the user's friends array
