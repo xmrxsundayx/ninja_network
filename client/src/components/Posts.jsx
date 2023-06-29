@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import EditPost from './EditPost'
 // import Button from 'react-bootstrap/Button';
 // import Modal from 'react-bootstrap/Modal';
 
@@ -126,7 +125,15 @@ const Posts = ({ postList, setPostList }) => {
                             <button type='button' className='btn btn-outline me-2'>
                                 <i className='fas fa-share'></i> Share
                             </button>
-                            <EditPost />
+                            {/* if id ? something so only created can delete */}
+                            <button 
+                            type='button' 
+                            className='btn btn-outline me-2' 
+
+                            onClick={() => getOnePost(post._id)}>
+                                <i className='fas fa-edit'></i>
+                                 Edit
+                            </button>
                             <button type='button' className='btn btn-outline me-2' onClick={()=> deletePost(post._id)}>
                                 <i className='fas fa-trash'></i> Delete
                             </button>
