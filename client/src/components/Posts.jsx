@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-// import Button from 'react-bootstrap/Button';
-// import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import PostForm from './PostForm';
 
 const Posts = ({ postList, setPostList }) => {
     const navigate = useNavigate()
     const [show, setShow] = useState(false);
+    const [post, setPost] = useState({});
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -14,10 +17,9 @@ const Posts = ({ postList, setPostList }) => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                console.log("getting all posts", postList);
                 const response = await axios.get('http://localhost:8000/api/posts/all', { withCredentials: true });
                 setPostList(response.data);
-                console.log("this is all posts", response.data);
+                console.log("this is all posts", response);
             } catch (error) {
                 console.log("Error fetching all posts", error);
             }
@@ -30,21 +32,51 @@ const Posts = ({ postList, setPostList }) => {
         axios.delete(`http://localhost:8000/api/post/delete/${id}`, { withCredentials: true })
             .then((res) => {
                 setPostList(postList.filter((post) => post._id !== id))
-                console.log("after delete",res.data);
+                console.log("after delete", res.data);
             })
             .catch(err => console.log("Error deleting post", err))
     }
+    // const getOnePost = (id) => {
+    //     axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+    //         .then((res) => {
+    //             console.log("one Post",res.data);
+    //         })
+    //         .catch(err => console.log("Error deleting post", err))
+    // }
+
     const getOnePost = (id) => {
-        axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
-            .then((res) => {
-                console.log("one Post",res.data);
+        axios
+            .get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+            .then(res => {
+                const postData = res.data;
+                setPost(postData)
+                navigate(`/post/${id}/edit`);
+                console.log("Fetched post:", postData);
             })
-            .catch(err => console.log("Error deleting post", err))
-    }
+            .catch(err => {
+                console.log("Error fetching post", err);
+            });
+    };
+
+    const handleUpdate = () => {
+        axios.patch(`/api/posts/update/${postList._id}`, postList, { withCredentials: true })
+            .then(response => {
+                console.log('Post updated successfully:', response.data);
+                handleClose();
+            })
+            .catch(error => {
+                console.error('Error updating post:', error);
+            });
+    };
 
     const handleViewProfile = () => {
         navigate(`/profile/${postList.creator._id}`);
     };
+
+    // const handleEditPost = () => {
+    //     console.log("edit post", post._id);
+    //     navigate(`/post/${post._id}/edit`);
+    //   };
 
 
     // Function for how long ago a post was posted
@@ -103,7 +135,7 @@ const Posts = ({ postList, setPostList }) => {
                         <img
                             src={post.image}
                             alt={post.content}
-                            style={{ width: '100%', height: 'auto', display: 'block' , marginLeft: '15px'}}
+                            style={{ width: '100%', height: 'auto', display: 'block', marginLeft: '15px' }}
                         />
                         <div className='m-3'>
                             <h5 >{post.content}</h5>
@@ -125,25 +157,21 @@ const Posts = ({ postList, setPostList }) => {
                             <button type='button' className='btn btn-outline me-2'>
                                 <i className='fas fa-share'></i> Share
                             </button>
-                            {/* if id ? something so only created can delete */}
-                            <button 
-                            type='button' 
-                            className='btn btn-outline me-2' 
-
-                            onClick={() => getOnePost(post._id)}>
+                            <button
+                                type='button'
+                                className='btn btn-outline me-2'
+                                onClick={() => {
+                                    getOnePost(post._id)
+                                }}>
                                 <i className='fas fa-edit'></i>
-                                 Edit
+                                Edit
                             </button>
-                            <button type='button' className='btn btn-outline me-2' onClick={()=> deletePost(post._id)}>
+                            <button type='button' className='btn btn-outline me-2' onClick={() => deletePost(post._id)}>
                                 <i className='fas fa-trash'></i> Delete
                             </button>
                         </div>
                         <div className='d-flex justify-content-center mx-3'>
                             <textarea className='w-100' placeholder='Comments coming soon'></textarea>
-                            {/* {onePost.map((post, index) => (
-                    <div key={index}>{post}</div>
-                    ))} */}
-                            {/* {onePost.data} */}
                         </div>
                     </div>
                 ))}
