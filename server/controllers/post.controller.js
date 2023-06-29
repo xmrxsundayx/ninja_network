@@ -31,7 +31,7 @@ module.exports = {
     getUserPosts: (req, res) => {
         const userToken = jwt.verify(req.cookies.usertoken, secret)
         Post.find({ creator: userToken._id })
-            .populate('creator', 'firstName lastName')
+            .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
             // .populate('comments')
             // .populate('likes')
             .sort({ createdAt: 'desc' })
@@ -41,7 +41,7 @@ module.exports = {
     // Read one post
     getOnePost: (req, res) => {
         Post.findOne({ _id: req.params.id })
-            .populate('creator', 'firstName lastName')
+            .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
             // .populate('comments')
             // .populate('likes')
             .then( e => res.json(e))
@@ -55,7 +55,7 @@ module.exports = {
             const post = await Post.findOneAndUpdate(
                 { _id: req.params.id, creator: userToken._id },
         req.body, { new: true, runValidators: true })
-        .populate('creator', 'firstName lastName');
+        .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments');
         res.json(post);
     } catch (err) {
         console.log(err);
