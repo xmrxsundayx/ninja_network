@@ -7,12 +7,12 @@ import StickyBox from "react-sticky-box"
 import PostForm from './PostForm';
 import Posts from './Posts';
 
-const Home = ({ user, setUser, postList, setPostList }) => {
+const Home = ({ user, setUser }) => {
   const [apiPosts, setApiPosts] = useState([]);
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [onePost, setOnePost] = useState({})
+  const [postList, setPostList] = useState([]);
   const { userId } = useParams();
   const navigate = useNavigate();
 
@@ -31,8 +31,8 @@ const Home = ({ user, setUser, postList, setPostList }) => {
       });
   }, [setUser]);
 
-   // this is to get all the Users
-   useEffect(() => {
+  // this is to get all the Users
+  useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/users/');
@@ -45,6 +45,20 @@ const Home = ({ user, setUser, postList, setPostList }) => {
 
     fetchAllUsers();
   }, []);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+        try {
+            console.log("getting all posts", postList);
+            const response = await axios.get('http://localhost:8000/api/posts/all', { withCredentials: true });
+            setPostList(response.data);
+            console.log("this is all posts", response.data);
+        } catch (error) {
+            console.log("Error fetching all posts", error);
+        }
+    };
+    fetchPosts();
+}, []);
 
 
   const handleViewProfile = () => {
@@ -141,7 +155,7 @@ const Home = ({ user, setUser, postList, setPostList }) => {
           {/* <!-- Middle Column --> */}
           <div className="col-4">
             <StickyBox offsetTop={90}>
-            < PostForm postList={postList} setPostList={setPostList} />
+              < PostForm postList={postList} setPostList={setPostList} />
             </StickyBox>
             < Posts postList={postList} setPostList={setPostList} />
           </div>
@@ -154,7 +168,7 @@ const Home = ({ user, setUser, postList, setPostList }) => {
                 <h4 className='p-2'>Ninjas Online</h4>
                 <div>
                   <div className='my-2'>
-                  {apiUsers && apiUsers.map((apiUser) => (
+                    {apiUsers && apiUsers.map((apiUser) => (
                       <div
                         key={apiUser._id}
                         style={{
