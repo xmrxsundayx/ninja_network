@@ -6,6 +6,8 @@ import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
 import PostForm from './PostForm';
 import Posts from './Posts';
+import github from '../images/github-logo.jpeg';
+import reactimage from '../images/logo192.png';
 
 const Home = ({ user, setUser }) => {
   const [apiPosts, setApiPosts] = useState([]);
@@ -146,7 +148,18 @@ const Home = ({ user, setUser }) => {
                   <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
                 </div>
               </div>
-
+              <div className='left-block'>
+                <h4 className='p-2'>
+                  Ninja Network </h4>
+                <h4 className='p-2'>
+                  brought to you by...</h4>
+                <div className='logos'>
+                <img className='logos' src={github} alt="" />
+                <img className='logos' src={reactimage} alt="" />
+                <img className='logos' src="/Users/khristakhwaja/Desktop/Projects/Group/ninja_network/client/src/images/MongoDB-Logo.jpg" alt="" />
+                <img className='logos' src="" alt="" />
+                </div>
+              </div>
 
 
             </StickyBox>
