@@ -9,6 +9,7 @@ const PostForm = ({ postList, setPostList }) => {
     const [post, setPost] = useState({})
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
+    const [image, setImage] = useState('');
 
     // useEffect(() => {
     //     console.log("getting all posts", postList)
@@ -42,26 +43,26 @@ const PostForm = ({ postList, setPostList }) => {
             });
     };
 
-    // const handlePhotoChange = (e) => {
-    //     e.preventDefault()
-    //     const photoData = new FormData();
-    //     photoData.append("file", image);
-    //     photoData.append("upload_preset", "byjlcqbx");
-    //     console.log("this is the image", image)
-    //     console.log("this is the photo data", photoData)
 
-    //     axios
-    //         .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", formData)
-    //         .then((response) => {
-    //             const sourceUrl = response.data.url;
-    //             console.log("this is the response", response);
-    //             setPost({ ...post, image: sourceUrl });
-    //             console.log(response.data.url);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // };
+
+    const handlePhotoChange = () => {
+        const photoData = new FormData();
+        photoData.append("file", image);
+        photoData.append("upload_preset", "byjlcqbx");
+        console.log("this is the image", image)
+        console.log("this is the photo data", photoData)
+        axios
+            .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", photoData)
+            .then((response) => {
+                const sourceUrl = response.data.url;
+                console.log("this is the response", response);
+                setPost({ ...post, image: sourceUrl });
+                console.log(response.data.url);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     return (
         <div>
@@ -71,12 +72,38 @@ const PostForm = ({ postList, setPostList }) => {
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
                         {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
+                        {post.image && (
+                            <img
+                                key={post.image}
+                                className=""
+                                style={{ 
+                                    margin: '10px', 
+                                    height: 'auto',
+                                    width: '100%',
+                                }}
+                                src={post.image}
+                                alt="post image"
+                            />
+                        )}
                         <textarea type='text' value={post.content} className="form-control" id="postText" placeholder="What's on your mind?" name="content"
                             style={{ backgroundColor: "#EDF7FB" }} onChange={handleChange} />
                     </div>
                     <div className="row">
                         <div className="col-sm-8 mt-3">
-                            <button type='file' className='btn btn-outline' htmlFor="imageInput"><i className='fas fa-image'></i> Image</button>
+                            <label htmlFor="postImage" className="btn btn-outline">
+                                <i className="fas fa-image"></i>
+                                Image
+                            </label>
+                            <input
+                                type="file"
+                                id="postImage"
+                                onChange={(e) => {
+                                    setImage(e.target.files[0]);
+                                    setPost({ ...post, image: URL.createObjectURL(e.target.files[0]) });
+                                    handlePhotoChange();
+                                }}
+                                style={{ display: 'none' }}
+                            />
                             <button type='file' className='btn btn-outline mx-1' htmlFor="videoInput"><i className='fas fa-video'></i> Video</button>
                             <button type='file' className='btn btn-outline mx-1' htmlFor="attachmentInput"><i className='fas fa-paperclip'></i> Attachment</button>
                         </div>
