@@ -137,28 +137,28 @@ const handleEditProfile = () => {
 };
 
 // Function for how long ago a post was posted
-function getTimeSince(publishDate) {
-  const now = new Date();
-  const postDate = new Date(publishDate);
-  const diffInSeconds = Math.floor((now - postDate) / 1000);
+// function getTimeSince(publishDate) {
+//   const now = new Date();
+//   const postDate = new Date(publishDate);
+//   const diffInSeconds = Math.floor((now - postDate) / 1000);
 
-  if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes} minutes`;
-  } else if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours} hours`;
-  } else if (diffInSeconds < 2592000) {
-    const days = Math.floor(diffInSeconds / 86400);
-    return `${days} days`;
-  } else if (diffInSeconds < 31536000) {
-    const months = Math.floor(diffInSeconds / 2592000);
-    return `${months} months`;
-  } else {
-    const years = Math.floor(diffInSeconds / 31536000);
-    return `${years} years`;
-  }
-}
+//   if (diffInSeconds < 3600) {
+//     const minutes = Math.floor(diffInSeconds / 60);
+//     return `${minutes} minutes`;
+//   } else if (diffInSeconds < 86400) {
+//     const hours = Math.floor(diffInSeconds / 3600);
+//     return `${hours} hours`;
+//   } else if (diffInSeconds < 2592000) {
+//     const days = Math.floor(diffInSeconds / 86400);
+//     return `${days} days`;
+//   } else if (diffInSeconds < 31536000) {
+//     const months = Math.floor(diffInSeconds / 2592000);
+//     return `${months} months`;
+//   } else {
+//     const years = Math.floor(diffInSeconds / 31536000);
+//     return `${years} years`;
+//   }
+// }
 
 //functions to handle friends
 const handleAddFriend = (apiUser, user, e) => {
@@ -237,21 +237,21 @@ const handleDeleteFriend = async (e, _id) => {
   }
 };
 
-const deletePost = (id) => {
-  axios.delete(`http://localhost:8000/api/post/delete/${id}`, { withCredentials: true })
-    .then((res) => {
-      setPostList(postList.filter((post) => post._id !== id))
-      console.log("after delete", res.data);
-    })
-    .catch(err => console.log("Error deleting post", err))
-}
-const getOnePost = (id) => {
-  axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
-    .then((res) => {
-      console.log("one Post", res.data);
-    })
-    .catch(err => console.log("Error deleting post", err))
-}
+// const deletePost = (id) => {
+//   axios.delete(`http://localhost:8000/api/post/delete/${id}`, { withCredentials: true })
+//     .then((res) => {
+//       setPostList(postList.filter((post) => post._id !== id))
+//       console.log("after delete", res.data);
+//     })
+//     .catch(err => console.log("Error deleting post", err))
+// }
+// const getOnePost = (id) => {
+//   axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+//     .then((res) => {
+//       console.log("one Post", res.data);
+//     })
+//     .catch(err => console.log("Error deleting post", err))
+// }
 
 
 return (
@@ -303,8 +303,8 @@ return (
                 </div>
               ))}
             </div>
-            <div>
-              <h5 className='mt-3'>Social Media Links</h5>
+              <h5 className='mt-3 '>Social Media Links</h5>
+              <div style={{ maxWidth: '100%', overflow: 'hidden' }}>
               {selectedUser?.links || user?.links?.map((link) => (
                 <div key={link._id}>
                   <a href={link} target='_blank' rel='noreferrer'>{link}</a>

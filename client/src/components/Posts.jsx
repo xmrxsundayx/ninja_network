@@ -140,7 +140,7 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
                         <img
                             src={post.image}
                             alt={post.content}
-                            style={{ width: '100%', height: 'auto', display: 'block', marginLeft: '15px' }}
+                            style={{ width: '96%', height: 'auto', display: 'block', margin: '0px 15px' }}
                         />
                         <div className='m-3'>
                             <h5 >{post.content}</h5>
