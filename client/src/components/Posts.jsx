@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import PostForm from './PostForm';
 
-const Posts = ({ postList, setPostList }) => {
+const Posts = ({ postList, setPostList, user, setUser}) => {
     const navigate = useNavigate()
     const [show, setShow] = useState(false);
     const [post, setPost] = useState({});
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    // this is to get the one logged User 
+    useEffect(() => {
+        axios
+            .get(`http://localhost:8000/api/users/logged`, { withCredentials: true })
+            .then(res => {
+                // show the user returned
+                console.log("logged user:", res.data)
+                console.log("logged user id:", res.data._id)
+                setUser(res.data);
+            })
+            .catch(err => {
+                console.log("current user error: ", err)
+                setUser({})
+            });
+    }, [setUser]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -36,13 +52,6 @@ const Posts = ({ postList, setPostList }) => {
             })
             .catch(err => console.log("Error deleting post", err))
     }
-    // const getOnePost = (id) => {
-    //     axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
-    //         .then((res) => {
-    //             console.log("one Post",res.data);
-    //         })
-    //         .catch(err => console.log("Error deleting post", err))
-    // }
 
     const getOnePost = (id) => {
         axios
@@ -73,11 +82,6 @@ const Posts = ({ postList, setPostList }) => {
         navigate(`/profile/${postList.creator._id}`);
     };
 
-    // const handleEditPost = () => {
-    //     console.log("edit post", post._id);
-    //     navigate(`/post/${post._id}/edit`);
-    //   };
-
 
     // Function for how long ago a post was posted
     function getTimeSince(publishDate) {
@@ -106,8 +110,9 @@ const Posts = ({ postList, setPostList }) => {
     return (
         <div>
             <div className="">
-                {/* view for all posts in friend list */}
-                {postList && postList.map((post, id) => (
+                {postList && postList 
+                    .filter(post => !window.location.href.includes('/profile') || post.creator._id === user._id)
+                    .map((post, id) => (
                     <div className='mid-block p-3'
                         key={id}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -157,18 +162,23 @@ const Posts = ({ postList, setPostList }) => {
                             <button type='button' className='btn btn-outline me-2'>
                                 <i className='fas fa-share'></i> Share
                             </button>
-                            <button
-                                type='button'
-                                className='btn btn-outline me-2'
-                                onClick={() => {
-                                    getOnePost(post._id)
-                                }}>
-                                <i className='fas fa-edit'></i>
-                                Edit
-                            </button>
-                            <button type='button' className='btn btn-outline me-2' onClick={() => deletePost(post._id)}>
+                            {/* ternary if user is logged in & the post belongs to them, then they can edit them */}
+                            {user._id === post.creator._id ?
+
+                                <button
+                                    type='button'
+                                    className='btn btn-outline me-2'
+                                    onClick={() => {
+                                        getOnePost(post._id)
+                                    }}>
+                                    <i className='fas fa-edit'></i>
+                                    Edit
+                                </button> 
+                                : null}                             {user._id === post.creator._id ?
+                                    <button type='button' className='btn btn-outline me-2' onClick={() => deletePost(post._id)}>
                                 <i className='fas fa-trash'></i> Delete
                             </button>
+                            : null}
                         </div>
                         <div className='d-flex justify-content-center mx-3'>
                             <textarea className='w-100' placeholder='Comments coming soon'></textarea>
