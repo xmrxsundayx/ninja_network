@@ -112,7 +112,7 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
         <div>
             <div className="">
                 {postList && postList 
-                    .filter(post => !window.location.href.includes(`/profile/${user._id}`) || post.creator._id === selectedUserId)
+                    .filter(post => !window.location.href.includes(`/profile/${user._id}`) || post.creator._id === user._id)
                     .map((post, id) => (
                     <div className='mid-block p-3'
                         key={id}>
