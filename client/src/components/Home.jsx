@@ -8,6 +8,9 @@ import PostForm from './PostForm';
 import Posts from './Posts';
 import github from '../images/github-logo.jpeg';
 import reactimage from '../images/logo192.png';
+import mongologo from '../images/MongoDB-Logo.jpg';
+import postman from '../images/postman-icon.png'
+import vscodelogo from "../images/visualstudio_code-card.webp"
 
 const Home = ({ user, setUser }) => {
   const [apiPosts, setApiPosts] = useState([]);
@@ -120,7 +123,7 @@ const Home = ({ user, setUser }) => {
 
 
   return (
-    <div className='background'>
+    <div className='background pb-4'>
       <Navbar />
       <div className="mt-5">
         <div className="row justify-content-center">
@@ -148,16 +151,18 @@ const Home = ({ user, setUser }) => {
                   <button className='btn specColor' onClick={handleViewProfile}>View Profile</button>
                 </div>
               </div>
-              <div className='left-block'>
-                <h4 className='p-2'>
-                  Ninja Network </h4>
-                <h4 className='p-2'>
-                  brought to you by...</h4>
-                <div className='logos'>
+              <div className='left-block p-3'>
+                <h5 className='p-2 specColor' style={{
+                  fontFamily: 'Roboto',
+                  borderRadius: '10px'
+                }}>
+                  Ninja Network brought to you by...</h5>
+                <div className='d-flex flex-column align-items-center'>
                 <img className='logos' src={github} alt="" />
                 <img className='logos' src={reactimage} alt="" />
-                <img className='logos' src="/Users/khristakhwaja/Desktop/Projects/Group/ninja_network/client/src/images/MongoDB-Logo.jpg" alt="" />
-                <img className='logos' src="" alt="" />
+                <img className='logos' src={mongologo} alt="" />
+                <img className='logos' src={vscodelogo} alt="" />
+                <img className='logos mt-3' src={postman} alt="" />
                 </div>
               </div>
 
