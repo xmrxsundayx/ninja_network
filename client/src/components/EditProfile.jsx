@@ -35,8 +35,7 @@ const EditProfile = ({ user, setUser }) => {
 
     // **********************************************************************************************************************
 
-    const handlePhotoChange = (e) => {
-        e.preventDefault()
+    const handlePhotoChange = () => {
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", "byjlcqbx");
@@ -143,34 +142,14 @@ const EditProfile = ({ user, setUser }) => {
                                     <input
                                         type="file"
                                         id="profilePhoto"
-                                        onChange={(e) => {setImage(e.target.files[0])}} />
-                                        <button className='btn btn-secondary' onClick={handlePhotoChange}>Upload</button>
+                                        onChange={(e) => {
+                                            setImage(e.target.files[0]);
+                                            setUser({ ...user, profilePhoto: URL.createObjectURL(e.target.files[0]) });
+                                            handlePhotoChange(); 
+                                          }}
+                                    />
                                 </div>
                             </div>
-
-                            {/* <div>
-                                <label htmlFor='profilePhoto'>Profile Photo:</label>
-                                <div>
-                                    {previewImage && (
-                                        <img
-                                            key={user.profilePhoto}
-                                            className="rounded-circle mb-4"
-                                            style={{ width: '150px', height: '150px', margin: '10px', }}
-                                            src={previewImage}
-                                            alt="profilePhoto" /> )}
-                                    {!previewImage && user.profilePhoto && (
-                                        <img
-                                            className="rounded-circle mb-4"
-                                            style={{ width: '150px', height: '150px', margin: '10px' }}
-                                            src={user.profilePhoto}
-                                            alt="profilePhoto"
-                                        /> )}
-                                    <input
-                                        type="file"
-                                        id="profilePhoto"
-                                        onChange={handlePhotoPreview} />
-                                </div>
-                            </div> */}
 
                         </div>
                         <div className="row">
