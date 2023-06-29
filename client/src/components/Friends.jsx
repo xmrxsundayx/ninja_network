@@ -7,10 +7,9 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 
 // Sample code to test api
-const Friends = ({ user, setUser }) => {
+const Friends = ({ user, setUser, selectedUser, setSelectedUser }) => {
     const [apiUsers, setApiUsers] = useState([]);
     const [addedFriends, setAddedFriends] = useState(user.friends || []);
-    const [selectedUser, setSelectedUser] = useState(null);
     const { userId } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -34,17 +33,17 @@ const Friends = ({ user, setUser }) => {
     }, [setUser]);
 
     // Fetch user data based on the URL ID
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const response = await axios.get(`/user/${userId}`);
-                setApiUsers(response.data);
-            } catch (error) {
-                console.error('Error fetching user:', error);
-            }
-        };
-        fetchUser();
-    }, [userId]);
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         try {
+    //             const response = await axios.get(`/user/${userId}`);
+    //             setApiUsers(response.data);
+    //         } catch (error) {
+    //             console.error('Error fetching user:', error);
+    //         }
+    //     };
+    //     fetchUser();
+    // }, [userId]);
 
     useEffect(() => {
         const fetchAllUsers = async () => {

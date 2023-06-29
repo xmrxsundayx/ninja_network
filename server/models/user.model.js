@@ -56,9 +56,10 @@ const UserSchema = new mongoose.Schema({
     // friendRequestsReceived: {
     //     type: Array,
     // },
-    posts: {
-        type: [],
-    }
+//     posts: [{
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: "Post",
+// }]
 
 }, {timestamps: true});
 
