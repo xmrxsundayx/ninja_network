@@ -12,8 +12,7 @@ const EditProfile = ({ user, setUser }) => {
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
     const [image, setImage] = useState("");
-
-
+    const [previewImage, setPreviewImage] = useState("");
 
 
     useEffect(() => {
@@ -35,8 +34,9 @@ const EditProfile = ({ user, setUser }) => {
     };
 
     // **********************************************************************************************************************
-    const handlePhotoChange = (e) => {
-        e.preventDefault()
+
+    const handlePhotoChange = () => {
+        // e.preventDefault()
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", "byjlcqbx");
@@ -56,7 +56,16 @@ const EditProfile = ({ user, setUser }) => {
             });
     };
 
+    const handlePhotoPreview = (e) => {
+        e.preventDefault()
+        const file = e.target.files[0];
+        setImage(file);
+        console.log("this is the file", file)
+        setPreviewImage(URL.createObjectURL(file));
+    };
+
     // **********************************************************************************************************************
+
 
     const handleRemoveLanguage = (index) => {
         const newLanguages = [...user.languages]
@@ -119,27 +128,30 @@ const EditProfile = ({ user, setUser }) => {
         <div className='background'>
             <Navbar />
             <div className="d-flex justify-content-center">
-                {/* <div className="container"> */}
                 <div className='block'>
-                    {/* <h4 className='p-2'>Submit a Post</h4> */}
                     <form onSubmit={submitHandler} >
                         <div className="row">
                             <div>
-                                <label>Profile Photo:</label>
+                                <label htmlFor='profilePhoto'>Profile Photo:</label>
                                 <div>
-                                    <img
-                                        key={user.profilePhoto}
-                                        className="rounded-circle mb-4"
-                                        style={{ width: '150px', height: '150px', margin: '10px', }}
-                                        src={user.profilePhoto}
-                                        alt="profilePhoto" />
+                                    {previewImage && (
+                                        <img
+                                            key={user.profilePhoto}
+                                            className="rounded-circle mb-4"
+                                            style={{ width: '150px', height: '150px', margin: '10px', }}
+                                            src={previewImage}
+                                            alt="profilePhoto" /> )}
+                                    {!previewImage && user.profilePhoto && (
+                                        <img
+                                            className="rounded-circle mb-4"
+                                            style={{ width: '150px', height: '150px', margin: '10px' }}
+                                            src={user.profilePhoto}
+                                            alt="profilePhoto"
+                                        /> )}
                                     <input
                                         type="file"
                                         id="profilePhoto"
-                                        onChange={(e) => {
-                                            setImage(e.target.files[0]);
-                                        }} />
-                                    <button className='btn btn-secondary' onClick={handlePhotoChange}>Upload</button>
+                                        onChange={handlePhotoPreview} />
                                 </div>
                             </div>
                         </div>
@@ -230,7 +242,7 @@ const EditProfile = ({ user, setUser }) => {
                         </div>
 
                         <div className="row justify-content-center">
-                            <button type="submit" className="mt-3 col-2 btn btn-secondary">Submit</button>
+                            <button type="submit" className="mt-3 col-2 btn btn-secondary" onClick={handlePhotoChange}>Submit</button>
                         </div>
                     </form>
                 </div>
