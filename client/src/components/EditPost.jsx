@@ -74,6 +74,7 @@ const EditPost = (user) => {
             <div className="d-flex justify-content-center">
                 <div className='block'>
                     <form onSubmit={handleUpdate}>
+
                         <div className="form-group text-center">
                             {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
                             {post.image && (
@@ -89,11 +90,13 @@ const EditPost = (user) => {
                                     alt="post image"
                                 />
                             )}
+
                             <textarea type='text' value={post.content} className="form-control" id="postText" placeholder="What's on your mind?" name="content"
                                 style={{ backgroundColor: "#EDF7FB" }} onChange={handleChange} />
                         </div>
                         <div className="row">
                             <div className="col-sm-8 mt-3">
+
                             <label htmlFor="postImage" className="btn btn-outline">
                                 <i className="fas fa-image"></i>
                                 Image
@@ -108,6 +111,7 @@ const EditPost = (user) => {
                                 }}
                                 style={{ display: 'none' }}
                             />
+
                                 <button type='file' className='btn btn-outline mx-1' htmlFor="videoInput"><i className='fas fa-video'></i> Video</button>
                                 <button type='file' className='btn btn-outline mx-1' htmlFor="attachmentInput"><i className='fas fa-paperclip'></i> Attachment</button>
                             </div>
