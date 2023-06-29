@@ -9,6 +9,7 @@ import Register from './components/Register';
 import EditProfile from './components/EditProfile';
 import Upload from './components/UploadTest';
 import Posts from './components/Posts';
+import EditPost from './components/EditPost'
 
 function App() {
   const [user, setUser] = useState({});
@@ -26,6 +27,7 @@ function App() {
           <Route element={<Friends selectedUser={selectedUser} setSelectedUser={setSelectedUser} user={user} setUser={setUser} />} path="/myninjas/:id" />
           <Route element={<Profile selectedUser={selectedUser} setSelectedUser={setSelectedUser} user={user} setUser={setUser} postList={postList} setPostList={setPostList}/>} path="/profile/:id" />
           <Route element={<EditProfile user={user} setUser={setUser} />} path="/profile/:id/edit" />
+          <Route element={<EditPost user={user} setUser={setUser} />} path="/post/:id/edit" />
           <Route element={
             <div>
               <Upload user={user} setUser={setUser} postList={postList} setPostList={setPostList} /><Posts user={user} setUser={setUser} postList={postList} setPostList={setPostList} />

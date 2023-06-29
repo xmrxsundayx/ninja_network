@@ -10,40 +10,10 @@ const PostForm = ({ postList, setPostList }) => {
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
-
     // useEffect(() => {
-    //     if (id) {
-    //         axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
-    //             .then(res => {
-    //                 console.log(res.data);
-    //                 setPost(res.data)
-    //             })
-    //             .catch(err => console.log("Error fetching post" + err))
-    //     }
-    // }, [])
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // const getAuth = () => {
-    //     useEffect(() => {
-    //       const token = // Obtain the authentication token from storage
-    //       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    //     }, []);
-
-    // const getAuthTokenFromCookies = () => {
-    //     const cookies = document.cookie.split(';');
-    //     for (let i = 0; i < cookies.length; i++) {
-    //         const cookie = cookies[i].trim();
-    //         if (cookie.startsWith('yourTokenCookieName=')) {
-    //             return cookie.substring('yourTokenCookieName='.length);
-    //         }
-    //     }
-    //     return null; // Token not found in cookies
-    // };
-
-    // axios.defaults.headers.common['Authorization'] = 'Bearer ' + getAuthTokenFromCookies();
-
-    // const token = getAuthTokenFromCookies();
-    // -----------------------------------------------------------------------------------------------------------------
+    //     console.log("getting all posts", postList)
+    // }
+    //     , [])
 
     // const handleChange = (e) => {
     //     setPost((prevPost) => ({
@@ -75,22 +45,23 @@ const PostForm = ({ postList, setPostList }) => {
     //         });
     // };
 
-
-
-
-    const handleUpdate = (e) => {
-        e.preventDefault()
-        console.log("updating post")
-        axios.put(`http://localhost:8000/api/post/update/${id}`, post, { withCredentials: true })
+    const handleSubmit = () => {
+        console.log("submitting post");
+        axios
+            .post('http://localhost:8000/api/post/create', post, { withCredentials: true })
             .then(res => {
-                console.log(res.data);
-                navigate('/profile/' + id)
+                console.log("Post created", res.data);
+                setErrors([]);
+                setLoaded(true);
+                setPostList(prevPostList => [...prevPostList, res.data]);
             })
             .catch(err => {
-                console.log("Error updating post" + err)
-                setErrors(err.response.data.errors)
-            })
-    }
+                console.log("Error creating post", err);
+                setErrors(err.response.data.errors);
+                setLoaded(false);
+            });
+    };
+
 
     // const handlePhotoChange = (e) => {
     //     e.preventDefault()
