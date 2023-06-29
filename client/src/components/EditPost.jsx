@@ -1,94 +1,81 @@
-import { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
+import React from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import Navbar from './Navbar'
 
-function EditPost({ postList, setPostList, postId }) {
-    const [show, setShow] = useState(false);
-    const [post, setPost] = useState(null);
-    const [file, setFile] = useState('');
-    const [text, setText] = useState('');
+const EditPost = (user) => {
+    const { id } = useParams()
+    const [errors, setErrors] = useState({})
+    const navigate = useNavigate()
+    const [loaded, setLoaded] = useState(false)
+    const [image, setImage] = useState("");
+    const [post, setPost] = useState({})
 
     useEffect(() => {
-        if (postId) {
-            // Fetch the specific post by ID using Axios
-            axios.get(`/api/post/${postList._id}`, { withCredentials: true })
-                .then(response => {
-                    setPost(response.data);
-                    setFile(response.data.file);
-                    setText(response.data.text);
-                    console.log("this is the post", response.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching post:', error);
-                });
-        }
-    }, [postId]);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    const handleUpdate = () => {
-        // Update the post data using Axios
-        axios.patch(`/api/posts/update/${postList._id}`, postList, { withCredentials: true })
-            .then(response => {
-                console.log('Post updated successfully:', response.data);
-                // Perform any necessary actions after successful update
-                // For example, you can fetch the updated post list or display a success message
-                handleClose();
+        axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+            .then(res => {
+                console.log('get user', user)
+                console.log("current Post",res.data);
+                setPost(res.data)
             })
-            .catch(error => {
-                console.error('Error updating post:', error);
-            });
+            .catch(err => console.log("Error getting post", err))
+    }, [])
+
+
+    const handleUpdate = (e) => {
+        e.preventDefault()
+        axios.patch(`http://localhost:8000/api/post/update/${id}`, post, { withCredentials: true })
+            .then(res => {
+                const postUser = res.data.creator._id
+                console.log('postUser', postUser)
+                console.log('submitted post',res.data);
+                navigate(`/profile/${postUser}`)
+            })
+            .catch(err => {
+                console.log("Error updating post", err)
+                setErrors(err.response.data.errors)
+            })
+    }
+
+    const handleChange = (e) => {
+        setPost((prevPost) => {
+            if (!prevPost) {
+                return { content: e.target.value };
+            }
+            return { ...prevPost, [e.target.name]: e.target.value };
+        });
     };
 
-    return (
-        <>
-            <Button
-                type='button'
-                className='btn-outline me-2'
-                onClick={handleShow}
-            >
-                <i className='fas fa-edit'></i>
-                Edit
-            </Button>
 
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Edit Post</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group id="editPost" controlId="formFileMultiple" className="mb-3">
-                        <Form.Label>File</Form.Label>
-                        <Form.Control
-                            type="file"
-                            multiple
-                            value={file}
-                            onChange={e => setFile(e.target.value)}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                        <Form.Label>Text</Form.Label>
-                        <Form.Control
-                            as="textarea"
-                            rows={3}
-                            value={text}
-                            onChange={e => setText(e.target.value)}
-                        />
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleUpdate}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
-    );
+
+    return (
+        <div className='background'>
+            <Navbar />
+            <div className="d-flex justify-content-center">
+                <div className='block'>
+                <form onSubmit={handleUpdate}>
+                    <div className="form-group">
+                        {errors.content ? <h6 className="text-danger">{errors.content.message}</h6> : null}
+                        <textarea type='text' value={post.content} className="form-control" id="postText" placeholder="What's on your mind?" name="content"
+                            style={{ backgroundColor: "#EDF7FB" }} onChange={handleChange} />
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-8 mt-3">
+                            <button type='file' className='btn btn-outline' htmlFor="imageInput"><i className='fas fa-image'></i> Image</button>
+                            <button type='file' className='btn btn-outline mx-1' htmlFor="videoInput"><i className='fas fa-video'></i> Video</button>
+                            <button type='file' className='btn btn-outline mx-1' htmlFor="attachmentInput"><i className='fas fa-paperclip'></i> Attachment</button>
+                        </div>
+                        <div className="col-sm-4 text-end mt-3">
+                            <button type="submit" className="btn specColor">Submit</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+
+    )
 }
 
 export default EditPost;

@@ -10,44 +10,10 @@ const PostForm = ({ postList, setPostList }) => {
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
 
-    useEffect(() => {
-        console.log("getting all posts", postList)
-    }
-        , [])
-
     // useEffect(() => {
-    //     if (id) {
-    //         axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
-    //             .then(res => {
-    //                 console.log(res.data);
-    //                 setPost(res.data)
-    //             })
-    //             .catch(err => console.log("Error fetching post" + err))
-    //     }
-    // }, [])
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // const getAuth = () => {
-    //     useEffect(() => {
-    //       const token = // Obtain the authentication token from storage
-    //       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    //     }, []);
-
-    // const getAuthTokenFromCookies = () => {
-    //     const cookies = document.cookie.split(';');
-    //     for (let i = 0; i < cookies.length; i++) {
-    //         const cookie = cookies[i].trim();
-    //         if (cookie.startsWith('yourTokenCookieName=')) {
-    //             return cookie.substring('yourTokenCookieName='.length);
-    //         }
-    //     }
-    //     return null; // Token not found in cookies
-    // };
-
-    // axios.defaults.headers.common['Authorization'] = 'Bearer ' + getAuthTokenFromCookies();
-
-    // const token = getAuthTokenFromCookies();
-    // -----------------------------------------------------------------------------------------------------------------
+    //     console.log("getting all posts", postList)
+    // }
+    //     , [])
 
     const handleChange = (e) => {
         setPost((prevPost) => {
@@ -59,8 +25,7 @@ const PostForm = ({ postList, setPostList }) => {
     };
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         console.log("submitting post");
         axios
             .post('http://localhost:8000/api/post/create', post, { withCredentials: true })
@@ -76,20 +41,6 @@ const PostForm = ({ postList, setPostList }) => {
                 setLoaded(false);
             });
     };
-
-    const handleUpdate = (e) => {
-        e.preventDefault()
-        console.log("updating post")
-        axios.put(`http://localhost:8000/api/post/update/${id}`, post, { withCredentials: true })
-            .then(res => {
-                console.log(res.data);
-                navigate('/profile/' + id)
-            })
-            .catch(err => {
-                console.log("Error updating post" + err)
-                setErrors(err.response.data.errors)
-            })
-    }
 
     // const handlePhotoChange = (e) => {
     //     e.preventDefault()
