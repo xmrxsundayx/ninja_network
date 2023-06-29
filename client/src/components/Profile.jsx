@@ -3,15 +3,17 @@ import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import axios from 'axios';
 import Navbar from './Navbar';
 import StickyBox from "react-sticky-box"
+import Posts from './Posts';
 
 
-const Profile = ({ user, setUser }) => {
-  const [apiPosts, setApiPosts] = useState([]);
+const Profile = ({ user, setUser, postList, setPostList }) => {
   const [apiUsers, setApiUsers] = useState([])
   const [addedFriends, setAddedFriends] = useState(user.friends || []);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [oneUser, setOneUser] = useState({})
-  const [onePost, setOnePost] = useState({})
+  const [oneUserPosts, setOneUserPosts] = useState([]);
+  const [onePost, setOnePost] = useState({});
+  const [selectedUserPosts, setSelectedUserPosts] = useState([]);
+  const [showSelectedUserPosts, setShowSelectedUserPosts] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,21 +33,28 @@ const Profile = ({ user, setUser }) => {
       });
   }, [setUser]);
 
-
   // create a useEffect to get only posts from the user
   useEffect(() => {
-    const fetchOneUserPosts = async () => {
+    const fetchUserPosts = async () => {
       try {
-        const response = await axios.get(`/user/${userId}/post`);
-        setOneUser(response.data);
-        console.log('Get User', response.data);
+        if (selectedUser) {
+          const response = await axios.get(`http://localhost:8000/api/posts/user/${selectedUser._id}`, { withCredentials: true });
+          setSelectedUserPosts(response.data);
+          console.log('Get Selected User Posts', response.data);
+          setShowSelectedUserPosts(true);
+        } else {
+          const response = await axios.get(`http://localhost:8000/api/posts/user/${userId}`, { withCredentials: true });
+          setOneUserPosts(response.data);
+          console.log('Get User Posts', response.data);
+          setShowSelectedUserPosts(false);
+        }
       } catch (error) {
-        console.error('Error fetching ninja posts:', error);
+        console.error('Error fetching user posts:', error);
       }
     };
-    fetchOneUserPosts();
-  }, [userId]);
 
+    fetchUserPosts();
+  }, [selectedUser, userId]);
 
   // this is to get the one Post info
   useEffect(() => {
@@ -73,18 +82,21 @@ const Profile = ({ user, setUser }) => {
         } else {
           const response = await axios.get(`/user/${userId}`);
           setSelectedUser(response.data);
-          console.log('Test1', response.data);
+          console.log('Fetched User:', response.data);
         }
       } catch (error) {
-        console.error('Test Error', error);
+        console.error('Error fetching user:', error);
       }
     };
-  
+
     if (selectedUser && selectedUser._id !== userId) {
       fetchOneUser();
     }
-  }, [location, userId]);
-  
+  }, [location, userId, selectedUser]);
+
+  console.log('Selected User:', selectedUser);
+
+
 
   // this is to get all the Users
   useEffect(() => {
@@ -214,6 +226,22 @@ const Profile = ({ user, setUser }) => {
     }
   };
 
+  const deletePost = (id) => {
+    axios.delete(`http://localhost:8000/api/post/delete/${id}`, { withCredentials: true })
+      .then((res) => {
+        setPostList(postList.filter((post) => post._id !== id))
+        console.log("after delete", res.data);
+      })
+      .catch(err => console.log("Error deleting post", err))
+  }
+  const getOnePost = (id) => {
+    axios.get(`http://localhost:8000/api/post/${id}`, { withCredentials: true })
+      .then((res) => {
+        console.log("one Post", res.data);
+      })
+      .catch(err => console.log("Error deleting post", err))
+  }
+
 
   return (
     <div className='background'>
@@ -326,68 +354,156 @@ const Profile = ({ user, setUser }) => {
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
           <div className="col-4">
-            <div className=''>
-              {apiPosts.map((apiPost, i) => (
-                <div className='mid-block'
-                  key={apiPost._id}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img
-                      className='rounded-circle'
-                      src={apiPost.owner.profilePhoto}
-                      alt={`${apiPost.owner.firstName} ${apiPost.owner.lastName}`}
-                      style={{
-                        width: '50px',
-                        height: '50px',
-                        margin: '20px',
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => handleViewProfile(apiPost.owner._id)}
-                    />
-                    <div>
+            <StickyBox offsetTop={90}>
+              <Posts />
+              {showSelectedUserPosts ? (
+                selectedUserPosts.map((post, id) => (
+                  <div className='mid-block p-3'
+                    key={id}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img
+                        className='rounded-circle'
+                        src={post.creator.profilePhoto}
+                        alt={`${post.creator.firstName} ${post.creator.lastName}`}
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          margin: '20px',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => handleViewProfile(post.creator._id)}
+                      />
                       <div>
-                        {apiPost.owner.firstName} {apiPost.owner.lastName}
-                      </div>
-                      <div>
-                        {getTimeSince(apiPost.publishDate)} ago
-                      </div>
-                    </div>
-                  </div>
-                  <img
-                    src={apiPost.image}
-                    alt={apiPost.text}
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
-                  <div className='m-3'>
-                    <h5 >{apiPost.text}</h5>
-                    <div>
-                      {apiPost.tags.map((tag, index) => (
-                        <div key={index} className='badge bg-secondary me-1'>
-                          #{tag}
+                        <div>
+                          {post.creator.firstName} {post.creator.lastName}
                         </div>
-                      ))}
+                        <div>
+                          {getTimeSince(post.createdAt)} ago
+                        </div>
+                      </div>
+                    </div>
+                    <img
+                      src={post.image}
+                      alt={post.content}
+                      style={{ width: '100%', height: 'auto', display: 'block', marginLeft: '15px' }}
+                    />
+                    <div className='m-3'>
+                      <h5 >{post.content}</h5>
+                      {/* <div>
+                                {post?.creator?.tags.map((tag, index) => (
+                                    <div key={index}className='badge bg-secondary me-1'>
+                                        #{tag}
+                                    </div>
+                                ))}
+                            </div> */}
+                    </div>
+                    <div className='d-flex justify-content-around'>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='far fa-heart'></i> Like
+                      </button>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='far fa-comment'></i> Comment
+                      </button>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='fas fa-share'></i> Share
+                      </button>
+                      {/* if id ? something so only created can delete */}
+                      <button
+                        type='button'
+                        className='btn btn-outline me-2'
+
+                        onClick={() => getOnePost(post._id)}>
+                        <i className='fas fa-edit'></i>
+                        Edit
+                      </button>
+                      <button type='button' className='btn btn-outline me-2' onClick={() => deletePost(post._id)}>
+                        <i className='fas fa-trash'></i> Delete
+                      </button>
+                    </div>
+                    <div className='d-flex justify-content-center mx-3'>
+                      <textarea className='w-100' placeholder='Comments coming soon'></textarea>
+                      {/* {onePost.map((post, index) => (
+                    <div key={index}>{post}</div>
+                    ))} */}
+                      {/* {onePost.data} */}
                     </div>
                   </div>
-                  <div className='d-flex justify-content-around'>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='far fa-heart'></i> Like
-                    </button>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='far fa-comment'></i> Comment
-                    </button>
-                    <button type='button' className='btn btn-outline me-2'>
-                      <i className='fas fa-share'></i> Share
-                    </button>
-                  </div>
-                  <div>
-                    <textarea className='w-100' placeholder='Comments coming soon'></textarea>
-                    {/* {onePost.map((post, index) => (
-                      <div key={index}>{post}</div>
+                ))
+              ) : (
+                oneUserPosts.map((post, id) => (
+                  <div className='mid-block p-3'
+                    key={id}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img
+                        className='rounded-circle'
+                        src={post.creator.profilePhoto}
+                        alt={`${post.creator.firstName} ${post.creator.lastName}`}
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          margin: '20px',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => handleViewProfile(post.creator._id)}
+                      />
+                      <div>
+                        <div>
+                          {post.creator.firstName} {post.creator.lastName}
+                        </div>
+                        <div>
+                          {getTimeSince(post.createdAt)} ago
+                        </div>
+                      </div>
+                    </div>
+                    <img
+                      src={post.image}
+                      alt={post.content}
+                      style={{ width: '100%', height: 'auto', display: 'block', marginLeft: '15px' }}
+                    />
+                    <div className='m-3'>
+                      <h5 >{post.content}</h5>
+                      {/* <div>
+                                {post?.creator?.tags.map((tag, index) => (
+                                    <div key={index}className='badge bg-secondary me-1'>
+                                        #{tag}
+                                    </div>
+                                ))}
+                            </div> */}
+                    </div>
+                    <div className='d-flex justify-content-around'>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='far fa-heart'></i> Like
+                      </button>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='far fa-comment'></i> Comment
+                      </button>
+                      <button type='button' className='btn btn-outline me-2'>
+                        <i className='fas fa-share'></i> Share
+                      </button>
+                      {/* if id ? something so only created can delete */}
+                      <button
+                        type='button'
+                        className='btn btn-outline me-2'
+
+                        onClick={() => getOnePost(post._id)}>
+                        <i className='fas fa-edit'></i>
+                        Edit
+                      </button>
+                      <button type='button' className='btn btn-outline me-2' onClick={() => deletePost(post._id)}>
+                        <i className='fas fa-trash'></i> Delete
+                      </button>
+                    </div>
+                    <div className='d-flex justify-content-center mx-3'>
+                      <textarea className='w-100' placeholder='Comments coming soon'></textarea>
+                      {/* {onePost.map((post, index) => (
+                    <div key={index}>{post}</div>
                     ))} */}
-                    {/* {onePost.data} */}
+                      {/* {onePost.data} */}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))
+              )}
+            </StickyBox>
           </div>
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* Right Column */}
