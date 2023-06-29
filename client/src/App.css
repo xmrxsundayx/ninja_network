@@ -50,6 +50,8 @@ form{
 
 .background{
   background-color: #dde7ea;
+  margin: 0px;
+  padding: 0px;
 }
 .right-block{
   background-color: #fff;

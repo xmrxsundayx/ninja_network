@@ -140,7 +140,7 @@ const Home = ({ user, setUser, postList, setPostList }) => {
           {/* -------------------------------------------------------------------------------------------------- */}
           {/* <!-- Middle Column --> */}
           <div className="col-4">
-            <StickyBox offsetTop={90} >
+            <StickyBox offsetTop={90}>
             < PostForm postList={postList} setPostList={setPostList} />
             </StickyBox>
             < Posts postList={postList} setPostList={setPostList} />

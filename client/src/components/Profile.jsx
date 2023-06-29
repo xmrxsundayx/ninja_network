@@ -249,7 +249,7 @@ const Profile = ({ user, setUser, postList, setPostList }) => {
       <div className="mt-5">
         <div className="row justify-content-center">
           {/* Left Column */}
-          <div className="col-1"></div>
+          <div className="col-1" />
           <div className="col-3">
             <div className='left-block'>
               <div className='m-3 d-flex flex-column align-items-center'>
@@ -552,7 +552,7 @@ const Profile = ({ user, setUser, postList, setPostList }) => {
               </div>
             </StickyBox>
           </div>
-          <div className="col-1"></div>
+          <div className="col-1"/>
         </div>
       </div>
     </div >
