@@ -103,3 +103,8 @@ background: "#fff"
 label{
   font-weight: bold;
 }
+
+.logos{
+  min-width: none;
+  max-width: 100px;
+}
