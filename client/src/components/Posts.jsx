@@ -10,8 +10,6 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
     const navigate = useNavigate()
     const [show, setShow] = useState(false);
     const [post, setPost] = useState({});
-    // const { userId } = useParams();
-    // const [user, setUser] = useState({});
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -84,11 +82,6 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
         navigate(`/profile/${postList.creator._id}`);
     };
 
-    // const handleEditPost = () => {
-    //     console.log("edit post", post._id);
-    //     navigate(`/post/${post._id}/edit`);
-    //   };
-
 
     // Function for how long ago a post was posted
     function getTimeSince(publishDate) {
@@ -117,8 +110,9 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
     return (
         <div>
             <div className="">
-                {/* view for all posts in friend list */}
-                {postList && postList.map((post, id) => (
+                {postList && postList 
+                    .filter(post => !window.location.href.includes('/profile') || post.creator._id === user._id)
+                    .map((post, id) => (
                     <div className='mid-block p-3'
                         key={id}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
