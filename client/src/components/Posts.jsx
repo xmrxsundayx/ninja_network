@@ -111,6 +111,7 @@ const Posts = ({ postList, setPostList, user, setUser}) => {
     return (
         <div>
             <div className="">
+                
                 {postList && postList 
                     .filter(post => !window.location.href.includes(`/profile/${user._id}`) || post.creator._id === selectedUserId)
                     .map((post, id) => (

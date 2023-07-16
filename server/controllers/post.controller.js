@@ -9,7 +9,11 @@ module.exports = {
     createPost: (req, res) => {
         const userToken = jwt.verify(req.cookies.usertoken, secret);
         Post.create({ ...req.body, creator: userToken._id })
-            .then(e => res.status(201).json(e))
+        .then(async e => {
+                // this is to add the user to the post on creation. 
+                e=await e.populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
+                res.status(201).json(e)
+            })
             .catch(err => {
                 console.log(err);
                 res.status(400).json({ message: "Error creating post!", errors: err.errors });
@@ -21,8 +25,6 @@ module.exports = {
     getAllPosts: (req, res) => {
         Post.find()
             .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
-            // .populate('comments')
-            // .populate('likes')
             .sort({ createdAt: 'desc' })
             .then(e => res.json(e))
             .catch(err => res.status(400).json({ message: "Error getting all posts!", error: err }));
@@ -32,8 +34,6 @@ module.exports = {
         const userToken = jwt.verify(req.cookies.usertoken, secret)
         Post.find({ creator: userToken._id })
             .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
-            // .populate('comments')
-            // .populate('likes')
             .sort({ createdAt: 'desc' })
             .then(e => {
                 console.log('logged e:',e)
@@ -45,8 +45,6 @@ module.exports = {
         // const userToken = jwt.verify(req.cookies.usertoken, secret)
         Post.find({ creator: req.params.id })
             .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
-            // // .populate('comments')
-            // // .populate('likes')
             .sort({ createdAt: 'desc' })
             .then(e => {
                 console.log('e:',e)
@@ -57,8 +55,6 @@ module.exports = {
     getOnePost: (req, res) => {
         Post.findOne({ _id: req.params.id })
             .populate('creator', 'firstName lastName profilePhoto createdAt content image tags likes comments')
-            // .populate('comments')
-            // .populate('likes')
             .then(e => res.json(e))
             .catch(err => res.status(400).json({ message: "Error getting post!", errors: err.errors }));
     },

@@ -26,15 +26,18 @@ const PostForm = ({ postList, setPostList }) => {
     };
 
 
-    const handleSubmit = () => {
-        console.log("submitting post");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const photoUrl = await handlePhotoChange(image);
+        console.log("submitting post, photoUrl", photoUrl);
         axios
-            .post('http://localhost:8000/api/post/create', post, { withCredentials: true })
+            .post('http://localhost:8000/api/post/create', {...post, image:photoUrl}, { withCredentials: true })
             .then(res => {
                 console.log("Post created", res.data);
                 setErrors([]);
+                setPost({ content: "" });
                 setLoaded(true);
-                setPostList(prevPostList => [...prevPostList, res.data]);
+                setPostList(prevPostList => [res.data,...prevPostList ]);
             })
             .catch(err => {
                 console.log("Error creating post", err);
@@ -45,23 +48,22 @@ const PostForm = ({ postList, setPostList }) => {
 
 
 
-    const handlePhotoChange = () => {
+    const handlePhotoChange = async (image) => {
         const photoData = new FormData();
         photoData.append("file", image);
         photoData.append("upload_preset", "byjlcqbx");
         console.log("this is the image", image)
         console.log("this is the photo data", photoData)
-        axios
+        try {
+        const response = await axios
             .post("https://api.cloudinary.com/v1_1/dijdukoam/image/upload", photoData)
-            .then((response) => {
-                const sourceUrl = response.data.url;
-                console.log("this is the response", response);
-                setPost({ ...post, image: sourceUrl });
-                console.log(response.data.url);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        return (response.data.url);
+                // console.log("this is the response", response);
+                // setPost({ ...post, image: sourceUrl });
+                // console.log(response.data.url);
+        } catch (error) {
+            console.log("Error uploading photo", error);
+        }
     };
 
     return (
@@ -100,7 +102,7 @@ const PostForm = ({ postList, setPostList }) => {
                                 onChange={(e) => {
                                     setImage(e.target.files[0]);
                                     setPost({ ...post, image: URL.createObjectURL(e.target.files[0]) });
-                                    handlePhotoChange();
+                                    // handlePhotoChange(e.target.files[0]);
                                 }}
                                 style={{ display: 'none' }}
                             />

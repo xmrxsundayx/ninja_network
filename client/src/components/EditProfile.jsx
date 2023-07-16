@@ -11,7 +11,7 @@ const EditProfile = ({ user, setUser }) => {
     const [errors, setErrors] = useState({})
     const navigate = useNavigate()
     const [loaded, setLoaded] = useState(false)
-    const [image, setImage] = useState("");
+    // const [image, setImage] = useState("");
     // const [previewImage, setPreviewImage] = useState("");
 
 
@@ -35,7 +35,7 @@ const EditProfile = ({ user, setUser }) => {
 
     // **********************************************************************************************************************
 
-    const handlePhotoChange = () => {
+    const handlePhotoChange = (image) => {
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", "byjlcqbx");
@@ -143,9 +143,9 @@ const EditProfile = ({ user, setUser }) => {
                                         type="file"
                                         id="profilePhoto"
                                         onChange={(e) => {
-                                            setImage(e.target.files[0]);
+                                            // setImage(e.target.files[0]);
                                             setUser({ ...user, profilePhoto: URL.createObjectURL(e.target.files[0]) });
-                                            handlePhotoChange(); 
+                                            handlePhotoChange(e.target.files[0]); 
                                           }}
                                     />
                                 </div>
