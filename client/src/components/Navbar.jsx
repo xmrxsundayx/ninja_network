@@ -43,10 +43,6 @@ const Navbar = () => {
         navigate(`/home/${user._id}`)
     }
 
-    const handleProfile = () => {
-        navigate(`/profile/${user._id}`)
-    }
-
     return (
         <div className="sticky">
             <nav className="d-flex navbar navbar-expand-lg" style={{ background: "#5F9CB5" }}>
@@ -58,15 +54,10 @@ const Navbar = () => {
                         onClick={handleHome}
                         style={{ cursor: "pointer" }}
                     />
-                    {/* Removing Search */}
-                    
+
                     <div className="form-outline input-group mx-auto">
-                        
+
                     </div>
-                    {/* ********************** */}
-                    {/* if we want to add a logo, we can save the image in the image file and upload it here. Make sure to uncomment the import for the logo as well. */}
-                    {/* <img src={logo} height="28" alt="ninja_logo"/> */}
-                    {/* *********************** */}
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -82,9 +73,9 @@ const Navbar = () => {
                             <Link to={`/home/${user._id}`} className="nav-item nav-link">
                                 Home
                             </Link>
-                            <a href={`/profile/${user._id}`} onClick={handleProfile} className="nav-item nav-link">
+                            <Link to={`/profile/${user._id}`} className="nav-item nav-link">
                                 Profile
-                            </a>
+                            </Link>
                             <Link to={`/myninjas/${user._id}`} className="nav-item nav-link">
                                 My Ninjas
                             </Link>
