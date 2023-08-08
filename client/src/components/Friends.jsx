@@ -198,41 +198,49 @@ const Friends = ({ user, setUser, selectedUser, setSelectedUser }) => {
                                 gap: '20px',
                             }}
                         >
-                            {apiUsers && apiUsers.map((apiUser) => (
-                                <div
-                                    key={apiUser._id}
-                                    style={{
-                                        width: '350px',
-                                        padding: '0px 10px',
-                                        background: 'rgb(237,247,251)',
-                                        borderRadius: '30px',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                    }}
-                                    onClick={() => handleFriendClick(apiUser._id)}
-                                >
-                                    <img
-                                        src={apiUser.profilePhoto}
-                                        alt={`${apiUser.firstName} ${apiUser.lastName}`}
+                            {apiUsers && apiUsers
+                                .filter(apiUser => {
+                                    // Check if the user is already a friend
+                                    const friendExists = user.friends.some(friend => friend._id === apiUser._id);
+                                    // Check if the user is the logged-in user
+                                    const isCurrentUser = apiUser._id === user._id;
+                                    return !friendExists && !isCurrentUser; // Return true if the user is NOT a friend and NOT the logged-in user
+                                })
+                                .map((apiUser) => (
+                                    <div
+                                        key={apiUser._id}
                                         style={{
-                                            width: '80px',
-                                            height: '80px',
-                                            margin: '20px 10px 20px 10px',
-                                            borderRadius: '50%',
+                                            width: '350px',
+                                            padding: '0px 10px',
+                                            background: 'rgb(237,247,251)',
+                                            borderRadius: '30px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
                                         }}
-                                    />
-                                    {apiUser.firstName} {apiUser.lastName}
-                                    <div>
-                                        <button
-                                            className='btn btn-outline-primary mx-3'
-                                            onClick={(e) => handleAddFriend(apiUser, user, e)}
-                                        >
-                                            +
-                                        </button>
+                                        onClick={() => handleFriendClick(apiUser._id)}
+                                    >
+                                        <img
+                                            src={apiUser.profilePhoto}
+                                            alt={`${apiUser.firstName} ${apiUser.lastName}`}
+                                            style={{
+                                                width: '80px',
+                                                height: '80px',
+                                                margin: '20px 10px 20px 10px',
+                                                borderRadius: '50%',
+                                            }}
+                                        />
+                                        {apiUser.firstName} {apiUser.lastName}
+                                        <div>
+                                            <button
+                                                className='btn btn-outline-primary mx-3'
+                                                onClick={(e) => handleAddFriend(apiUser, user, e)}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
                         </div>
                     </div>
                 </div>
